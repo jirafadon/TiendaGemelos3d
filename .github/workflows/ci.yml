@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: print3d-backend
+        working-directory: backend
 
     services:
       mongodb:
@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: print3d-backend/package-lock.json
+          cache-dependency-path: backend/package-lock.json
 
       - name: Install dependencies
         run: npm ci || npm install
@@ -49,5 +49,5 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: print3d-backend/coverage/lcov.info
+          files: backend/coverage/lcov.info
           fail_ci_if_error: false
