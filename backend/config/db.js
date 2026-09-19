@@ -1,18 +1,27 @@
 import mongoose from 'mongoose';
 
-export async function connectDB() {
-  try {
-    const mongoUri = process.env.MONGO_URI;
-    if (!mongoUri) {
-      throw new Error('MONGO_URI no está configurada.');
-    }
+let connectionPromise = null;
 
-    mongoose.set('strictQuery', true);
-    const connection = await mongoose.connect(mongoUri);
-    console.log(`MongoDB conectado: ${connection.connection.host}/${connection.connection.name}`);
-    return connection;
-  } catch (error) {
-    console.error('Error al conectar con MongoDB:', error.message);
-    process.exit(1);
+export async function connectDB() {
+  if (mongoose.connection.readyState === 1) return mongoose.connection;
+  if (connectionPromise) return connectionPromise;
+
+  const mongoUri = process.env.MONGO_URI;
+  if (!mongoUri) {
+    throw new Error('MONGO_URI no está configurada.');
   }
+
+  mongoose.set('strictQuery', true);
+  connectionPromise = mongoose.connect(mongoUri)
+    .then(connection => {
+      console.log(`MongoDB conectado: ${connection.connection.host}/${connection.connection.name}`);
+      return connection;
+    })
+    .catch(error => {
+      connectionPromise = null;
+      console.error('Error al conectar con MongoDB:', error.message);
+      throw error;
+    });
+
+  return connectionPromise;
 }
