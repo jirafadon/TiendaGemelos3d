@@ -1,0 +1,50 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: printlab3d-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - print3d-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: printlab3d-backend
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    env_file:
+      - ./print3d-backend/.env
+    environment:
+      MONGO_URI: mongodb://mongo:27017/printlab3d
+      PORT: 4000
+    ports:
+      - "4000:4000"
+    networks:
+      - print3d-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: printlab3d-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+    networks:
+      - print3d-net
+
+networks:
+  print3d-net:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local

@@ -1,0 +1,8 @@
+node_modules
+.env
+.git
+.gitignore
+coverage
+*.log
+print3d-backend/tests
+print3d-backend/node_modules
