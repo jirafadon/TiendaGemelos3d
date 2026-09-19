@@ -19,7 +19,7 @@ services:
     depends_on:
       - mongo
     env_file:
-      - ./print3d-backend/.env
+      - ./backend/.env
     environment:
       MONGO_URI: mongodb://mongo:27017/printlab3d
       PORT: 4000
