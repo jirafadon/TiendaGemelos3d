@@ -1,0 +1,12 @@
+FROM nginx:alpine
+
+COPY index.html /usr/share/nginx/html/index.html
+COPY admin.html /usr/share/nginx/html/admin.html
+COPY frontend/manifest.json /usr/share/nginx/html/manifest.json
+COPY frontend/sw.js /usr/share/nginx/html/sw.js
+COPY frontend/offline.html /usr/share/nginx/html/offline.html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

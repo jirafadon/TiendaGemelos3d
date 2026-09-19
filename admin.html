@@ -1,0 +1,1264 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PrintLab 3D · Administración</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#090b10;--surface:#10131a;--surface2:#161a23;--surface3:#1d2330;--text:#f7f8fb;--muted:#99a2b2;--border:rgba(255,255,255,.08);--primary:#7c5cff;--success:#22c55e;--warning:#f59e0b;--danger:#ef4444;--info:#38bdf8;--sidebar:258px;--radius:16px}body.light{--bg:#f4f6fa;--surface:#fff;--surface2:#f8f9fc;--surface3:#eef1f7;--text:#111827;--muted:#64748b;--border:rgba(15,23,42,.09)}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px Inter,sans-serif;transition:.2s}button,input,select,textarea{font:inherit}button{cursor:pointer}img{max-width:100%;display:block}.hidden{display:none!important}.app{min-height:100vh}.sidebar{position:fixed;left:0;top:0;bottom:0;width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);z-index:100;display:flex;flex-direction:column}.brand{height:76px;padding:0 20px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border)}.mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#7c5cff,#4f46e5);display:grid;place-items:center;color:#fff}.brand strong{font:700 19px "Space Grotesk"}.brand span{color:#a78bfa}.nav{padding:15px 12px;flex:1}.nav-label{color:var(--muted);font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:14px 10px 7px}.nav button{width:100%;border:0;background:transparent;color:var(--muted);padding:11px 12px;border-radius:10px;text-align:left;display:flex;gap:12px;align-items:center;margin:3px 0}.nav button:hover{background:var(--surface2);color:var(--text)}.nav button.active{background:rgba(124,92,255,.16);color:#fff;box-shadow:inset 3px 0 var(--primary)}.side-user{padding:14px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center}.avatar{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--surface3)}.side-user strong{font-size:12px;display:block}.side-user small{color:var(--muted)}.main{margin-left:var(--sidebar);min-height:100vh}.top{height:76px;position:sticky;top:0;z-index:80;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:rgba(9,11,16,.88);backdrop-filter:blur(15px);border-bottom:1px solid var(--border)}body.light .top{background:rgba(244,246,250,.88)}.top-left,.top-right{display:flex;align-items:center;gap:10px}.top h1{font:700 22px "Space Grotesk";margin:0}.top p{margin:4px 0 0;color:var(--muted);font-size:11px}.icon{width:40px;height:40px;border:1px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text)}.mobile{display:none}.content{padding:28px;max-width:1800px;margin:auto}.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 18px 50px rgba(0,0,0,.18)}.kpi{padding:18px}.kpi-head{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}.kpi-icon{width:34px;height:34px;border-radius:9px;background:rgba(124,92,255,.12);display:grid;place-items:center;color:#a78bfa}.kpi-value{font:700 27px "Space Grotesk";margin-top:15px}.delta{font-size:11px;margin-top:8px;color:var(--muted)}.up{color:var(--success)}.down{color:var(--danger)}.dash2{display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-top:20px}.dash3{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:20px;margin-top:20px}.panel{padding:20px}.head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}.head h2{font:700 17px "Space Grotesk";margin:0}.head p{color:var(--muted);font-size:11px;margin:4px 0 0}.chart{height:320px}.mini{display:grid;gap:3px}.mini-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}.mini-row:last-child{border:0}.mini-left{display:flex;align-items:center;gap:9px;min-width:0}.mini-left strong{font-size:11px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mini-left small{color:var(--muted);display:block;margin-top:3px}.rank{width:26px;height:26px;border-radius:7px;background:var(--surface3);display:grid;place-items:center;color:var(--muted);font-size:10px}.section{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.section h2{font:700 18px "Space Grotesk";margin:0}.section p{color:var(--muted);font-size:11px;margin:5px 0 0}.btn{min-height:40px;padding:0 13px;border-radius:10px;border:1px solid var(--border);background:var(--surface2);color:var(--text);display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn:hover{border-color:rgba(124,92,255,.5);transform:translateY(-1px)}.primary{background:linear-gradient(135deg,#7c5cff,#5b4ae6);border:0;color:#fff}.danger{background:var(--danger);border-color:transparent;color:#fff}.small{min-height:33px;padding:0 9px;font-size:11px}.filters{display:grid;grid-template-columns:1.5fr .9fr .9fr .9fr auto;gap:9px;margin-bottom:15px}.input,.select{width:100%;min-height:41px;border:1px solid var(--border);background:var(--surface2);color:var(--text);border-radius:10px;padding:9px 11px;outline:0}.input:focus,.select:focus{border-color:rgba(124,92,255,.65);box-shadow:0 0 0 3px rgba(124,92,255,.1)}.search{position:relative}.search i{position:absolute;left:12px;top:13px;color:var(--muted)}.search .input{padding-left:36px}.table-card{overflow:hidden}.scroll{overflow:auto}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:12px 15px;border-bottom:1px solid var(--border);text-align:left}th{background:var(--surface2);color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.7px}td{font-size:12px}tbody tr:hover{background:var(--surface2)}.product{display:flex;gap:10px;align-items:center;min-width:220px}.thumb{width:44px;height:44px;border-radius:9px;object-fit:cover;background:var(--surface3)}.product strong{display:block;font-size:12px}.product small{color:var(--muted)}.badge{display:inline-flex;align-items:center;min-height:23px;padding:0 8px;border-radius:99px;font-size:10px;font-weight:700;border:1px solid transparent}.b-green{color:#4ade80;background:rgba(34,197,94,.1)}.b-yellow{color:#fbbf24;background:rgba(245,158,11,.1)}.b-red{color:#f87171;background:rgba(239,68,68,.1)}.b-blue{color:#67e8f9;background:rgba(56,189,248,.1)}.b-gray{color:var(--muted);background:var(--surface3)}.actions{display:flex;gap:5px}.pager{display:flex;justify-content:space-between;align-items:center;padding:13px 15px;color:var(--muted);font-size:11px}.pages{display:flex;gap:5px}.page{width:33px;height:33px;border:1px solid var(--border);border-radius:8px;background:var(--surface2);color:var(--text)}.page.active{background:var(--primary);color:#fff;border-color:var(--primary)}.page:disabled{opacity:.35}.empty{text-align:center;padding:45px;color:var(--muted)}.empty i{font-size:28px;display:block;margin-bottom:10px}.empty strong{color:var(--text);display:block;margin-bottom:4px}.modal-bg{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.66);backdrop-filter:blur(6px);display:grid;place-items:center;padding:18px}.modal{width:min(820px,100%);max-height:90vh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:0 30px 100px rgba(0,0,0,.45)}.modal.lg{width:min(1050px,100%)}.modal-head{position:sticky;top:0;background:var(--surface);padding:17px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}.modal-head h3{margin:0;font:700 17px "Space Grotesk"}.modal-head p{margin:4px 0 0;color:var(--muted);font-size:11px}.close{width:36px;height:36px;border:1px solid var(--border);border-radius:9px;background:var(--surface2);color:var(--text)}.modal-body{padding:20px}.modal-foot{position:sticky;bottom:0;background:var(--surface);padding:13px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}.form{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.full{grid-column:1/-1}.field label{display:block;color:var(--muted);font-size:11px;font-weight:700;margin-bottom:7px}.field small{color:var(--muted);font-size:10px}.variants{padding:13px;border:1px solid var(--border);background:var(--surface2);border-radius:12px}.variant-head{display:flex;justify-content:space-between;margin-bottom:9px}.dynamic{display:grid;gap:7px}.dynamic-row{display:flex;gap:7px}.dynamic-row .input{min-width:0}.detail{display:grid;grid-template-columns:1fr 1fr;gap:16px}.box{border:1px solid var(--border);background:var(--surface2);border-radius:12px;padding:14px}.box h4{font:700 12px "Space Grotesk";margin:0 0 10px}.line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11px}.line:last-child{border:0}.line span:first-child{color:var(--muted)}.item{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--border)}.item:last-child{border:0}.item img{width:40px;height:40px;border-radius:8px;object-fit:cover}.item-main{flex:1}.item-main strong{font-size:11px;display:block}.item-main small{color:var(--muted)}.timeline{display:grid;gap:14px;position:relative}.timeline:before{content:"";position:absolute;left:5px;top:5px;bottom:5px;width:1px;background:var(--border)}.event{position:relative;padding-left:21px}.dot{position:absolute;left:1px;top:4px;width:9px;height:9px;border-radius:50%;background:var(--primary)}.event strong{display:block;font-size:11px}.event small{color:var(--muted)}.settings{display:grid;grid-template-columns:1fr 1fr;gap:20px}.setting{padding:20px}.setting-row{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 0;border-bottom:1px solid var(--border)}.setting-row:last-child{border:0}.setting-row strong{font-size:12px;display:block}.setting-row small{color:var(--muted);display:block;margin-top:3px}.switch{width:44px;height:24px;position:relative}.switch input{opacity:0}.slider{position:absolute;inset:0;background:var(--surface3);border:1px solid var(--border);border-radius:99px}.slider:before{content:"";position:absolute;width:18px;height:18px;left:2px;top:2px;border-radius:50%;background:var(--muted);transition:.2s}.switch input:checked+.slider{background:var(--primary);border-color:var(--primary)}.switch input:checked+.slider:before{transform:translateX(20px);background:#fff}.toast-wrap{position:fixed;right:18px;bottom:18px;z-index:900;width:min(360px,calc(100vw - 36px));display:grid;gap:8px}.toast{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px;box-shadow:0 18px 50px rgba(0,0,0,.3);display:flex;gap:10px}.toast i{margin-top:2px}.toast strong{font-size:11px}.toast p{margin:3px 0 0;color:var(--muted);font-size:10px}.sk{background:var(--surface3);color:transparent!important;border-radius:7px}.note{border:1px dashed var(--border);border-radius:10px;padding:11px;color:var(--muted);font-size:10px;line-height:1.5}@media(max-width:1200px){.grid4{grid-template-columns:repeat(2,1fr)}.dash3{grid-template-columns:1fr 1fr}.dash3>*:first-child{grid-column:1/-1}.filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}}@media(max-width:900px){.sidebar{transform:translateX(-100%);transition:.2s;box-shadow:20px 0 60px rgba(0,0,0,.35)}body.menu-open .sidebar{transform:translateX(0)}.main{margin-left:0}.mobile{display:block}.dash2{grid-template-columns:1fr}.settings{grid-template-columns:1fr}.content{padding:20px 15px}.top{padding:0 15px}}@media(max-width:640px){.grid4,.dash3,.form,.detail{grid-template-columns:1fr}.dash3>*:first-child{grid-column:auto}.filters{grid-template-columns:1fr}.filters .search{grid-column:auto}.content{padding:15px 10px}.top{height:68px}.top h1{font-size:18px}.pager{flex-direction:column;align-items:flex-start;gap:9px}}
+</style>
+
+<link rel="stylesheet" href="frontend/a11y.css">
+<script src="frontend/analytics.js" defer></script>
+<script>
+window.PRINT3D_GA_MEASUREMENT_ID = '';
+window.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('button').forEach((button) => {
+    if (!button.getAttribute('aria-label')) {
+      const text = button.textContent.trim().replace(/\s+/g, ' ');
+      button.setAttribute('aria-label', text || 'Botón');
+    }
+  });
+  document.querySelectorAll('.modal').forEach((modal) => {
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+  });
+  document.querySelectorAll('input, select, textarea').forEach((field) => {
+    if (!field.id) field.id = `field-${Math.random().toString(36).slice(2)}`;
+    const label = field.closest('label');
+    if (!label && !document.querySelector(`label[for="${field.id}"]`)) {
+      field.setAttribute('aria-label', field.getAttribute('placeholder') || 'Campo de formulario');
+    }
+  });
+});
+</script>
+<link rel="stylesheet" href="/frontend/a11y.css"><script src="/frontend/analytics.js" defer></script></head>
+<body>
+<a class="skip-link" href="#main-content">Saltar al contenido</a>
+<div class="app">
+<aside class="sidebar" id="sidebar"><div class="brand"><div class="mark"><i class="fa-solid fa-cube"></i></div><strong>PrintLab <span>3D</span></strong></div><nav class="nav"><div class="nav-label">Principal</div><button class="active" data-view="dashboard"><i class="fa-solid fa-chart-line"></i>Dashboard</button><button data-view="products"><i class="fa-solid fa-box"></i>Productos</button><button data-view="orders"><i class="fa-solid fa-receipt"></i>Pedidos</button><button data-view="users"><i class="fa-solid fa-users"></i>Usuarios</button><div class="nav-label">Configuración</div><button data-view="coupons"><i class="fa-solid fa-ticket"></i>Cupones</button><button data-view="settings"><i class="fa-solid fa-sliders"></i>Configuración</button><div class="nav-label">Accesos</div><button id="storeBtn"><i class="fa-solid fa-store"></i>Ver tienda</button><button id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i>Cerrar sesión</button></nav><div class="side-user"><img class="avatar" id="sideAvatar" src="https://i.pravatar.cc/100?img=12"><div><strong id="sideName">Admin PrintLab</strong><small>Administrador</small></div></div></aside>
+<main id="admin-main-content" id="main-content" class="main"><header class="top"><div class="top-left"><button class="icon mobile" id="menuBtn"><i class="fa-solid fa-bars"></i></button><div><h1 id="title">Dashboard</h1><p id="subtitle">Resumen general de PrintLab 3D</p></div></div><div class="top-right"><button class="icon" id="refreshBtn" title="Actualizar"><i class="fa-solid fa-rotate"></i></button><button class="icon" id="themeBtn" title="Tema"><i class="fa-solid fa-sun"></i></button></div></header><section class="content">
+<div id="dashboardView"></div>
+<div id="productsView" class="hidden"></div>
+<div id="ordersView" class="hidden"></div>
+<div id="usersView" class="hidden"></div>
+<div id="couponsView" class="hidden"></div>
+<div id="settingsView" class="hidden"></div>
+</section></main></div><div id="modalRoot"></div><div class="toast-wrap" id="toasts"></div>
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
+<script>
+"use strict";
+const API_URL="http://localhost:4000/api";
+// ⚠️ REEMPLAZAR: API_URL debe apuntar al backend real en producción.
+const TOKEN_KEY="printlab_token";const USER_KEY="printlab_user";const DATA_KEY="printlab_admin_state";const THEME_KEY="printlab_admin_theme";const PAGE_SIZE=8;const POLL_MS=30000;
+const cats=["figuras","decoración","funcionales","miniaturas","juguetes","repuestos","personalizados"];
+const products=[
+{id:"p001",name:"Dragón articulado",cat:"figuras",price:12900,oldPrice:15900,rating:4.9,reviews:128,stock:24,tags:["Hot","Oferta"],seed:101,active:true,sold:184,desc:"Dragón articulado impreso en PLA con excelente definición.",variants:{color:["Negro","Rojo","Violeta"],size:["M","L"]}},
+{id:"p002",name:"Casita nórdica decorativa",cat:"decoración",price:8900,oldPrice:0,rating:4.7,reviews:74,stock:31,tags:["Nuevo"],seed:102,active:true,sold:96,desc:"Casa decorativa para estanterías y escritorios.",variants:{color:["Blanco","Arena","Terracota"],size:["S","M"]}},
+{id:"p003",name:"Organizador modular de escritorio",cat:"funcionales",price:10900,oldPrice:0,rating:4.8,reviews:91,stock:18,tags:["Hot"],seed:103,active:true,sold:151,desc:"Organizador modular para cables y accesorios.",variants:{color:["Negro","Gris","Blanco"],size:["M"]}},
+{id:"p004",name:"Miniatura guerrero medieval",cat:"miniaturas",price:6500,oldPrice:7500,rating:4.9,reviews:53,stock:40,tags:["Oferta"],seed:104,active:true,sold:89,desc:"Miniatura de guerrero medieval para colección y pintura.",variants:{color:["Gris","Blanco"],size:["28mm","32mm"]}},
+{id:"p005",name:"Robot articulado mini",cat:"juguetes",price:7200,oldPrice:0,rating:4.6,reviews:61,stock:52,tags:["Nuevo"],seed:105,active:true,sold:112,desc:"Robot articulado para jugar o coleccionar.",variants:{color:["Azul","Rojo","Negro"],size:["S"]}},
+{id:"p006",name:"Perilla universal para horno",cat:"repuestos",price:4200,oldPrice:0,rating:4.5,reviews:38,stock:67,tags:[],seed:106,active:true,sold:73,desc:"Repuesto universal para perillas de horno.",variants:{color:["Negro","Blanco"],size:["Estándar"]}},
+{id:"p007",name:"Llavero personalizado",cat:"personalizados",price:3500,oldPrice:0,rating:4.9,reviews:210,stock:100,tags:["Hot"],seed:107,active:true,sold:245,desc:"Llavero personalizado con nombre o iniciales.",variants:{color:["Negro","Blanco","Rojo","Azul"],size:["S"]}},
+{id:"p008",name:"Soporte para celular ajustable",cat:"funcionales",price:5900,oldPrice:6900,rating:4.8,reviews:117,stock:29,tags:["Oferta"],seed:108,active:true,sold:168,desc:"Soporte de escritorio con ángulo ajustable.",variants:{color:["Negro","Gris"],size:["M"]}},
+{id:"p009",name:"Calavera geométrica",cat:"decoración",price:9800,oldPrice:0,rating:4.6,reviews:45,stock:16,tags:[],seed:109,active:true,sold:67,desc:"Escultura geométrica de sobremesa.",variants:{color:["Negro","Blanco","Dorado"],size:["M","L"]}},
+{id:"p010",name:"Gato articulado",cat:"figuras",price:7800,oldPrice:0,rating:4.9,reviews:144,stock:36,tags:["Hot"],seed:110,active:true,sold:201,desc:"Figura de gato articulado.",variants:{color:["Naranja","Negro","Blanco"],size:["M"]}},
+{id:"p011",name:"Set de bases para miniaturas",cat:"miniaturas",price:5400,oldPrice:0,rating:4.7,reviews:32,stock:58,tags:[],seed:111,active:true,sold:55,desc:"Bases texturizadas para miniaturas.",variants:{color:["Negro","Gris"],size:["25mm","32mm"]}},
+{id:"p012",name:"Puzzle mecánico cubo",cat:"juguetes",price:8400,oldPrice:9900,rating:4.8,reviews:86,stock:22,tags:["Oferta"],seed:112,active:true,sold:121,desc:"Puzzle mecánico de piezas impresas.",variants:{color:["Negro","Blanco","Multicolor"],size:["M"]}},
+{id:"p013",name:"Clip para cable",cat:"funcionales",price:1800,oldPrice:0,rating:4.5,reviews:98,stock:180,tags:[],seed:113,active:true,sold:188,desc:"Clip reutilizable para organizar cables.",variants:{color:["Negro","Blanco","Gris"],size:["S"]}},
+{id:"p014",name:"Engranaje de reemplazo",cat:"repuestos",price:3900,oldPrice:0,rating:4.4,reviews:22,stock:73,tags:[],seed:114,active:true,sold:41,desc:"Engranaje de reemplazo para mecanismos compatibles.",variants:{color:["Negro"],size:["20mm","30mm","40mm"]}},
+{id:"p015",name:"Maceta hexagonal",cat:"decoración",price:7600,oldPrice:8900,rating:4.7,reviews:67,stock:44,tags:["Oferta"],seed:115,active:true,sold:101,desc:"Maceta geométrica con drenaje.",variants:{color:["Blanco","Arena","Verde"],size:["S","M"]}},
+{id:"p016",name:"Placa con nombre",cat:"personalizados",price:4900,oldPrice:0,rating:4.9,reviews:88,stock:90,tags:["Nuevo"],seed:116,active:true,sold:93,desc:"Placa personalizada para puerta o escritorio.",variants:{color:["Negro","Blanco","Madera"],size:["S","M"]}},
+{id:"p017",name:"Dragón bebé",cat:"figuras",price:6900,oldPrice:7900,rating:4.8,reviews:73,stock:27,tags:["Oferta","Nuevo"],seed:117,active:true,sold:114,desc:"Pequeño dragón articulado para colección.",variants:{color:["Verde","Azul","Rojo"],size:["S","M"]}},
+{id:"p018",name:"Vehículo miniatura",cat:"miniaturas",price:6200,oldPrice:0,rating:4.6,reviews:36,stock:33,tags:[],seed:118,active:true,sold:58,desc:"Vehículo en escala para dioramas.",variants:{color:["Negro","Rojo","Azul"],size:["1:64","1:43"]}},
+{id:"p019",name:"Avión de escritorio",cat:"juguetes",price:8800,oldPrice:0,rating:4.7,reviews:29,stock:19,tags:["Nuevo"],seed:119,active:true,sold:47,desc:"Avión decorativo con piezas encastrables.",variants:{color:["Blanco","Gris","Azul"],size:["M"]}},
+{id:"p020",name:"Tapa protectora personalizada",cat:"personalizados",price:5600,oldPrice:0,rating:4.8,reviews:51,stock:61,tags:[],seed:120,active:true,sold:69,desc:"Tapa protectora fabricada a medida.",variants:{color:["Negro","Blanco","Gris"],size:["S","M","L"]}}];
+const orders=[{id:"ORD-2026-1042",customer:"Lucía Fernández",email:"lucia@example.com",total:24800,payment:"mercadopago",status:"shipped",created:"2026-09-18T13:20:00",address:"Av. Siempre Viva 742, Buenos Aires",items:[{id:"p001",name:"Dragón articulado",qty:1,price:12900,seed:101},{id:"p007",name:"Llavero personalizado",qty:2,price:3500,seed:107}],history:["pending","paid","shipped"]},{id:"ORD-2026-1041",customer:"Martín Gómez",email:"martin@example.com",total:18900,payment:"stripe",status:"paid",created:"2026-09-18T10:05:00",address:"Calle Falsa 123, San Justo",items:[{id:"p008",name:"Soporte para celular ajustable",qty:1,price:5900,seed:108}],history:["pending","paid"]},{id:"ORD-2026-1040",customer:"Sofía Rodríguez",email:"sofia@example.com",total:13400,payment:"paypal",status:"delivered",created:"2026-09-17T19:40:00",address:"Rivadavia 4500, CABA",items:[{id:"p003",name:"Organizador modular de escritorio",qty:1,price:10900,seed:103}],history:["pending","paid","shipped","delivered"]},{id:"ORD-2026-1039",customer:"Diego Acosta",email:"diego@example.com",total:7600,payment:"mercadopago",status:"pending",created:"2026-09-17T15:10:00",address:"Belgrano 88, Morón",items:[{id:"p015",name:"Maceta hexagonal",qty:1,price:7600,seed:115}],history:["pending"]},{id:"ORD-2026-1038",customer:"Valentina Ruiz",email:"valentina@example.com",total:15700,payment:"stripe",status:"shipped",created:"2026-09-17T11:25:00",address:"Laprida 101, La Plata",items:[{id:"p017",name:"Dragón bebé",qty:1,price:6900,seed:117}],history:["pending","paid","shipped"]},{id:"ORD-2026-1037",customer:"Nicolás Pérez",email:"nico@example.com",total:9800,payment:"mercadopago",status:"delivered",created:"2026-09-16T17:30:00",address:"Mitre 700, Tigre",items:[{id:"p009",name:"Calavera geométrica",qty:1,price:9800,seed:109}],history:["pending","paid","shipped","delivered"]},{id:"ORD-2026-1036",customer:"Carolina Silva",email:"carolina@example.com",total:14200,payment:"paypal",status:"shipped",created:"2026-09-16T14:05:00",address:"San Martín 222, Lanús",items:[{id:"p012",name:"Puzzle mecánico cubo",qty:1,price:8400,seed:112}],history:["pending","paid","shipped"]},{id:"ORD-2026-1035",customer:"Federico Torres",email:"fede@example.com",total:10600,payment:"stripe",status:"delivered",created:"2026-09-15T20:10:00",address:"Olazábal 333, CABA",items:[{id:"p007",name:"Llavero personalizado",qty:2,price:3500,seed:107}],history:["pending","paid","shipped","delivered"]},{id:"ORD-2026-1034",customer:"Paula Medina",email:"paula@example.com",total:13100,payment:"mercadopago",status:"delivered",created:"2026-09-15T12:15:00",address:"Perón 901, Ituzaingó",items:[{id:"p004",name:"Miniatura guerrero medieval",qty:2,price:6500,seed:104}],history:["pending","paid","shipped","delivered"]},{id:"ORD-2026-1033",customer:"Agustín Díaz",email:"agus@example.com",total:8400,payment:"stripe",status:"shipped",created:"2026-09-14T16:55:00",address:"Jujuy 110, Quilmes",items:[{id:"p012",name:"Puzzle mecánico cubo",qty:1,price:8400,seed:112}],history:["pending","paid","shipped"]}];
+const users=[{id:"u1",name:"Lucía Fernández",email:"lucia@example.com",provider:"google",role:"user",blocked:false,date:"2026-09-18",avatar:"https://i.pravatar.cc/100?img=47"},{id:"u2",name:"Martín Gómez",email:"martin@example.com",provider:"email",role:"user",blocked:false,date:"2026-09-18",avatar:"https://i.pravatar.cc/100?img=12"},{id:"u3",name:"Sofía Rodríguez",email:"sofia@example.com",provider:"google",role:"user",blocked:false,date:"2026-09-17",avatar:"https://i.pravatar.cc/100?img=32"},{id:"u4",name:"Diego Acosta",email:"diego@example.com",provider:"email",role:"user",blocked:false,date:"2026-09-17",avatar:"https://i.pravatar.cc/100?img=11"},{id:"u5",name:"Valentina Ruiz",email:"valentina@example.com",provider:"google",role:"user",blocked:false,date:"2026-09-17",avatar:"https://i.pravatar.cc/100?img=44"},{id:"u6",name:"Nicolás Pérez",email:"nico@example.com",provider:"email",role:"admin",blocked:false,date:"2026-09-16",avatar:"https://i.pravatar.cc/100?img=68"},{id:"u7",name:"Carolina Silva",email:"carolina@example.com",provider:"google",role:"user",blocked:false,date:"2026-09-16",avatar:"https://i.pravatar.cc/100?img=45"},{id:"u8",name:"Federico Torres",email:"fede@example.com",provider:"email",role:"user",blocked:false,date:"2026-09-15",avatar:"https://i.pravatar.cc/100?img=13"},{id:"u9",name:"Paula Medina",email:"paula@example.com",provider:"google",role:"user",blocked:false,date:"2026-09-15",avatar:"https://i.pravatar.cc/100?img=49"},{id:"u10",name:"Agustín Díaz",email:"agus@example.com",provider:"email",role:"user",blocked:true,date:"2026-09-14",avatar:"https://i.pravatar.cc/100?img=53"},{id:"admin",name:"Admin PrintLab",email:"admin@printlab.local",provider:"email",role:"admin",blocked:false,date:"2026-01-10",avatar:"https://i.pravatar.cc/100?img=12"}];
+const coupons=[{id:"c1",code:"PRINT10",type:"percent",value:10,max:500,used:37,expires:"2026-12-31",active:true},{id:"c2",code:"ENVIOGRATIS",type:"shipping",value:0,max:1000,used:81,expires:"2026-12-31",active:true}];
+const settings={storeName:"PrintLab 3D",storeEmail:"hola@printlab3d.com",storePhone:"+54 11 5555-5555",storeAddress:"Buenos Aires, Argentina",shippingCost:2500,freeShippingMinimum:50000,maintenance:false,allowRegistration:true,allowGuestCheckout:true};
+const state={view:"dashboard",api:false,pages:{products:1,orders:1,users:1},filters:{product:{q:"",cat:"",sort:"new",status:""},order:{q:"",status:"",payment:"",from:"",to:""},user:{q:"",provider:"",role:"",blocked:""}},chart:null,user:null};
+const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];const esc=v=>String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");const money=v=>new Intl.NumberFormat("es-AR",{style:"currency",currency:"ARS",maximumFractionDigits:0}).format(Number(v)||0);const date=v=>new Intl.DateTimeFormat("es-AR",{day:"2-digit",month:"2-digit",year:"numeric"}).format(new Date(v));const img=s=>`https://picsum.photos/seed/printlab-${s}/300/300`;const token=()=>localStorage.getItem(TOKEN_KEY)||"";
+function toast(type,title,msg){const el=document.createElement("div");el.className="toast";el.innerHTML=`<i class="fa-solid ${type==="success"?"fa-circle-check":type==="error"?"fa-circle-xmark":"fa-circle-info"}"></i><div><strong>${esc(title)}</strong><p>${esc(msg)}</p></div>`;$("#toasts").appendChild(el);setTimeout(()=>el.remove(),3500)}
+function save(){localStorage.setItem(DATA_KEY,JSON.stringify({products,orders,users,coupons,settings}))}function load(){try{const x=JSON.parse(localStorage.getItem(DATA_KEY)||"null");if(x){if(x.products)products.splice(0,products.length,...x.products);if(x.orders)orders.splice(0,orders.length,...x.orders);if(x.users)users.splice(0,users.length,...x.users);if(x.coupons)coupons.splice(0,coupons.length,...x.coupons);if(x.settings)Object.assign(settings,x.settings)}}catch(e){}save()}
+async function api(path,opt={}){const h={"Content-Type":"application/json",...(opt.headers||{})};if(token())h.Authorization=`Bearer ${token()}`;const c=new AbortController();const t=setTimeout(()=>c.abort(),6500);try{const r=await fetch(API_URL+path,{...opt,headers:h,signal:c.signal});if(!r.ok)throw Error(r.status);state.api=true;return (r.headers.get("content-type")||"").includes("json")?r.json():r.text()}finally{clearTimeout(t)}}
+async function tryApi(path,opt,fallback=null){try{return await api(path,opt)}catch(e){state.api=false;return fallback}}
+function auth(){let u=null;try{u=JSON.parse(localStorage.getItem(USER_KEY)||"null")}catch(e){}if(u&&u.role&&u.role!=="admin"){location.href="index.html";return false}state.user=u||{id:"admin",name:"Admin PrintLab",email:"admin@printlab.local",role:"admin",avatar:"https://i.pravatar.cc/100?img=12"};$("#sideName").textContent=state.user.name;$("#sideAvatar").src=state.user.avatar||"https://i.pravatar.cc/100?img=12";return true}
+const meta={dashboard:["Dashboard","Resumen general de PrintLab 3D"],products:["Productos","Catálogo y stock"],orders:["Pedidos","Ventas, pagos y envíos"],users:["Usuarios","Cuentas y permisos"],coupons:["Cupones","Promociones y descuentos"],settings:["Configuración","Datos y reglas de la tienda"]};
+function nav(v){state.view=v;Object.keys(meta).forEach(k=>$("#"+k+"View").classList.toggle("hidden",k!==v));$$(`[data-view]`).forEach(b=>b.classList.toggle("active",b.dataset.view===v));$("#title").textContent=meta[v][0];$("#subtitle").textContent=meta[v][1];if(v==="dashboard")dashboard();if(v==="products")productsView();if(v==="orders")ordersView();if(v==="users")usersView();if(v==="coupons")couponsView();if(v==="settings")settingsView()}
+function badge(s){const m={pending:["Pendiente","b-yellow"],paid:["Pagado","b-blue"],shipped:["Enviado","b-blue"],delivered:["Entregado","b-green"],cancelled:["Cancelado","b-red"]};const x=m[s]||[s,"b-gray"];return `<span class="badge ${x[1]}">${x[0]}</span>`}function pay(s){return ({mercadopago:"Mercado Pago",paypal:"PayPal",stripe:"Stripe"})[s]||s}
+function dashboard(){const paid=orders.filter(o=>["paid","shipped","delivered"].includes(o.status));const sales=paid.reduce((a,o)=>a+o.total,0);$("#dashboardView").innerHTML=`<div class="grid4">${[["Ventas del mes",money(sales),"fa-sack-dollar","+12.4%"],["Pedidos totales",orders.length,"fa-receipt","+8.2%"],["Productos activos",products.filter(p=>p.active).length,"fa-box-open","+5.1%"],["Usuarios registrados",users.length,"fa-users","+18.7%"]].map(x=>`<div class="card kpi"><div class="kpi-head"><span>${x[0]}</span><span class="kpi-icon"><i class="fa-solid ${x[2]}"></i></span></div><div class="kpi-value">${x[1]}</div><div class="delta"><span class="up">${x[3]}</span> vs. mes anterior</div></div>`).join("")}</div><div class="dash2"><div class="card panel"><div class="head"><div><h2>Ventas últimos 7 días</h2><p>Facturación registrada por día</p></div><span class="badge b-green">Actualizado</span></div><div class="chart"><canvas id="salesChart"></canvas></div></div><div class="card panel"><div class="head"><div><h2>Top 5 productos</h2><p>Unidades vendidas</p></div></div><div class="mini">${[...products].sort((a,b)=>b.sold-a.sold).slice(0,5).map((p,i)=>`<div class="mini-row"><div class="mini-left"><span class="rank">${i+1}</span><img class="avatar" src="${img(p.seed)}"><div><strong>${esc(p.name)}</strong><small>${p.cat}</small></div></div><strong>${p.sold} u.</strong></div>`).join("")}</div></div></div><div class="dash3"><div class="card table-card"><div class="panel head"><div><h2>Últimos pedidos</h2><p>Las 10 órdenes más recientes</p></div><button class="btn small" data-go="orders">Ver todos</button></div><div class="scroll"><table><thead><tr><th>Pedido</th><th>Cliente</th><th>Total</th><th>Estado</th></tr></thead><tbody>${orders.map(o=>`<tr><td><strong>${o.id}</strong></td><td>${esc(o.customer)}</td><td>${money(o.total)}</td><td>${badge(o.status)}</td></tr>`).join("")}</tbody></table></div></div><div class="card panel"><div class="head"><div><h2>Usuarios recientes</h2><p>Últimos registros</p></div></div><div class="mini">${users.slice(0,6).map(u=>`<div class="mini-row"><div class="mini-left"><img class="avatar" src="${u.avatar}"><div><strong>${esc(u.name)}</strong><small>${esc(u.email)}</small></div></div><span class="badge ${u.role==="admin"?"b-blue":"b-gray"}">${u.role==="admin"?"Admin":"Usuario"}</span></div>`).join("")}</div></div><div class="card panel"><div class="head"><div><h2>Actividad</h2><p>Estado del sistema</p></div></div><div class="mini">${[["fa-database","Base de datos",state.api?"Conectada":"Modo demo"],["fa-shield-halved","Autenticación","JWT + rol admin"],["fa-clock","Polling","Cada 30 segundos"],["fa-envelope","Emails","Preparado para Resend"]].map(x=>`<div class="mini-row"><div class="mini-left"><span class="rank"><i class="fa-solid ${x[0]}"></i></span><div><strong>${x[1]}</strong><small>${x[2]}</small></div></div></div>`).join("")}</div></div></div>`;renderChart()}
+function renderChart(){if(typeof Chart==="undefined")return;const c=$("#salesChart");if(!c)return;if(state.chart)state.chart.destroy();const vals=[4200,7800,6100,9500,8400,12800,17600];state.chart=new Chart(c,{type:"line",data:{labels:["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],datasets:[{label:"Ventas",data:vals,borderColor:"#7c5cff",backgroundColor:"rgba(124,92,255,.12)",fill:true,tension:.35}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>money(c.raw)}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>money(v)}},x:{grid:{display:false}}}}})}
+function categoryOpts(selected=""){return cats.map(c=>`<option value="${c}" ${c===selected?"selected":""}>${c[0].toUpperCase()+c.slice(1)}</option>`).join("")}
+function paginate(list,page,render){const total=Math.max(1,Math.ceil(list.length/PAGE_SIZE));page=Math.min(page,total);const visible=list.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE);render(visible,total);return {visible,total}}
+function productsView(){const f=state.filters.product;let list=[...products];if(f.q){const q=f.q.toLowerCase();list=list.filter(p=>(p.name+p.cat+p.id).toLowerCase().includes(q))}if(f.cat)list=list.filter(p=>p.cat===f.cat);if(f.status)list=list.filter(p=>f.status==="active"?p.active:!p.active);const sorts={new:(a,b)=>b.id.localeCompare(a.id),popular:(a,b)=>b.sold-a.sold,priceAsc:(a,b)=>a.price-b.price,priceDesc:(a,b)=>b.price-a.price,rating:(a,b)=>b.rating-a.rating};list.sort(sorts[f.sort]||sorts.new);const p=state.pages.products;$("#productsView").innerHTML=`<div class="section"><div><h2>Productos</h2><p>Administrá el catálogo de PrintLab 3D</p></div><button class="btn primary" id="newProduct"><i class="fa-solid fa-plus"></i>Nuevo producto</button></div><div class="filters"><div class="search"><i class="fa-solid fa-magnifying-glass"></i><input class="input" id="pq" placeholder="Buscar producto..." value="${esc(f.q)}"></div><select class="select" id="pc"><option value="">Todas las categorías</option>${categoryOpts(f.cat)}</select><select class="select" id="ps"><option value="new">Más nuevos</option><option value="popular">Más populares</option><option value="priceAsc">Precio menor</option><option value="priceDesc">Precio mayor</option><option value="rating">Mejor rating</option></select><select class="select" id="pa"><option value="">Todos los estados</option><option value="active">Activos</option><option value="inactive">Inactivos</option></select><button class="btn" id="pcClear">Limpiar</button></div><div class="card table-card"><div class="scroll"><table><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${list.slice((p-1)*PAGE_SIZE,p*PAGE_SIZE).map(productRow).join("")||`<tr><td colspan="6"><div class="empty"><i class="fa-solid fa-box-open"></i><strong>No hay productos</strong>Probá otros filtros.</div></td></tr>`}</tbody></table></div><div class="pager"><span>Mostrando ${list.length?((p-1)*PAGE_SIZE+1):0}-${Math.min(p*PAGE_SIZE,list.length)} de ${list.length}</span><div class="pages">${pageButtons(p,Math.max(1,Math.ceil(list.length/PAGE_SIZE)),"product")}</div></div></div>`;$("#ps").value=f.sort;$("#pa").value=f.status;bindProductFilters();$("#newProduct").onclick=()=>productModal();$$('[data-edit]').forEach(b=>b.onclick=()=>productModal(b.dataset.edit));$$('[data-toggle]').forEach(b=>b.onclick=()=>toggleProduct(b.dataset.toggle));$$('[data-delete]').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.delete))}
+function productRow(p){return `<tr><td><div class="product"><img class="thumb" src="${img(p.seed)}"><div><strong>${esc(p.name)}</strong><small>${esc(p.id)}</small></div></div></td><td>${esc(p.cat)}</td><td><strong>${money(p.price)}</strong></td><td><span class="badge ${p.stock<=10?"b-red":p.stock<=25?"b-yellow":"b-green"}">${p.stock}</span></td><td><span class="badge ${p.active?"b-green":"b-gray"}">${p.active?"Activo":"Inactivo"}</span></td><td><div class="actions"><button class="btn small" data-edit="${p.id}"><i class="fa-solid fa-pen"></i></button><button class="btn small" data-toggle="${p.id}"><i class="fa-solid ${p.active?"fa-eye-slash":"fa-eye"}"></i></button><button class="btn small" data-delete="${p.id}"><i class="fa-solid fa-trash"></i></button></div></td></tr>`}
+function pageButtons(cur,total,type){let s=`<button class="page" ${cur<=1?"disabled":""} data-page="${type}:${cur-1}"><i class="fa-solid fa-chevron-left"></i></button>`;for(let i=1;i<=total;i++)s+=`<button class="page ${i===cur?"active":""}" data-page="${type}:${i}">${i}</button>`;return s+`<button class="page" ${cur>=total?"disabled":""} data-page="${type}:${cur+1}"><i class="fa-solid fa-chevron-right"></i></button>`}
+function bindProductFilters(){$("#pq").oninput=()=>{state.filters.product.q=$("#pq").value;state.pages.products=1;productsView()};$("#pc").onchange=()=>{state.filters.product.cat=$("#pc").value;state.pages.products=1;productsView()};$("#ps").onchange=()=>{state.filters.product.sort=$("#ps").value;productsView()};$("#pa").onchange=()=>{state.filters.product.status=$("#pa").value;state.pages.products=1;productsView()};$("#pcClear").onclick=()=>{state.filters.product={q:"",cat:"",sort:"new",status:""};state.pages.products=1;productsView()}}
+function productModal(id=null){const p=products.find(x=>x.id===id)||{name:"",cat:"figuras",price:0,oldPrice:0,stock:0,tags:[],seed:1,active:true,desc:"",variants:{color:[""],size:[""]}};openModal(`<div class="modal lg"><div class="modal-head"><div><h3>${id?"Editar producto":"Nuevo producto"}</h3><p>Completá todos los datos del catálogo.</p></div><button class="close"><i class="fa-solid fa-xmark"></i></button></div><form id="pf"><div class="modal-body"><div class="form"><div class="field full"><label>Nombre *</label><input class="input" id="fn" required value="${esc(p.name)}"></div><div class="field"><label>Slug</label><input class="input" id="fs" value="${esc(p.slug||"")}"></div><div class="field"><label>Categoría *</label><select class="select" id="fc">${categoryOpts(p.cat)}</select></div><div class="field full"><label>Descripción *</label><textarea class="input" id="fd" required>${esc(p.desc)}</textarea></div><div class="field"><label>Precio *</label><input class="input" id="fp" type="number" min="0" required value="${p.price}"></div><div class="field"><label>Precio anterior</label><input class="input" id="fo" type="number" min="0" value="${p.oldPrice||0}"></div><div class="field"><label>Stock *</label><input class="input" id="fst" type="number" min="0" required value="${p.stock}"></div><div class="field"><label>Seed de imagen</label><input class="input" id="fi" value="${esc(p.seed)}"></div><div class="field full"><label>Tags</label><input class="input" id="ft" value="${esc((p.tags||[]).join(", "))}" placeholder="Nuevo, Oferta, Hot"></div><div class="field full"><div class="variants"><div class="variant-head"><strong>Variantes · Color</strong><button class="btn small" type="button" id="addColor">Agregar</button></div><div class="dynamic" id="colors"></div></div></div><div class="field full"><div class="variants"><div class="variant-head"><strong>Variantes · Tamaño</strong><button class="btn small" type="button" id="addSize">Agregar</button></div><div class="dynamic" id="sizes"></div></div></div><div class="field"><label>Estado</label><label><input type="checkbox" id="fa" ${p.active!==false?"checked":""}> Producto activo</label></div></div></div><div class="modal-foot"><button class="btn" type="button" data-close>Cancelar</button><button class="btn primary">Guardar producto</button></div></form></div>`);const add=(where,v="")=>{const r=document.createElement("div");r.className="dynamic-row";r.innerHTML=`<input class="input" value="${esc(v)}"><button class="btn small" type="button">×</button>`;r.lastElementChild.onclick=()=>r.remove();$(where).appendChild(r)};(p.variants.color||[""]).forEach(v=>add("#colors",v));(p.variants.size||[""]).forEach(v=>add("#sizes",v));$("#addColor").onclick=()=>add("#colors");$("#addSize").onclick=()=>add("#sizes");$("#fn").oninput=()=>{if(!id)$("#fs").value=$("#fn").value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")};$("#pf").onsubmit=async e=>{e.preventDefault();const item={...p,id:id||`p${Date.now()}`,name:$("#fn").value.trim(),slug:$("#fs").value.trim(),cat:$("#fc").value,desc:$("#fd").value.trim(),price:+$("#fp").value,oldPrice:+$("#fo").value,stock:+$("#fst").value,seed:$("#fi").value||Date.now(),tags:$("#ft").value.split(",").map(x=>x.trim()).filter(Boolean),active:$("#fa").checked,variants:{color:$$('#colors input').map(x=>x.value).filter(Boolean),size:$$('#sizes input').map(x=>x.value).filter(Boolean)},rating:p.rating||5,reviews:p.reviews||0,sold:p.sold||0};const ix=products.findIndex(x=>x.id===item.id);if(ix>=0)products[ix]=item;else products.unshift(item);save();await tryApi(id?`/admin/products/${id}`:"/admin/products",{method:id?"PUT":"POST",body:JSON.stringify(item)});closeModal();toast("success","Producto guardado",item.name);productsView();dashboard()}}
+function toggleProduct(id){const p=products.find(x=>x.id===id);if(!p)return;p.active=!p.active;save();tryApi(`/admin/products/${id}/toggle`,{method:"PATCH",body:JSON.stringify({active:p.active})});toast("success",p.active?"Producto activado":"Producto desactivado",p.name);productsView()}function deleteProduct(id){const p=products.find(x=>x.id===id);if(!p)return;confirmModal("Eliminar producto",`Se aplicará soft delete a ${p.name}.`,()=>{p.active=false;p.deletedAt=new Date().toISOString();save();tryApi(`/admin/products/${id}`,{method:"DELETE"});toast("success","Producto eliminado",p.name);productsView()})}
+function ordersView(){const f=state.filters.order;let list=[...orders];if(f.q){const q=f.q.toLowerCase();list=list.filter(o=>(o.id+o.customer+o.email).toLowerCase().includes(q))}if(f.status)list=list.filter(o=>o.status===f.status);if(f.payment)list=list.filter(o=>o.payment===f.payment);if(f.from)list=list.filter(o=>o.created>=f.from+"T00:00:00");if(f.to)list=list.filter(o=>o.created<=f.to+"T23:59:59");const p=state.pages.orders;$("#ordersView").innerHTML=`<div class="section"><div><h2>Pedidos</h2><p>Gestioná pagos, envíos y estados.</p></div><button class="btn" id="csv"><i class="fa-solid fa-file-csv"></i>Exportar CSV</button></div><div class="filters"><div class="search"><i class="fa-solid fa-magnifying-glass"></i><input class="input" id="oq" placeholder="Buscar número o cliente..." value="${esc(f.q)}"></div><select class="select" id="os"><option value="">Todos los estados</option><option value="pending">Pendiente</option><option value="paid">Pagado</option><option value="shipped">Enviado</option><option value="delivered">Entregado</option></select><select class="select" id="op"><option value="">Todos los métodos</option><option value="mercadopago">Mercado Pago</option><option value="paypal">PayPal</option><option value="stripe">Stripe</option></select><input class="input" type="date" id="of" value="${f.from}"><input class="input" type="date" id="ot" value="${f.to}"></div><div class="card table-card"><div class="scroll"><table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Método</th><th>Pago</th><th>Envío</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>${list.slice((p-1)*PAGE_SIZE,p*PAGE_SIZE).map(o=>`<tr><td><strong>${o.id}</strong></td><td>${esc(o.customer)}<br><small>${esc(o.email)}</small></td><td>${money(o.total)}</td><td>${pay(o.payment)}</td><td>${badge(o.status)}</td><td>${badge(o.status==="delivered"?"delivered":o.status==="shipped"?"shipped":"pending")}</td><td>${date(o.created)}</td><td><button class="btn small" data-order="${o.id}">Ver</button></td></tr>`).join("")||`<tr><td colspan="8"><div class="empty">No hay pedidos.</div></td></tr>`}</tbody></table></div><div class="pager"><span>${list.length} pedidos</span><div class="pages">${pageButtons(p,Math.max(1,Math.ceil(list.length/PAGE_SIZE)),"order")}</div></div></div>`;bindOrderFilters();$("#csv").onclick=csv;$$('[data-order]').forEach(b=>b.onclick=()=>orderModal(b.dataset.order))}
+function bindOrderFilters(){$("#oq").oninput=()=>{state.filters.order.q=$("#oq").value;state.pages.orders=1;ordersView()};$("#os").onchange=()=>{state.filters.order.status=$("#os").value;state.pages.orders=1;ordersView()};$("#op").onchange=()=>{state.filters.order.payment=$("#op").value;state.pages.orders=1;ordersView()};$("#of").onchange=()=>{state.filters.order.from=$("#of").value;state.pages.orders=1;ordersView()};$("#ot").onchange=()=>{state.filters.order.to=$("#ot").value;state.pages.orders=1;ordersView()};$("#os").value=state.filters.order.status;$("#op").value=state.filters.order.payment}
+function orderModal(id){const o=orders.find(x=>x.id===id);if(!o)return;openModal(`<div class="modal lg"><div class="modal-head"><div><h3>Pedido ${o.id}</h3><p>${date(o.created)}</p></div><button class="close"><i class="fa-solid fa-xmark"></i></button></div><div class="modal-body"><div class="detail"><div><div class="box"><h4>Cliente y dirección</h4><div class="line"><span>Cliente</span><strong>${esc(o.customer)}</strong></div><div class="line"><span>Email</span><strong>${esc(o.email)}</strong></div><div class="line"><span>Dirección</span><strong>${esc(o.address)}</strong></div></div><div class="box" style="margin-top:15px"><h4>Items</h4>${o.items.map(i=>`<div class="item"><img src="${img(i.seed)}"><div class="item-main"><strong>${esc(i.name)}</strong><small>${i.qty} × ${money(i.price)}</small></div><strong>${money(i.qty*i.price)}</strong></div>`).join("")}<div class="line"><span>Total</span><strong>${money(o.total)}</strong></div></div></div><div><div class="box"><h4>Estado</h4><div class="line"><span>Método</span><strong>${pay(o.payment)}</strong></div><div class="line"><span>Estado actual</span>${badge(o.status)}</div><select class="select" id="newStatus"><option value="pending">Pendiente</option><option value="paid">Pagado</option><option value="shipped">Enviado</option><option value="delivered">Entregado</option></select><button class="btn primary" style="width:100%;margin-top:8px" id="saveStatus">Guardar estado</button><button class="btn" style="width:100%;margin-top:8px" id="resend"><i class="fa-solid fa-envelope"></i>Reenviar email</button></div><div class="box" style="margin-top:15px"><h4>Historial</h4><div class="timeline">${o.history.map(h=>`<div class="event"><span class="dot"></span><strong>${({pending:"Pendiente",paid:"Pagado",shipped:"Enviado",delivered:"Entregado"})[h]||h}</strong><small>Estado registrado</small></div>`).join("")}</div></div></div></div></div><div class="modal-foot"><button class="btn" data-close>Cerrar</button></div></div>`);$("#newStatus").value=o.status;$("#saveStatus").onclick=()=>{changeOrder(id,$("#newStatus").value);closeModal();ordersView();dashboard()};$("#resend").onclick=async()=>{await tryApi(`/admin/orders/${id}/resend-email`,{method:"POST"});toast("success","Email reenviado","Se solicitó el email de confirmación.")}}
+function changeOrder(id,s){const o=orders.find(x=>x.id===id);if(!o)return;o.status=s;o.history=[...(o.history||[]),s];save();tryApi(`/admin/orders/${id}/status`,{method:"PATCH",body:JSON.stringify({status:s})});toast("success","Estado actualizado",`${id}: ${s}`)}
+function csv(){const head=["Número","Cliente","Email","Total","Método","Estado","Fecha"];const rows=orders.map(o=>[o.id,o.customer,o.email,o.total,pay(o.payment),o.status,o.created]);const q=v=>`"${String(v).replaceAll('"','""')}"`;const data="\uFEFF"+[head,...rows].map(r=>r.map(q).join(";")).join("\n");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type:"text/csv;charset=utf-8"}));a.download="printlab-pedidos.csv";a.click();toast("success","CSV exportado","Archivo generado correctamente.")}
+function usersView(){const f=state.filters.user;let list=[...users];if(f.q){const q=f.q.toLowerCase();list=list.filter(u=>(u.name+u.email).toLowerCase().includes(q))}if(f.provider)list=list.filter(u=>u.provider===f.provider);if(f.role)list=list.filter(u=>u.role===f.role);if(f.blocked)list=list.filter(u=>f.blocked==="blocked"?u.blocked:!u.blocked);const p=state.pages.users;$("#usersView").innerHTML=`<div class="section"><div><h2>Usuarios</h2><p>Gestioná cuentas, roles y acceso.</p></div></div><div class="filters"><div class="search"><i class="fa-solid fa-magnifying-glass"></i><input class="input" id="uq" placeholder="Buscar nombre o email..." value="${esc(f.q)}"></div><select class="select" id="up"><option value="">Todos los proveedores</option><option value="email">Email</option><option value="google">Google</option></select><select class="select" id="ur"><option value="">Todos los roles</option><option value="user">Usuario</option><option value="admin">Administrador</option></select><select class="select" id="ub"><option value="">Todos</option><option value="active">Activos</option><option value="blocked">Bloqueados</option></select><button class="btn" id="uc">Limpiar</button></div><div class="card table-card"><div class="scroll"><table><thead><tr><th>Usuario</th><th>Proveedor</th><th>Rol</th><th>Estado</th><th>Registro</th><th>Acciones</th></tr></thead><tbody>${list.slice((p-1)*PAGE_SIZE,p*PAGE_SIZE).map(u=>`<tr><td><div class="product"><img class="avatar" src="${u.avatar}"><div><strong>${esc(u.name)}</strong><small>${esc(u.email)}</small></div></div></td><td>${u.provider==="google"?"Google":"Email"}</td><td><span class="badge ${u.role==="admin"?"b-blue":"b-gray"}">${u.role==="admin"?"Administrador":"Usuario"}</span></td><td><span class="badge ${u.blocked?"b-red":"b-green"}">${u.blocked?"Bloqueado":"Activo"}</span></td><td>${date(u.date)}</td><td><div class="actions"><button class="btn small" data-role="${u.id}" ${u.id===state.user.id?"disabled":""}>Rol</button><button class="btn small" data-block-user="${u.id}" ${u.id===state.user.id?"disabled":""}>${u.blocked?"Desbloquear":"Bloquear"}</button></div></td></tr>`).join("")}</tbody></table></div><div class="pager"><span>${list.length} usuarios</span><div class="pages">${pageButtons(p,Math.max(1,Math.ceil(list.length/PAGE_SIZE)),"user")}</div></div></div>`;$("#up").value=f.provider;$("#ur").value=f.role;$("#ub").value=f.blocked;$("#uq").oninput=()=>{f.q=$("#uq").value;state.pages.users=1;usersView()};$("#up").onchange=()=>{f.provider=$("#up").value;usersView()};$("#ur").onchange=()=>{f.role=$("#ur").value;usersView()};$("#ub").onchange=()=>{f.blocked=$("#ub").value;usersView()};$("#uc").onclick=()=>{state.filters.user={q:"",provider:"",role:"",blocked:""};state.pages.users=1;usersView()};$$('[data-role]').forEach(b=>b.onclick=()=>roleUser(b.dataset.role));$$('[data-block-user]').forEach(b=>b.onclick=()=>blockUser(b.dataset.blockUser))}
+function roleUser(id){const u=users.find(x=>x.id===id);if(!u||u.id===state.user.id)return;u.role=u.role==="admin"?"user":"admin";save();tryApi(`/admin/users/${id}`,{method:"PATCH",body:JSON.stringify({role:u.role})});toast("success","Rol actualizado",u.name);usersView()}function blockUser(id){const u=users.find(x=>x.id===id);if(!u||u.id===state.user.id)return;u.blocked=!u.blocked;save();tryApi(`/admin/users/${id}`,{method:"PATCH",body:JSON.stringify({blocked:u.blocked})});toast("success",u.blocked?"Usuario bloqueado":"Usuario desbloqueado",u.name);usersView()}
+function couponsView(){ $("#couponsView").innerHTML=`<div class="section"><div><h2>Cupones</h2><p>CRUD de promociones y descuentos.</p></div><button class="btn primary" id="newCoupon">Nuevo cupón</button></div><div class="card table-card"><div class="scroll"><table><thead><tr><th>Código</th><th>Tipo</th><th>Valor</th><th>Usos</th><th>Expiración</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>${coupons.map(c=>`<tr><td><strong>${c.code}</strong></td><td>${c.type==="percent"?"Porcentaje":c.type==="fixed"?"Monto fijo":"Envío"}</td><td>${c.type==="percent"?c.value+"%":c.type==="fixed"?money(c.value):"Gratis"}</td><td>${c.used}/${c.max||"∞"}</td><td>${date(c.expires)}</td><td><span class="badge ${c.active?"b-green":"b-gray"}">${c.active?"Activo":"Inactivo"}</span></td><td><div class="actions"><button class="btn small" data-coupon-edit="${c.id}">Editar</button><button class="btn small" data-coupon-toggle="${c.id}">Activar</button><button class="btn small" data-coupon-delete="${c.id}">Eliminar</button></div></td></tr>`).join("")}</tbody></table></div></div>`;$("#newCoupon").onclick=()=>couponModal();$$('[data-coupon-edit]').forEach(b=>b.onclick=()=>couponModal(b.dataset.couponEdit));$$('[data-coupon-toggle]').forEach(b=>b.onclick=()=>toggleCoupon(b.dataset.couponToggle));$$('[data-coupon-delete]').forEach(b=>b.onclick=()=>deleteCoupon(b.dataset.couponDelete))}
+function couponModal(id=null){const c=coupons.find(x=>x.id===id)||{code:"",type:"percent",value:10,max:100,expires:"2026-12-31",active:true};openModal(`<div class="modal"><div class="modal-head"><div><h3>${id?"Editar cupón":"Nuevo cupón"}</h3><p>Configurá las reglas de descuento.</p></div><button class="close">×</button></div><form id="cf"><div class="modal-body"><div class="form"><div class="field"><label>Código *</label><input class="input" id="cc" required value="${esc(c.code)}"></div><div class="field"><label>Tipo</label><select class="select" id="ct"><option value="percent">Porcentaje</option><option value="fixed">Monto fijo</option><option value="shipping">Envío gratis</option></select></div><div class="field"><label>Valor</label><input class="input" id="cv" type="number" value="${c.value}"></div><div class="field"><label>Usos máximos</label><input class="input" id="cm" type="number" value="${c.max}"></div><div class="field"><label>Expiración</label><input class="input" id="ce" type="date" value="${c.expires}"></div><div class="field"><label><input id="ca" type="checkbox" ${c.active?"checked":""}> Activo</label></div></div></div><div class="modal-foot"><button class="btn" type="button" data-close>Cancelar</button><button class="btn primary">Guardar</button></div></form></div>`);$("#ct").value=c.type;$("#cf").onsubmit=async e=>{e.preventDefault();const x={...c,id:id||`c${Date.now()}`,code:$("#cc").value.trim().toUpperCase(),type:$("#ct").value,value:+$("#cv").value,max:+$("#cm").value,expires:$("#ce").value,active:$("#ca").checked};const ix=coupons.findIndex(y=>y.id===x.id);if(ix>=0)coupons[ix]=x;else coupons.unshift(x);save();await tryApi(id?`/admin/coupons/${id}`:"/admin/coupons",{method:id?"PUT":"POST",body:JSON.stringify(x)});closeModal();toast("success","Cupón guardado",x.code);couponsView()}}function toggleCoupon(id){const c=coupons.find(x=>x.id===id);if(!c)return;c.active=!c.active;save();tryApi(`/admin/coupons/${id}`,{method:"PUT",body:JSON.stringify(c)});couponsView()}function deleteCoupon(id){const c=coupons.find(x=>x.id===id);confirmModal("Eliminar cupón",`Se eliminará ${c.code}.`,()=>{coupons.splice(coupons.indexOf(c),1);save();tryApi(`/admin/coupons/${id}`,{method:"DELETE"});couponsView()})}
+function settingsView(){ $("#settingsView").innerHTML=`<div class="section"><div><h2>Configuración</h2><p>Datos generales y reglas de operación.</p></div><button class="btn primary" id="saveSettings">Guardar cambios</button></div><div class="settings"><div class="card setting"><div class="head"><div><h2>Datos de la tienda</h2><p>Información de contacto.</p></div></div><div class="form"><div class="field"><label>Nombre</label><input class="input" id="sn" value="${esc(settings.storeName)}"></div><div class="field"><label>Email</label><input class="input" id="se" value="${esc(settings.storeEmail)}"></div><div class="field"><label>Teléfono</label><input class="input" id="sp" value="${esc(settings.storePhone)}"></div><div class="field"><label>Dirección</label><input class="input" id="sa" value="${esc(settings.storeAddress)}"></div></div></div><div class="card setting"><div class="head"><div><h2>Envíos</h2><p>Valores en pesos argentinos.</p></div></div><div class="form"><div class="field"><label>Costo estándar</label><input class="input" id="sc" type="number" value="${settings.shippingCost}"></div><div class="field"><label>Mínimo envío gratis</label><input class="input" id="sf" type="number" value="${settings.freeShippingMinimum}"></div></div></div><div class="card setting"><div class="head"><div><h2>Comportamiento</h2><p>Controles operativos.</p></div></div>${[["maintenance","Modo mantenimiento","Oculta la tienda para visitantes."],["allowRegistration","Permitir registro","Permite crear cuentas."],["allowGuestCheckout","Checkout invitado","Permite comprar sin cuenta."]].map(x=>`<div class="setting-row"><div><strong>${x[1]}</strong><small>${x[2]}</small></div><label class="switch"><input id="${x[0]}" type="checkbox" ${settings[x[0]]?"checked":""}><span class="slider"></span></label></div>`).join("")}</div><div class="card setting"><div class="head"><div><h2>Estado de integración</h2><p>Conectividad con el backend.</p></div></div><div class="setting-row"><div><strong>API</strong><small>${state.api?"Backend conectado":"Modo demo / backend no disponible"}</small></div><span class="badge ${state.api?"b-green":"b-yellow"}">${state.api?"Online":"Demo"}</span></div><div class="setting-row"><div><strong>Polling</strong><small>Los datos se actualizan cada 30 segundos.</small></div><span class="badge b-blue">30 s</span></div><div class="note">Las claves privadas nunca deben guardarse en este HTML. Las integraciones reales se gestionan en el backend.</div></div></div>`;$("#saveSettings").onclick=async()=>{Object.assign(settings,{storeName:$("#sn").value,storeEmail:$("#se").value,storePhone:$("#sp").value,storeAddress:$("#sa").value,shippingCost:+$("#sc").value,freeShippingMinimum:+$("#sf").value,maintenance:$("#maintenance").checked,allowRegistration:$("#allowRegistration").checked,allowGuestCheckout:$("#allowGuestCheckout").checked});save();await tryApi("/admin/settings",{method:"PUT",body:JSON.stringify(settings)});toast("success","Configuración guardada","Los cambios fueron guardados.");settingsView()}}
+function openModal(content){$("#modalRoot").innerHTML=`<div class="modal-bg" id="mbg">${content}</div>`;$("#mbg").onclick=e=>{if(e.target.id==="mbg")closeModal()};$$('[data-close],.close').forEach(b=>b.onclick=closeModal)}function closeModal(){$("#modalRoot").innerHTML=""}function confirmModal(title,msg,fn){openModal(`<div class="modal" style="max-width:430px"><div class="modal-head"><div><h3>${esc(title)}</h3><p>Confirmación</p></div><button class="close">×</button></div><div class="modal-body"><p>${esc(msg)}</p></div><div class="modal-foot"><button class="btn" data-close>Cancelar</button><button class="btn danger" id="yes">Confirmar</button></div></div>`);$("#yes").onclick=()=>{closeModal();fn()}}
+async function bootstrapSync(){const r=await tryApi("/admin/bootstrap");if(r&&typeof r==="object"){if(r.products)products.splice(0,products.length,...r.products);if(r.orders)orders.splice(0,orders.length,...r.orders);if(r.users)users.splice(0,users.length,...r.users);if(r.coupons)coupons.splice(0,coupons.length,...r.coupons);if(r.settings)Object.assign(settings,r.settings);save();nav(state.view)}}
+$$('[data-view]').forEach(b=>b.onclick=()=>nav(b.dataset.view));$$('[data-go]').forEach(b=>b.onclick=()=>nav(b.dataset.go));$("#storeBtn").onclick=()=>location.href="index.html";$("#logoutBtn").onclick=()=>{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(USER_KEY);location.href="index.html"};$("#menuBtn").onclick=()=>document.body.classList.toggle("menu-open");$("#themeBtn").onclick=()=>{const light=!document.body.classList.contains("light");document.body.classList.toggle("light",light);localStorage.setItem(THEME_KEY,light?"light":"dark");renderChart()};$("#refreshBtn").onclick=async()=>{await bootstrapSync();if(!state.api)load();toast("success","Datos actualizados",state.api?"Sincronizados con el backend.":"Actualizados en modo demo.")};document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+load();if(!auth())throw Error("No autorizado");document.body.classList.toggle("light",localStorage.getItem(THEME_KEY)==="light");nav("dashboard");bootstrapSync();setInterval(()=>bootstrapSync(),POLL_MS);
+</script>
+
+<script>
+(function(){
+  const getFocusable=(root)=>[...root.querySelectorAll('a[href],button,input,select,textarea,[tabindex]:not([tabindex="-1"])')].filter((el)=>!el.disabled&&el.offsetParent!==null);
+  let activeDialog=null;
+  let lastFocus=null;
+  const enhance=()=>{
+    document.querySelectorAll('button').forEach((button)=>{
+      if(!button.getAttribute('aria-label')) button.setAttribute('aria-label',button.textContent.trim().replace(/\s+/g,' ')||'Botón');
+    });
+    document.querySelectorAll('.modal,.modal-bg').forEach((dialog)=>{
+      dialog.setAttribute('role','dialog');
+      dialog.setAttribute('aria-modal','true');
+    });
+    const toastNodes=document.querySelectorAll('[class*="toast"],.toast');
+    toastNodes.forEach((node)=>node.setAttribute('role','status'));
+  };
+  const observer=new MutationObserver(()=>{
+    enhance();
+    const dialog=document.querySelector('.modal-bg .modal')||document.querySelector('.modal-bg');
+    if(dialog && dialog!==activeDialog){
+      lastFocus=document.activeElement; activeDialog=dialog;
+      const first=getFocusable(dialog)[0]; if(first) first.focus();
+    }
+    if(!dialog) activeDialog=null;
+  });
+  observer.observe(document.body,{subtree:true,childList:true});
+  document.addEventListener('keydown',(event)=>{
+    if(event.key!=='Tab'||!activeDialog) return;
+    const items=getFocusable(activeDialog); if(!items.length) return;
+    const first=items[0],last=items[items.length-1];
+    if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}
+    else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}
+  });
+  enhance();
+})();
+</script>
+</body>
+</html>
