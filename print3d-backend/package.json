@@ -23,7 +23,7 @@
     "google-auth-library": "^10.5.0",
     "mercadopago": "^2.11.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
-    "stripe": "^18.5.0",
+    "stripe": "^22.6.2",
     "express-validator": "^7.2.1",
     "morgan": "^1.10.1",
     "cookie-parser": "^1.4.7",
