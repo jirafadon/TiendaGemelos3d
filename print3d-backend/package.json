@@ -20,7 +20,7 @@
     "express-rate-limit": "^8.2.1",
     "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^3.0.2",
-    "google-auth-library": "^10.5.0",
+    "google-auth-library": "^11.1.0",
     "mercadopago": "^2.11.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "stripe": "^18.5.0",
