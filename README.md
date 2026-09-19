@@ -10,7 +10,7 @@ printlab-3d/
 ├── admin.html                 # Panel administrativo
 ├── docs/
 │   └── frontend-backend-integration.md
-└── print3d-backend/
+└── backend/
     ├── package.json
     ├── .env.example
     ├── .gitignore
@@ -25,7 +25,7 @@ printlab-3d/
     └── templates/email/
 ```
 
-> Si `index.html` todavía no está en tu copia local, usá el `index.html` de la Parte 1 antes de conectar los fragmentos de `docs/frontend-backend-integration.md`.
+> Si `frontend/index.html` todavía no está en tu copia local, usá el `frontend/index.html` de la Parte 1 antes de conectar los fragmentos de `docs/frontend-backend-integration.md`.
 
 ## 1. Requisitos
 
@@ -41,7 +41,7 @@ printlab-3d/
 ## 2. Instalar el backend
 
 ```bash
-cd print3d-backend
+cd backend
 npm install
 ```
 
@@ -107,7 +107,7 @@ MONGO_URI=mongodb+srv://USUARIO:CONTRASENA@cluster.mongodb.net/printlab3d?retryW
 5. Agregá los orígenes autorizados, por ejemplo `http://localhost:5500`.
 6. Agregá las URLs de origen de tu frontend de producción.
 7. Copiá el Client ID a `GOOGLE_CLIENT_ID`.
-8. En `index.html`, reemplazá el marcador de `client_id` del fragmento de Google Identity Services.
+8. En `frontend/index.html`, reemplazá el marcador de `client_id` del fragmento de Google Identity Services.
 
 ## 6. Obtener Mercado Pago
 
@@ -149,7 +149,7 @@ https://TU-DOMINIO-NGROK/api/payments/webhook/mercadopago
 
 ## 10. Ejecutar en desarrollo
 
-Desde `print3d-backend/`:
+Desde `backend/`:
 
 ```bash
 npm run dev
@@ -183,10 +183,10 @@ El seed elimina los productos existentes e inserta 20 productos demo. No ejecute
 
 ## 12. Probar el frontend local
 
-Podés servir el directorio raíz con cualquier servidor estático. Una opción rápida con Python:
+Podés servir el directorio `frontend/` con cualquier servidor estático. Una opción rápida con Python:
 
 ```bash
-cd ..
+cd frontend
 python -m http.server 5500
 ```
 
@@ -413,7 +413,7 @@ Incluyen:
 
 Los tests automatizados usan Jest, Supertest y MongoDB Memory Server.
 
-Desde `print3d-backend/`:
+Desde `backend/`:
 
 ```bash
 npm test
@@ -428,9 +428,9 @@ Los tests cubren autenticación, productos, pedidos y checkout. La suite utiliza
 Requisitos:
 
 - Docker Desktop o Docker Engine con Docker Compose.
-- `print3d-backend/.env` configurado.
-- `print3d-backend/package-lock.json` generado a partir de `package.json` antes de construir la imagen, porque el Dockerfile utiliza `npm ci`.
-- El `index.html` de la Parte 1 debe estar en la raíz del proyecto para construir la imagen frontend.
+- `backend/.env` configurado.
+- `backend/package-lock.json` generado a partir de `package.json` antes de construir la imagen, porque el Dockerfile utiliza `npm ci`.
+- El `frontend/index.html` de la Parte 1 debe estar en la raíz del proyecto para construir la imagen frontend.
 
 Desarrollo:
 
@@ -491,7 +491,7 @@ La tienda incluye:
 - `frontend/manifest.json` para instalación como aplicación.
 - `frontend/sw.js` como Service Worker.
 - `frontend/offline.html` como fallback sin conexión.
-- `frontend/index-pwa-snippet.html` con el bloque exacto que debe incorporarse al `index.html` de la Parte 1.
+- `frontend/index-pwa-snippet.html` con el bloque exacto que debe incorporarse al `frontend/index.html` de la Parte 1.
 
 Antes de probar la instalación, el sitio debe servirse por HTTPS en producción o por `localhost` durante desarrollo. Un archivo abierto directamente con `file://` no permite registrar correctamente el Service Worker.
 
@@ -515,7 +515,7 @@ Antes de probar la instalación, el sitio debe servirse por HTTPS en producción
 2. Buscá el icono de instalación en la barra de direcciones o el menú del navegador.
 3. Elegí `Instalar PrintLab 3D`.
 
-### Integración en `index.html`
+### Integración en `frontend/index.html`
 
 Antes de `</body>`:
 
@@ -555,7 +555,7 @@ printlab-3d/
     ├── offline.html
     └── index-pwa-snippet.html
 
-print3d-backend/
+backend/
 ├── jest.config.js
 └── tests/
     ├── setup.js
@@ -566,4 +566,4 @@ print3d-backend/
     └── payments.test.js
 ```
 
-> Importante: el `index.html` de la Parte 1 no estaba presente en el filesystem acumulado al comenzar la Parte 7. No se fabricó una copia distinta. Para que el Dockerfile frontend y la PWA queden operativos, hay que reincorporar ese archivo en la raíz y pegar el snippet PWA.
+> Importante: el `frontend/index.html` de la Parte 1 no estaba presente en el filesystem acumulado al comenzar la Parte 7. No se fabricó una copia distinta. Para que el Dockerfile frontend y la PWA queden operativos, hay que reincorporar ese archivo en la raíz y pegar el snippet PWA.
