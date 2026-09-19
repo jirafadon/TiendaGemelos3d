@@ -2,10 +2,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-COPY print3d-backend/package*.json ./
+COPY backend/package*.json ./
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
-COPY print3d-backend/ ./
+COPY backend/ ./
 
 FROM node:20-alpine AS final
 
