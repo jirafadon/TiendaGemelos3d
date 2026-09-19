@@ -24,7 +24,7 @@ services:
       mongo:
         condition: service_healthy
     env_file:
-      - ./print3d-backend/.env
+      - ./backend/.env
     environment:
       NODE_ENV: production
       MONGO_URI: mongodb://mongo:27017/printlab3d
