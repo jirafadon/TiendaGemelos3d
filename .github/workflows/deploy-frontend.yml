@@ -24,6 +24,7 @@ jobs:
       - name: Deploy to Vercel
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        working-directory: frontend
         run: vercel --prod --yes --token "$VERCEL_TOKEN"
 
       # Alternativa Netlify:
