@@ -1159,8 +1159,8 @@ window.addEventListener('DOMContentLoaded', () => {
 <!-- Línea de mantenimiento del proyecto PrintLab 3D: este archivo es autocontenido y ejecutable. -->
 <script>
 "use strict";
-const API_URL=window.__PRINT3D_API_URL__ || "http://localhost:4000/api";
-// ⚠️ REEMPLAZAR: API_URL debe apuntar al backend real en producción.
+const API_URL="/api";
+// API serverless en el mismo dominio de Vercel.
 const TOKEN_KEY="printlab_token";const USER_KEY="printlab_user";const DATA_KEY="printlab_admin_state";const THEME_KEY="printlab_admin_theme";const PAGE_SIZE=8;const POLL_MS=30000;
 const cats=["figuras","decoración","funcionales","miniaturas","juguetes","repuestos","personalizados"];
 const products=[
