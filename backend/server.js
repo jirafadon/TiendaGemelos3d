@@ -62,7 +62,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.post('/api/admin/reseed/tg3d-reseed-2026-09-20-8f4d9c2a7b1e6d3f', async (req, res, next) => {
+app.get('/api/admin/reseed/tg3d-reseed-2026-09-20-8f4d9c2a7b1e6d3f', async (req, res, next) => {
   try {
     const Product = (await import('./models/Product.js')).default;
     const images = new Map([
