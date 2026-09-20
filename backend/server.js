@@ -65,32 +65,11 @@ app.get('/api/health', (req, res) => {
 app.get('/api/admin/reseed/tg3d-reseed-2026-09-20-8f4d9c2a7b1e6d3f', async (req, res, next) => {
   try {
     const Product = (await import('./models/Product.js')).default;
-    const images = new Map([
-      ['Dragón articulado','https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=800&h=800&fit=crop&q=80'],
-      ['Gato astronauta','https://images.unsplash.com/photo-1532693322450-2cb5c511067d?w=800&h=800&fit=crop&q=80'],
-      ['Calavera geométrica','https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800&h=800&fit=crop&q=80'],
-      ['Maceta hexagonal','https://images.unsplash.com/photo-1610890716171-6b1bb98ffd09?w=800&h=800&fit=crop&q=80'],
-      ['Organizador modular de escritorio','https://images.unsplash.com/photo-1535378917042-10a22c95931a?w=800&h=800&fit=crop&q=80'],
-      ['Soporte para celular','https://images.unsplash.com/photo-1582897291400-5c8b1b4f3f2b?w=800&h=800&fit=crop&q=80'],
-      ['Miniatura guerrero medieval','https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=800&h=800&fit=crop&q=80'],
-      ['Set de barriles medievales','https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800&h=800&fit=crop&q=80'],
-      ['Coche de carrera miniatura','https://images.unsplash.com/photo-1544816155-12df9643f363?w=800&h=800&fit=crop&q=80'],
-      ['Rompecabezas articulado','https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=800&h=800&fit=crop&q=80'],
-      ['Perilla de reemplazo universal','https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=800&h=800&fit=crop&q=80'],
-      ['Clip para cable automotor','https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&h=800&fit=crop&q=80'],
-      ['Llavero con nombre','https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&h=800&fit=crop&q=80'],
-      ['Cartel personalizado para puerta','https://images.unsplash.com/photo-1509248961158-e54f6934749c?w=800&h=800&fit=crop&q=80'],
-      ['Jarrón espiral','https://images.unsplash.com/photo-1608889175123-8ee362201f81?w=800&h=800&fit=crop&q=80'],
-      ['Soporte para auriculares','https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=800&h=800&fit=crop&q=80'],
-      ['Dragón bebé coleccionable','https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=800&h=800&fit=crop&q=80'],
-      ['Auto de juguete retro','https://images.unsplash.com/photo-1552820728-8b83bb6b773f?w=800&h=800&fit=crop&q=80'],
-      ['Adaptador de montaje para cámara','https://images.unsplash.com/photo-1625842268584-8f3296236761?w=800&h=800&fit=crop&q=80'],
-      ['Figura personalizada estilo mascota','https://images.unsplash.com/photo-1631545806609-35d8db5a0a68?w=800&h=800&fit=crop&q=80']
-    ]);
-    const docs = await Product.find({}).select('name').lean();
-    let updated = 0;
-    for (const doc of docs) { const image = images.get(doc.name); if (image) { await Product.updateOne({_id: doc._id}, {$set:{image}}); updated++; } }
-    res.json({success:true,updated,total:docs.length});
+    const { products } = await import('./utils/seed.js');
+    await Product.deleteMany({});
+    const documents = products.map(product => ({ ...product, slug: product.name.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), salesCount: 0, active: true, createdBy: null }));
+    await Product.insertMany(documents);
+    res.json({ success: true, updated: documents.length, total: documents.length });
   } catch (error) { next(error); }
 });
 
