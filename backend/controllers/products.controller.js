@@ -9,6 +9,9 @@ function normalizeVariants(variants = {}) {
 }
 
 function productPayload(body, userId) {
+  const images = Array.isArray(body.images) ? body.images.map(String).filter(Boolean).slice(0, 6) : [];
+  const image = String(body.image || images[0] || '');
+
   return {
     name: String(body.name || '').trim(),
     slug: createSlug(body.slug || body.name),
@@ -20,6 +23,9 @@ function productPayload(body, userId) {
     rating: Number(body.rating || 0),
     reviews: Number(body.reviews || 0),
     seed: String(body.seed || ''),
+    images,
+    image: image || images[0] || '',
+
     tags: Array.isArray(body.tags) ? body.tags.map(String) : [],
     variants: normalizeVariants(body.variants),
     active: body.active !== false,
