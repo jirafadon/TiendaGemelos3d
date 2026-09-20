@@ -56,6 +56,7 @@ const productSchema = new mongoose.Schema(
       min: 0,
       default: 0
     },
+    image: { type: String, default: '' },
     seed: {
       type: String,
       default: ''
