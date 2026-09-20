@@ -57,7 +57,7 @@ app.use(rateLimit({
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    message: 'PrintLab 3D API funcionando.',
+    message: 'Tienda Gemelos 3D API funcionando.',
     environment: process.env.NODE_ENV || 'development'
   });
 });
@@ -75,7 +75,7 @@ app.use(errorHandler);
 export async function startServer() {
   await connectDB();
   return app.listen(port, () => {
-    console.log(`PrintLab 3D backend escuchando en http://localhost:${port}`);
+    console.log(`Tienda Gemelos 3D backend escuchando en http://localhost:${port}`);
   });
 }
 
