@@ -322,7 +322,9 @@
 
     function initGoogle() {
       if (!window.google?.accounts?.id) return;
-      window.google.accounts.id.initialize({ client_id: '⚠️ REEMPLAZAR: TU_GOOGLE_CLIENT_ID.apps.googleusercontent.com', callback: handleGoogleResponse });
+      const clientId = window.TG3D_GOOGLE_CLIENT_ID || '';
+      if (!clientId) { const node=$('#googleBtn'); if(node) node.innerHTML='<div class="error">Google Login requiere configurar GOOGLE_CLIENT_ID.</div>'; return; }
+      window.google.accounts.id.initialize({ client_id: clientId, callback: handleGoogleResponse });
       window.google.accounts.id.renderButton($('#googleBtn'), { theme: 'outline', size: 'large', width: 300, text: 'continue_with' });
     }
 
