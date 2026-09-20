@@ -275,18 +275,18 @@
       const sort = $('#sortFilter').value;
       let list = products.filter((p) => p.active !== false);
       if (category) list = list.filter((p) => p.category === category);
-      if (query) list = list.filter((p) => \`${p.name} ${p.description} ${p.category}\`.toLowerCase().includes(query));
+      if (query) list = list.filter((p) => `${p.name} ${p.description} ${p.category}`.toLowerCase().includes(query));
       if (sort === 'priceAsc') list.sort((a,b) => a.price - b.price);
       if (sort === 'priceDesc') list.sort((a,b) => b.price - a.price);
-      $('#catalogStatus').textContent = \`${list.length} producto${list.length === 1 ? '' : 's'} disponible${list.length === 1 ? '' : 's'}.\`;
+      $('#catalogStatus').textContent = `${list.length} producto${list.length === 1 ? '' : 's'} disponible${list.length === 1 ? '' : 's'}.`;
       $('#products').innerHTML = list.map((p) => {
         const badge = (p.tags||[]).includes('hot') ? 'Hot' : ((p.tags||[]).includes('oferta') ? 'Oferta' : ((p.tags||[]).includes('nuevo') ? 'Nuevo' : ''));
         const oldPrice = Number(p.oldPrice || 0);
         const currentPrice = Number(p.price || 0);
         const discount = oldPrice > currentPrice ? Math.round((1 - currentPrice / oldPrice) * 100) : 0;
         const freeShipping = currentPrice > 50000;
-        const image = p.images?.[0] || p.image || \`https://picsum.photos/seed/${encodeURIComponent(p.seed || p._id || "gemelos3d")}/800/800\`;
-        return \`<article class="card"><div class="product-media"><img class="product-image" src="${escapeHtml(image)}" alt="${escapeHtml(p.name)}">${badge ? \`<span class="product-badge">${badge}</span>\` : ''}<button class="wishlist" type="button" aria-label="Agregar ${escapeHtml(p.name)} a favoritos">♡</button></div><div class="product-body"><h3>${escapeHtml(p.name)}</h3><div class="product-rating">★ ${Number(p.rating || 0).toFixed(1)} <span>(${Number(p.reviews || 0)})</span></div><div class="price-row"><div class="price">${money(currentPrice)}</div>${oldPrice > currentPrice ? \`<del class="old-price">${money(oldPrice)}</del><span class="discount">-${discount}% OFF</span>\` : ''}</div>${freeShipping ? '<div class="free-shipping">Envío gratis</div>' : ''}<div class="product-actions"><button class="btn primary" type="button" data-add="${p._id}" aria-label="Agregar ${escapeHtml(p.name)} al carrito">Agregar al carrito</button><button class="btn detail-btn" type="button" data-detail="${p._id}">Ver</button></div></div></article>\`;
+        const image = p.images?.[0] || p.image || `https://picsum.photos/seed/${encodeURIComponent(p.seed || p._id || "gemelos3d")}/800/800`;
+        return `<article class="card"><div class="product-media"><img class="product-image" src="${escapeHtml(image)}" alt="${escapeHtml(p.name)}">${badge ? `<span class="product-badge">${badge}</span>` : ''}<button class="wishlist" type="button" aria-label="Agregar ${escapeHtml(p.name)} a favoritos">♡</button></div><div class="product-body"><h3>${escapeHtml(p.name)}</h3><div class="product-rating">★ ${Number(p.rating || 0).toFixed(1)} <span>(${Number(p.reviews || 0)})</span></div><div class="price-row"><div class="price">${money(currentPrice)}</div>${oldPrice > currentPrice ? `<del class="old-price">${money(oldPrice)}</del><span class="discount">-${discount}% OFF</span>` : ''}</div>${freeShipping ? '<div class="free-shipping">Envío gratis</div>' : ''}<div class="product-actions"><button class="btn primary" type="button" data-add="${p._id}" aria-label="Agregar ${escapeHtml(p.name)} al carrito">Agregar al carrito</button><button class="btn detail-btn" type="button" data-detail="${p._id}">Ver</button></div></div></article>`;
       }).join('') || '<div class="card" style="padding:20px">No encontramos productos con esos filtros.</div>';
       document.querySelectorAll('[data-add]').forEach((button) => button.addEventListener('click', () => addToCart(button.dataset.add)));
       document.querySelectorAll('.product-image').forEach((image) => image.addEventListener('error', () => { image.src = '/images/hero.svg'; }, { once: true }));
