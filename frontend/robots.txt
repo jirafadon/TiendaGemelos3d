@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /api/
-Sitemap: https://tudominio.com/sitemap.xml
+Sitemap: https://tiendagemelos3d.vercel.app/sitemap.xml
