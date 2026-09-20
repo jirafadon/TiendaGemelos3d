@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { body } from 'express-validator';
+import { validate } from '../middleware/validate.js';
 import { protect, notBlocked } from '../middleware/auth.js';
 import {
   checkout,
@@ -9,7 +11,7 @@ import {
 
 const router = Router();
 
-router.post('/checkout', protect, notBlocked, checkout);
+router.post('/checkout',[body('items').isArray({min:1,max:50}),body('customer').isObject(),body('customer.name').trim().isLength({min:2,max:120}),body('customer.email').isEmail(),body('customer.address').trim().isLength({min:3,max:240}),body('customer.city').trim().isLength({min:2,max:100}),body('customer.zip').trim().isLength({min:3,max:20}),body('payMethod').optional().isIn(['mercadopago','mp','paypal','stripe','transfer','bank_transfer']),body('couponCode').optional({nullable:true}).trim().isLength({max:40})],validate,protect,notBlocked,checkout);
 router.post('/webhook/mercadopago', mpWebhook);
 router.post('/webhook/paypal/capture', protect, notBlocked, paypalCapture);
 router.post('/webhook/stripe', stripeWebhook);
