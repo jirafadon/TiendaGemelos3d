@@ -35,7 +35,7 @@
         <select class="select" id="pc"><option value="all">Todas las categorías</option>${categoryOpts(productListState.category==='all'?'':productListState.category)}</select>
         <select class="select" id="ps"><option value="new">Más nuevos</option><option value="popular">Más populares</option><option value="priceAsc">Precio menor</option><option value="priceDesc">Precio mayor</option><option value="rating">Mejor rating</option></select>
         <select class="select" id="pa"><option value="all">Todos los estados</option><option value="active">Activos</option><option value="inactive">Inactivos</option></select>
-        <button class="btn" id="pcClear">Limpiar</button>
+        <button class="btn" id="pcClear">Limpiar</button><select class="select" id="productLimitSelect" style="max-width:170px"><option value="10">10 por página</option><option value="20" selected>20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select>
       </div>
       <div class="card table-card">
         <div class="scroll"><table><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr></thead>
@@ -51,6 +51,8 @@
     d.querySelector('#ps').onchange=()=>{state.filters.product.sort=d.querySelector('#ps').value;productListState.page=1;loadProducts()};
     d.querySelector('#pa').onchange=()=>{productListState.status=d.querySelector('#pa').value||'all';state.filters.product.status=productListState.status==='all'?'':productListState.status;productListState.page=1;loadProducts()};
     d.querySelector('#pcClear').onclick=()=>{state.filters.product={q:'',cat:'',sort:'new',status:''};productListState.search='';productListState.category='all';productListState.status='all';productListState.page=1;loadProducts()};
+    d.querySelector('#productLimitSelect').value=String(productListState.limit);
+    d.querySelector('#productLimitSelect').onchange=(e)=>changeProductLimit(e.target.value);
     d.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>productModal(b.dataset.edit));
     d.querySelectorAll('[data-toggle]').forEach(b=>b.onclick=()=>toggleProduct(b.dataset.toggle));
     d.querySelectorAll('[data-delete]').forEach(b=>b.onclick=()=>deleteProduct(b.dataset.delete));
@@ -107,9 +109,19 @@
       status:productListState.status
     });
     try{
+      const useClientSort=state.filters.product.sort&&state.filters.product.sort!=='new';
+      if(useClientSort){params.set('page','1');params.set('limit','200');}
       const data=await api('/admin/products?'+params.toString());
-      const incoming=Array.isArray(data?.products)?data.products.map(normalizeProduct):[];
-      productListState.total=Number(data?.total)||0;
+      let incoming=Array.isArray(data?.products)?data.products.map(normalizeProduct):[];
+      if(useClientSort){
+        const sorts={popular:(a,b)=>(Number(b.sold)||0)-(Number(a.sold)||0),priceAsc:(a,b)=>(Number(a.price)||0)-(Number(b.price)||0),priceDesc:(a,b)=>(Number(b.price)||0)-(Number(a.price)||0),rating:(a,b)=>(Number(b.rating)||0)-(Number(a.rating)||0)};
+        incoming.sort(sorts[state.filters.product.sort]||(()=>0));
+        productListState.total=incoming.length;
+        const start=(productListState.page-1)*productListState.limit;
+        incoming=incoming.slice(start,start+productListState.limit);
+      }else{
+        productListState.total=Number(data?.total)||0;
+      }
       products.splice(0,products.length,...incoming);
       renderProductTable(incoming);
     }catch(err){
