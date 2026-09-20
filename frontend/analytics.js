@@ -157,15 +157,14 @@
 
   const originalNav=w.nav;
   w.productsView=()=>loadProducts();
-
-  if(typeof originalNav==='function') w.nav=originalNav;
+  if(typeof originalNav==='function') w.nav=(v)=>{originalNav(v);if(v==='products')loadProducts();};
 
   const originalProductModal=w.productModal;
   const originalToggleProduct=w.toggleProduct;
   void originalProductModal; void originalToggleProduct;
 
   const run=()=>{
-    if(typeof state==='undefined'||!d.querySelector('#productsView')) return;
+    if(typeof state==='undefined'||!d.querySelector('#productsView')||state.view!=='products') return;
     productListState.search=state.filters.product.q||'';
     productListState.category=state.filters.product.cat||'all';
     productListState.status=state.filters.product.status||'all';
