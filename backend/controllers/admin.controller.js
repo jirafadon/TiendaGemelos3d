@@ -70,7 +70,7 @@ export async function getBootstrap(req, res, next) {
         active: coupon.active
       })),
       settings: {
-        storeName: settings?.storeName || 'PrintLab 3D',
+        storeName: settings?.storeName || 'Tienda Gemelos 3D',
         storeEmail: settings?.storeEmail || process.env.ADMIN_EMAIL || '',
         storePhone: settings?.storePhone || '',
         storeAddress: settings?.storeAddress || '',
