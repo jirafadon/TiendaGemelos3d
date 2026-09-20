@@ -98,6 +98,49 @@
     @media(max-width:900px){.footer-grid{grid-template-columns:1fr 1fr}.hero-grid{grid-template-columns:1fr}.categories{grid-template-columns:repeat(2,1fr)}.products{grid-template-columns:repeat(2,1fr)}.footer-grid{grid-template-columns:1fr 1fr}.search{order:5;flex-basis:100%}.nav{flex-wrap:wrap;padding:12px 0}}
     @media(max-width:560px){.hero-visual{min-height:340px}.hero-card-1{top:10%;left:5%}.hero-card-2{bottom:10%;right:5%}.footer-grid{grid-template-columns:1fr}.container{width:min(100% - 22px,1180px)}.hero{padding-top:42px}.categories,.products,.footer-grid{grid-template-columns:1fr}.hero h1{font-size:48px}.section-head{align-items:start;flex-direction:column}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-orb,.hero-cube svg,.card,.btn{animation:none;transition:none}}
+  
+    /* Home compacta estilo marketplace */
+    body{background:var(--bg)}
+    .catalog-header{padding:24px 0 16px}
+    .catalog-header .container{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .catalog-header h1{font:700 1.8rem/1.2 'Space Grotesk',system-ui,sans-serif;margin:0 0 4px;letter-spacing:-.5px}
+    .catalog-header p{color:var(--text-2);font-size:.95rem;margin:0}
+    .catalog-offer{white-space:nowrap;border:1px solid rgba(0,224,184,.35);background:rgba(0,224,184,.08);color:var(--accent);border-radius:999px;padding:8px 12px;font-size:.82rem;font-weight:700}
+    .category-bar{padding:0;border-bottom:1px solid var(--line);border-top:1px solid var(--line);background:var(--bg-2)}
+    .category-links{display:flex;align-items:center;gap:4px;overflow-x:auto;scrollbar-width:none}
+    .category-links::-webkit-scrollbar{display:none}
+    .category-links a{display:block;padding:14px 12px;color:var(--text-2);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;font-size:14px;font-weight:600;transition:color .18s,border-color .18s}
+    .category-links a:hover,.category-links a.active{color:var(--text);border-color:var(--accent)}
+    .category-bar + #catalogo{padding-top:28px}
+    .catalog-status-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .catalog-status-row h2{font:700 1.25rem 'Space Grotesk',system-ui,sans-serif;margin:0}
+    .catalog-status-row p{margin:0;color:var(--text-2);font-size:13px}
+    .filters{display:none}
+    .products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .card{border:1px solid var(--border);border-radius:var(--radius);background:var(--surface);overflow:hidden;transition:box-shadow .18s,border-color .18s}
+    .card:hover{transform:none;border-color:var(--border-2);box-shadow:0 8px 24px rgba(0,0,0,.22)}
+    .product-media{position:relative;overflow:hidden;background:#fff}
+    .product-image{aspect-ratio:1;background:#fff;display:block;width:100%;object-fit:cover;transition:none}
+    .card:hover .product-image{transform:none}
+    .product-body{padding:14px}
+    .product-body h3{margin:0;font-size:15px;line-height:1.35;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+    .product-rating{font-size:12px;color:#f5c451;margin:4px 0 7px}
+    .product-rating span{color:var(--text-3)}
+    .price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+    .price{font-size:24px;line-height:1.15;font-weight:800;margin:5px 0 0;color:var(--accent)}
+    .old-price{font-size:12px;color:var(--text-3)}
+    .discount{font-size:12px;color:#35c978;font-weight:700}
+    .free-shipping{color:#35c978;font-size:13px;font-weight:700;margin-top:3px}
+    .product-actions{display:flex;gap:8px;margin-top:12px}
+    .product-actions .btn{flex:1;width:100%}
+    .detail-btn{display:none}
+    .btn.primary{background:var(--accent);color:#04140f;border-color:transparent;box-shadow:none}
+    .btn.primary:hover{background:#19efc7;box-shadow:0 4px 12px rgba(0,224,184,.2)}
+    @media(max-width:1400px){.products{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:899px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:599px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.catalog-header{padding:18px 0 12px}.catalog-header h1{font-size:1.45rem}.catalog-offer{display:none}.catalog-status-row{display:block}.catalog-status-row p{margin-top:4px}.product-body{padding:11px}.product-body h3{font-size:14px}.price{font-size:20px}.product-actions{margin-top:10px}.product-actions .btn{font-size:12px;padding:10px 8px}}
+    @media(prefers-reduced-motion:reduce){.card,.btn{transition:none}}
+
   </style>
 <script src="/analytics.js" defer></script><script src="/consent-banner.js" defer></script><link rel="manifest" href="/manifest.json"></head>
 <body>
@@ -117,40 +160,39 @@
   </header>
 
   <main id="contenido">
-    <section class="hero">
-      <div class="container hero-grid">
+    <section class="catalog-header">
+      <div class="container">
         <div>
-          <span class="hero-badge"><i class="fa-solid fa-bolt"></i> Impresión 3D de alta calidad</span>
-          <h1>Objetos que parecen imposibles.</h1>
-          <p>Figuras, decoración, accesorios y regalos impresos en 3D. Diseñamos, imprimimos y preparamos cada pedido con atención al detalle.</p><div class="stats"><div><strong>+2.400</strong><span>pedidos</span></div><div><strong>4.9★</strong><span>valoración</span></div><div><strong>24–72h</strong><span>fabricación</span></div></div>
-          <div class="hero-actions">
-            <a class="btn primary" href="#catalogo">Ver catálogo</a>
-            <a class="btn" href="#catalogo">Diseño personalizado</a>
-          </div>
+          <h1>Productos de impresión 3D</h1>
+          <p>Envíos a todo el país · Fabricación bajo demanda</p>
         </div>
-        <div class="hero-visual" aria-label="Impresión 3D premium"><div class="hero-orb hero-orb-1"></div><div class="hero-orb hero-orb-2"></div><div class="hero-orb hero-orb-3"></div><div class="hero-cube" aria-hidden="true"><svg viewBox="0 0 240 240" fill="none"><defs><linearGradient id="cubeGrad" x1="35" y1="35" x2="205" y2="205"><stop stop-color="#00e0b8"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><path d="M120 25 205 73v94l-85 48-85-48V73l85-48Z" fill="rgba(255,255,255,.025)" stroke="url(#cubeGrad)" stroke-width="4"/><path d="M120 25v94m0 0 85-46m-85 46L35 73m85 46v96" stroke="url(#cubeGrad)" stroke-width="3" opacity=".72"/><path d="m120 70 44 25v50l-44 25-44-25V95l44-25Z" fill="rgba(0,224,184,.08)" stroke="rgba(255,255,255,.22)" stroke-width="2"/><circle cx="120" cy="120" r="8" fill="url(#cubeGrad)"/></svg></div><div class="hero-card hero-card-1"><i class="fa-solid fa-cube"></i><span>Impresión 3D premium</span></div><div class="hero-card hero-card-2"><i class="fa-solid fa-star"></i><span>4.9 valoración</span></div></div>
+        <span class="catalog-offer">🔥 Ofertas de la semana</span>
       </div>
     </section>
 
-    <section id="categorias">
+    <section class="category-bar" aria-label="Categorías de productos">
       <div class="container">
-        <div class="section-head"><div><h2>Categorías</h2><p>Encontrá rápido lo que buscás.</p></div></div>
-        <div class="categories"><a class="category" href="#catalogo" data-category="figuras"><i class="fa-solid fa-cube"></i><strong>Figuras</strong><span>Personajes y piezas decorativas</span></a>
-<a class="category" href="#catalogo" data-category="decoracion"><i class="fa-solid fa-wand-magic-sparkles"></i><strong>Decoración</strong><span>Objetos para tu espacio</span></a>
-<a class="category" href="#catalogo" data-category="funcionales"><i class="fa-solid fa-gear"></i><strong>Funcionales</strong><span>Organización y accesorios útiles</span></a>
-<a class="category" href="#catalogo" data-category="miniaturas"><i class="fa-solid fa-chess-knight"></i><strong>Miniaturas</strong><span>Coleccionables y escenografía</span></a>
-<a class="category" href="#catalogo" data-category="juguetes"><i class="fa-solid fa-gamepad"></i><strong>Juguetes</strong><span>Modelos y piezas para jugar</span></a>
-<a class="category" href="#catalogo" data-category="repuestos"><i class="fa-solid fa-screwdriver-wrench"></i><strong>Repuestos</strong><span>Piezas prácticas y adaptadores</span></a>
-<a class="category" href="#catalogo" data-category="personalizados"><i class="fa-solid fa-wand-magic-sparkles"></i><strong>Personalizados</strong><span>Nombres, mascotas y regalos</span></a></div>
+        <nav class="category-links">
+          <a href="#catalogo" data-category="">Todos</a>
+          <a href="#catalogo" data-category="figuras">Figuras</a>
+          <a href="#catalogo" data-category="decoracion">Decoración</a>
+          <a href="#catalogo" data-category="funcionales">Funcionales</a>
+          <a href="#catalogo" data-category="miniaturas">Miniaturas</a>
+          <a href="#catalogo" data-category="juguetes">Juguetes</a>
+          <a href="#catalogo" data-category="repuestos">Repuestos</a>
+          <a href="#catalogo" data-category="personalizados">Personalizados</a>
+        </nav>
       </div>
     </section>
+
     <section id="catalogo">
       <div class="container">
-        <div class="section-head"><div><h2>Catálogo</h2><p id="catalogStatus" class="live" aria-live="polite">Cargando productos...</p></div></div>
-        <div class="filters">
-          <label class="sr-only" for="categoryFilter">Categoría</label>
-          <select id="categoryFilter" class="field"><option value="">Todas las categorías</option><option value="figuras">Figuras</option><option value="decoracion">Decoración</option><option value="funcionales">Hogar y escritorio</option><option value="miniaturas">Miniaturas</option><option value="juguetes">Juguetes</option><option value="repuestos">Repuestos</option><option value="personalizados">Personalizados</option></select>
-          <label class="sr-only" for="sortFilter">Ordenar productos</label>
+        <div class="catalog-status-row">
+          <h2>Todos los productos</h2>
+          <p id="catalogStatus" class="live" aria-live="polite">Cargando productos...</p>
+        </div>
+        <div class="filters" aria-hidden="true">
+          <select id="categoryFilter" class="field"><option value="">Todas las categorías</option><option value="figuras">Figuras</option><option value="decoracion">Decoración</option><option value="funcionales">Funcionales</option><option value="miniaturas">Miniaturas</option><option value="juguetes">Juguetes</option><option value="repuestos">Repuestos</option><option value="personalizados">Personalizados</option></select>
           <select id="sortFilter" class="field"><option value="new">Más recientes</option><option value="priceAsc">Precio menor</option><option value="priceDesc">Precio mayor</option></select>
         </div>
         <div id="products" class="products" aria-live="polite"></div>
@@ -158,7 +200,7 @@
     </section>
   </main>
 
-  <footer id="contacto"><div class="container footer-grid"><div><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><defs><linearGradient id="logoGradFooter" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#00e0b8"/><stop offset="100%" stop-color="#7c5cff"/></linearGradient></defs><path d="M20 4 34 12v16l-14 8L6 28V12L20 4Z" stroke="url(#logoGradFooter)" stroke-width="2" fill="none"/><path d="M20 4v16m0 0 14-8M20 20 6 12m14 8v16" stroke="url(#logoGradFooter)" stroke-width="1.5" opacity=".65"/><circle cx="20" cy="20" r="3" fill="url(#logoGradFooter)"/></svg></span><strong class="brand-name">Tienda Gemelos 3D</strong></div><div class="footer-description">Impresión 3D, diseño y objetos para regalar, decorar y usar. Creamos piezas con detalle y personalidad.</div><div class="socials" aria-label="Redes sociales"><span class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></span><span class="social-icon" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></span><span class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></span></div></div><div><div class="footer-title">Tienda</div><div class="footer-links"><a href="#catalogo">Catálogo</a><a href="#categorias">Categorías</a><a href="#catalogo">Novedades</a></div></div><div><div class="footer-title">Ayuda</div><div class="footer-links"><a href="#contacto">Contacto</a><a href="#catalogo">Preguntas frecuentes</a><a href="#catalogo">Envíos</a></div></div><div><div class="footer-title">Novedades</div><p style="margin:0 0 12px">Recibí lanzamientos y novedades de Tienda Gemelos 3D.</p><form id="newsletterForm" class="newsletter"><label class="sr-only" for="newsletterEmail">Tu email</label><input id="newsletterEmail" type="email" required placeholder="tu@email.com" autocomplete="email"><button class="btn primary" type="submit">Suscribirme</button></form></div><div class="footer-bottom"><span>© <span id="currentYear"></span> Tienda Gemelos 3D · Todos los derechos reservados</span><span>Hecho con impresión 3D y creatividad.</span></div></div></footer>
+  <footer id="contacto"><div class="container footer-grid"><div><div class="footer-brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><defs><linearGradient id="logoGradFooter" x1="0" y1="0" x2="40" y2="40"><stop offset="0%" stop-color="#00e0b8"/><stop offset="100%" stop-color="#7c5cff"/></linearGradient></defs><path d="M20 4 34 12v16l-14 8L6 28V12L20 4Z" stroke="url(#logoGradFooter)" stroke-width="2" fill="none"/><path d="M20 4v16m0 0 14-8M20 20 6 12m14 8v16" stroke="url(#logoGradFooter)" stroke-width="1.5" opacity=".65"/><circle cx="20" cy="20" r="3" fill="url(#logoGradFooter)"/></svg></span><strong class="brand-name">Tienda Gemelos 3D</strong></div><div class="footer-description">Impresión 3D, diseño y objetos para regalar, decorar y usar. Creamos piezas con detalle y personalidad.</div><div class="socials" aria-label="Redes sociales"><span class="social-icon" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></span><span class="social-icon" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></span><span class="social-icon" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></span></div></div><div><div class="footer-title">Tienda</div><div class="footer-links"><a href="#catalogo">Catálogo</a><a href="#catalogo">Categorías</a><a href="#catalogo">Novedades</a></div></div><div><div class="footer-title">Ayuda</div><div class="footer-links"><a href="#contacto">Contacto</a><a href="#catalogo">Preguntas frecuentes</a><a href="#catalogo">Envíos</a></div></div><div><div class="footer-title">Novedades</div><p style="margin:0 0 12px">Recibí lanzamientos y novedades de Tienda Gemelos 3D.</p><form id="newsletterForm" class="newsletter"><label class="sr-only" for="newsletterEmail">Tu email</label><input id="newsletterEmail" type="email" required placeholder="tu@email.com" autocomplete="email"><button class="btn primary" type="submit">Suscribirme</button></form></div><div class="footer-bottom"><span>© <span id="currentYear"></span> Tienda Gemelos 3D · Todos los derechos reservados</span><span>Hecho con impresión 3D y creatividad.</span></div></div></footer>
 
   <div id="modalRoot" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true"></div>
   <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
@@ -233,13 +275,23 @@
       const sort = $('#sortFilter').value;
       let list = products.filter((p) => p.active !== false);
       if (category) list = list.filter((p) => p.category === category);
-      if (query) list = list.filter((p) => `${p.name} ${p.description} ${p.category}`.toLowerCase().includes(query));
+      if (query) list = list.filter((p) => \`${p.name} ${p.description} ${p.category}\`.toLowerCase().includes(query));
       if (sort === 'priceAsc') list.sort((a,b) => a.price - b.price);
       if (sort === 'priceDesc') list.sort((a,b) => b.price - a.price);
-      $('#catalogStatus').textContent = `${list.length} producto${list.length === 1 ? '' : 's'} disponible${list.length === 1 ? '' : 's'}.`;
-      $('#products').innerHTML = list.map((p) => { const badge=(p.tags||[]).includes('hot')?'Hot':((p.tags||[]).includes('oferta')?'Oferta':((p.tags||[]).includes('nuevo')?'Nuevo':'')); return `<article class="card"><div class="product-media"><img class="product-image" src="${escapeHtml(p.image || `https://picsum.photos/seed/${encodeURIComponent(p.seed || p._id || "gemelos3d")}/800/800`)}" alt="${escapeHtml(p.name)}">${badge?`<span class="product-badge">${badge}</span>`:''}<button class="wishlist" type="button" aria-label="Agregar ${escapeHtml(p.name)} a favoritos">♡</button></div><div class="product-body"><div class="product-meta">${escapeHtml(p.category || 'Producto')} · ★ ${Number(p.rating||0).toFixed(1)} (${Number(p.reviews||0)})</div><h3>${escapeHtml(p.name)}</h3><div class="product-meta">${escapeHtml(p.description || 'Producto impreso en 3D.')}</div><div class="price">${money(p.price)} ${p.oldPrice?`<del class="product-meta">${money(p.oldPrice)}</del>`:''}</div><div class="product-actions"><button class="btn" type="button" data-detail="${p._id}">Ver</button><button class="btn primary" type="button" data-add="${p._id}" aria-label="Agregar ${escapeHtml(p.name)} al carrito">Agregar al carrito</button></div></div></article>`}).join('') || '<div class="card" style="padding:20px">No encontramos productos con esos filtros.</div>';
-      document.querySelectorAll('[data-add]').forEach((button) => button.addEventListener('click', () => addToCart(button.dataset.add))); document.querySelectorAll('.product-image').forEach((image)=>image.addEventListener('error',()=>{image.src='/images/hero.svg';},{once:true}));
+      $('#catalogStatus').textContent = \`${list.length} producto${list.length === 1 ? '' : 's'} disponible${list.length === 1 ? '' : 's'}.\`;
+      $('#products').innerHTML = list.map((p) => {
+        const badge = (p.tags||[]).includes('hot') ? 'Hot' : ((p.tags||[]).includes('oferta') ? 'Oferta' : ((p.tags||[]).includes('nuevo') ? 'Nuevo' : ''));
+        const oldPrice = Number(p.oldPrice || 0);
+        const currentPrice = Number(p.price || 0);
+        const discount = oldPrice > currentPrice ? Math.round((1 - currentPrice / oldPrice) * 100) : 0;
+        const freeShipping = currentPrice > 50000;
+        const image = p.images?.[0] || p.image || \`https://picsum.photos/seed/${encodeURIComponent(p.seed || p._id || "gemelos3d")}/800/800\`;
+        return \`<article class="card"><div class="product-media"><img class="product-image" src="${escapeHtml(image)}" alt="${escapeHtml(p.name)}">${badge ? \`<span class="product-badge">${badge}</span>\` : ''}<button class="wishlist" type="button" aria-label="Agregar ${escapeHtml(p.name)} a favoritos">♡</button></div><div class="product-body"><h3>${escapeHtml(p.name)}</h3><div class="product-rating">★ ${Number(p.rating || 0).toFixed(1)} <span>(${Number(p.reviews || 0)})</span></div><div class="price-row"><div class="price">${money(currentPrice)}</div>${oldPrice > currentPrice ? \`<del class="old-price">${money(oldPrice)}</del><span class="discount">-${discount}% OFF</span>\` : ''}</div>${freeShipping ? '<div class="free-shipping">Envío gratis</div>' : ''}<div class="product-actions"><button class="btn primary" type="button" data-add="${p._id}" aria-label="Agregar ${escapeHtml(p.name)} al carrito">Agregar al carrito</button><button class="btn detail-btn" type="button" data-detail="${p._id}">Ver</button></div></div></article>\`;
+      }).join('') || '<div class="card" style="padding:20px">No encontramos productos con esos filtros.</div>';
+      document.querySelectorAll('[data-add]').forEach((button) => button.addEventListener('click', () => addToCart(button.dataset.add)));
+      document.querySelectorAll('.product-image').forEach((image) => image.addEventListener('error', () => { image.src = '/images/hero.svg'; }, { once: true }));
       document.querySelectorAll('[data-detail]').forEach((button) => button.addEventListener('click', () => showProduct(button.dataset.detail)));
+      document.querySelectorAll('[data-category]').forEach((node) => node.classList.toggle('active', node.dataset.category === category));
     }
 
     async function loadProducts() {
