@@ -1,11 +1,11 @@
-# PrintLab 3D — Proyecto completo
+# Tienda Gemelos 3D — Proyecto completo
 
 Tienda online de productos impresos en 3D con frontend vanilla, panel de administración y backend Node.js + Express + MongoDB.
 
 ## Estructura
 
 ```text
-printlab-3d/
+tienda-gemelos-3d/
 ├── index.html                 # Frontend de la tienda
 ├── admin.html                 # Panel administrativo
 ├── docs/
@@ -67,7 +67,7 @@ NODE_ENV=development
 FRONTEND_URL=http://localhost:5500
 ADMIN_URL=http://localhost:5500/admin.html
 BACKEND_URL=http://localhost:4000
-MONGO_URI=mongodb://127.0.0.1:27017/printlab3d
+MONGO_URI=mongodb://127.0.0.1:27017/tiendagemelos3d
 JWT_SECRET=CAMBIAR_POR_UN_SECRETO_LARGO_Y_ALEATORIO
 JWT_EXPIRES_IN=7d
 GOOGLE_CLIENT_ID=TU_CLIENT_ID.apps.googleusercontent.com
@@ -79,7 +79,7 @@ PAYPAL_ENV=sandbox
 STRIPE_SECRET_KEY=sk_test_xxx
 STRIPE_WEBHOOK_SECRET=whsec_xxx
 RESEND_API_KEY=re_xxx
-RESEND_FROM_EMAIL=PrintLab 3D <no-reply@tu-dominio.com>
+RESEND_FROM_EMAIL=Tienda Gemelos 3D <no-reply@tu-dominio.com>
 ADMIN_EMAIL=admin@tu-dominio.com
 ```
 
@@ -95,7 +95,7 @@ ADMIN_EMAIL=admin@tu-dominio.com
 Ejemplo:
 
 ```env
-MONGO_URI=mongodb+srv://USUARIO:CONTRASENA@cluster.mongodb.net/printlab3d?retryWrites=true&w=majority
+MONGO_URI=mongodb+srv://USUARIO:CONTRASENA@cluster.mongodb.net/tiendagemelos3d?retryWrites=true&w=majority
 ```
 
 ## 5. Obtener Google OAuth
@@ -513,7 +513,7 @@ Antes de probar la instalación, el sitio debe servirse por HTTPS en producción
 
 1. Abrí la tienda con Chrome o Edge.
 2. Buscá el icono de instalación en la barra de direcciones o el menú del navegador.
-3. Elegí `Instalar PrintLab 3D`.
+3. Elegí `Instalar Tienda Gemelos 3D`.
 
 ### Integración en `frontend/index.html`
 
@@ -536,7 +536,7 @@ Antes de `</body>`:
 ## 14. Estructura añadida en la Parte 7
 
 ```text
-printlab-3d/
+tienda-gemelos-3d/
 ├── .dockerignore
 ├── Dockerfile
 ├── Dockerfile.frontend
