@@ -87,4 +87,8 @@ async function seed() {
   }
 }
 
-seed();
+export { products, seed };
+
+if (process.argv[1] && new URL(`file://${process.argv[1]}`).href === import.meta.url) {
+  await seed();
+}
