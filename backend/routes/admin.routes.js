@@ -96,7 +96,7 @@ router.get('/orders', listOrders);
 router.get('/orders/export', exportOrders);
 router.get('/orders/:id', getAdminOrder);
 router.patch('/orders/:id/status', updateOrderStatus);
-router.post('/orders/:id/resend-email', resendOrderEmail);
+router.post('/orders/:id/resend-email',[param('id').isMongoId()],validate,resendOrderEmail);
 
 router.get('/users', listUsers);
 router.patch('/users/:id', updateUser);
