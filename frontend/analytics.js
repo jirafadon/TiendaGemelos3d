@@ -10,7 +10,7 @@
     total:0,
     search:'',
     category:'all',
-    status:'all'
+    status:'active'
   };
 
   const normalizeProduct=(p)=>({
@@ -34,7 +34,7 @@
         <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input class="input" id="pq" placeholder="Buscar producto..." value="${esc(productListState.search)}"></div>
         <select class="select" id="pc"><option value="all">Todas las categorías</option>${categoryOpts(productListState.category==='all'?'':productListState.category)}</select>
         <select class="select" id="ps"><option value="new">Más nuevos</option><option value="popular">Más populares</option><option value="priceAsc">Precio menor</option><option value="priceDesc">Precio mayor</option><option value="rating">Mejor rating</option></select>
-        <select class="select" id="pa"><option value="all">Todos los estados</option><option value="active">Activos</option><option value="inactive">Inactivos</option></select>
+        <select class="select" id="pa"><option value="active">Solo activos</option><option value="inactive">Solo inactivos</option><option value="all">Todos</option></select>
         <button class="btn" id="pcClear">Limpiar</button><select class="select" id="productLimitSelect" style="max-width:170px"><option value="10">10 por página</option><option value="20" selected>20 por página</option><option value="50">50 por página</option><option value="100">100 por página</option></select>
       </div>
       <div class="card table-card">
@@ -50,7 +50,7 @@
     d.querySelector('#pc').onchange=()=>{productListState.category=d.querySelector('#pc').value||'all';state.filters.product.cat=productListState.category==='all'?'':productListState.category;productListState.page=1;loadProducts()};
     d.querySelector('#ps').onchange=()=>{state.filters.product.sort=d.querySelector('#ps').value;productListState.page=1;loadProducts()};
     d.querySelector('#pa').onchange=()=>{productListState.status=d.querySelector('#pa').value||'all';state.filters.product.status=productListState.status==='all'?'':productListState.status;productListState.page=1;loadProducts()};
-    d.querySelector('#pcClear').onclick=()=>{state.filters.product={q:'',cat:'',sort:'new',status:''};productListState.search='';productListState.category='all';productListState.status='all';productListState.page=1;loadProducts()};
+    d.querySelector('#pcClear').onclick=()=>{state.filters.product={q:'',cat:'',sort:'new',status:'active'};productListState.search='';productListState.category='all';productListState.status='active';productListState.page=1;loadProducts()};
     d.querySelector('#productLimitSelect').value=String(productListState.limit);
     d.querySelector('#productLimitSelect').onchange=(e)=>changeProductLimit(e.target.value);
     d.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>productModal(b.dataset.edit));
@@ -161,13 +161,19 @@
 
   const originalProductModal=w.productModal;
   const originalToggleProduct=w.toggleProduct;
-  void originalProductModal; void originalToggleProduct;
+  void originalProductModal;
+  if(typeof originalToggleProduct==='function'){
+    w.toggleProduct=async(id)=>{
+      await originalToggleProduct(id);
+      await loadProducts();
+    };
+  }
 
   const run=()=>{
     if(typeof state==='undefined'||!d.querySelector('#productsView')||state.view!=='products') return;
     productListState.search=state.filters.product.q||'';
     productListState.category=state.filters.product.cat||'all';
-    productListState.status=state.filters.product.status||'all';
+    productListState.status=state.filters.product.status||'active';
     loadProducts();
   };
 
