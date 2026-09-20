@@ -339,7 +339,7 @@
     $('#wishlistBtn')?.addEventListener('click',()=>toast('Lista de deseos','Guardá tus productos favoritos próximamente.'));
     $('#categoryFilter').onchange=renderProducts; $('#sortFilter').onchange=renderProducts; $('#searchInput').oninput=renderProducts;
     document.querySelectorAll('[data-category]').forEach((node)=>node.addEventListener('click',()=>{ $('#categoryFilter').value=node.dataset.category; renderProducts(); }));
-    updateCartCount(); loadProducts();
+    updateCartCount(); loadProducts(); if(sessionStorage.getItem('tg3d_admin_denied')){sessionStorage.removeItem('tg3d_admin_denied');setTimeout(()=>toast('Acceso denegado'),150);}
     if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
   </script>
 </body>
