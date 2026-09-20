@@ -1,4 +1,7 @@
 import { Router } from 'express';
+import multer from 'multer';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { cloudinary } from '../config/cloudinary.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 import {
   getBootstrap,
@@ -29,6 +32,7 @@ import {
 } from '../controllers/admin.controller.js';
 
 const router = Router();
+const upload = multer({ storage: new CloudinaryStorage({ cloudinary, params: { folder: 'tiendagemelos3d/products', resource_type: 'image', allowed_formats: ['jpg','jpeg','png','webp','gif'] } }), limits: { fileSize: 8 * 1024 * 1024 } });
 router.use(protect, adminOnly);
 
 router.get('/bootstrap', getBootstrap);
@@ -37,6 +41,11 @@ router.get('/dashboard/sales-chart', getSalesChart);
 router.get('/dashboard/top-products', getTopProducts);
 router.get('/dashboard/recent-orders', getRecentOrders);
 router.get('/dashboard/recent-users', getRecentUsers);
+
+router.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file?.path) return res.status(400).json({ success: false, message: 'No se recibió una imagen válida.' });
+  res.json({ success: true, url: req.file.path });
+});
 
 router.get('/products', listProducts);
 router.post('/products', createAdminProduct);
