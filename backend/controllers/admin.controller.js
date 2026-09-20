@@ -33,6 +33,7 @@ export async function getBootstrap(req, res, next) {
         tags: product.tags || [],
         seed: product.seed || '',
         image: product.image || '',
+        images: (product.images?.length ? product.images : (product.image ? [product.image] : [])).slice(0, 6),
         active: product.active,
         sold: product.salesCount || 0,
         desc: product.description,
@@ -225,12 +226,15 @@ export async function listProducts(req, res, next) {
 
 export async function createAdminProduct(req, res, next) {
   try {
+    const images = Array.isArray(req.body.images) ? req.body.images.map(String).filter(Boolean).slice(0, 6) : [];
     const payload = {
       ...req.body,
       category: req.body.category || req.body.cat,
       description: req.body.description || req.body.desc,
       slug: createSlug(req.body.slug || req.body.name),
-      createdBy: req.user._id
+      createdBy: req.user._id,
+      images,
+      image: String(req.body.image || images[0] || '')
     };
     delete payload.cat;
     delete payload.desc;
@@ -244,11 +248,14 @@ export async function createAdminProduct(req, res, next) {
 
 export async function updateAdminProduct(req, res, next) {
   try {
+    const images = Array.isArray(req.body.images) ? req.body.images.map(String).filter(Boolean).slice(0, 6) : [];
     const payload = {
       ...req.body,
       category: req.body.category || req.body.cat,
       description: req.body.description || req.body.desc,
-      slug: createSlug(req.body.slug || req.body.name)
+      slug: createSlug(req.body.slug || req.body.name),
+      images,
+      image: String(req.body.image || images[0] || '')
     };
     delete payload.cat;
     delete payload.desc;
