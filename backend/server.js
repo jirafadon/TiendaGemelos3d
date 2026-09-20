@@ -23,8 +23,7 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
 
 const allowedOrigins = [
   process.env.FRONTEND_URL,
-  process.env.ADMIN_URL,
-  'http://localhost:3000',
+    'http://localhost:3000',
   'http://localhost:5173',
   'http://localhost:5500'
 ].filter(Boolean);
