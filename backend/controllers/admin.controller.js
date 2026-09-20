@@ -20,7 +20,6 @@ async function ensureDefaultCoupons() {
 
 export async function getBootstrap(req, res, next) {
   try {
-    await ensureDefaultCoupons();
     await Product.updateMany(
       { image: { $exists: true, $ne: '' }, $or: [{ images: { $exists: false } }, { images: { $size: 0 } }] },
       [{ $set: { images: ['$image'] } }]
