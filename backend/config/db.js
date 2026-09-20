@@ -1,10 +1,20 @@
 import mongoose from 'mongoose';
 
-let connectionPromise = null;
+const cache = globalThis.mongooseCache || {
+  connection: null,
+  promise: null
+};
+
+globalThis.mongooseCache = cache;
 
 export async function connectDB() {
-  if (mongoose.connection.readyState === 1) return mongoose.connection;
-  if (connectionPromise) return connectionPromise;
+  if (cache.connection?.connection?.readyState === 1) {
+    return cache.connection;
+  }
+
+  if (cache.promise) {
+    return cache.promise;
+  }
 
   const mongoUri = process.env.MONGO_URI;
   if (!mongoUri) {
@@ -12,16 +22,19 @@ export async function connectDB() {
   }
 
   mongoose.set('strictQuery', true);
-  connectionPromise = mongoose.connect(mongoUri)
-    .then(connection => {
+
+  cache.promise = mongoose.connect(mongoUri)
+    .then((connection) => {
+      cache.connection = connection;
       console.log(`MongoDB conectado: ${connection.connection.host}/${connection.connection.name}`);
       return connection;
     })
-    .catch(error => {
-      connectionPromise = null;
+    .catch((error) => {
+      cache.promise = null;
+      cache.connection = null;
       console.error('Error al conectar con MongoDB:', error.message);
       throw error;
     });
 
-  return connectionPromise;
+  return cache.promise;
 }
