@@ -20,6 +20,10 @@ async function ensureDefaultCoupons() {
 
 export async function getBootstrap(req, res, next) {
   try {
+    await Product.updateMany(
+      { image: { $exists: true, $ne: '' }, $or: [{ images: { $exists: false } }, { images: { $size: 0 } }] },
+      [{ $set: { images: ['$image'] } }]
+    );
     const [products, orders, users, coupons, settings] = await Promise.all([
       Product.find().sort({ createdAt: -1 }).limit(200),
       Order.find().sort({ createdAt: -1 }).limit(200).populate('user', 'name email'),
