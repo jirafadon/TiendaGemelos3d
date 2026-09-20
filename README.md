@@ -567,3 +567,17 @@ backend/
 ```
 
 > Importante: el `frontend/index.html` de la Parte 1 no estaba presente en el filesystem acumulado al comenzar la Parte 7. No se fabricó una copia distinta. Para que el Dockerfile frontend y la PWA queden operativos, hay que reincorporar ese archivo en la raíz y pegar el snippet PWA.
+
+## Cómo usar el panel admin
+
+1. Ir a https://tiendagemelos3d.vercel.app/admin.html.
+2. Iniciar sesión con el email y contraseña del administrador.
+3. Ver el dashboard con sus KPIs.
+4. Ir a **Productos** → **Nuevo producto** o **Editar** un producto existente.
+5. Arrastrar una imagen al recuadro o elegir un archivo; la imagen se sube automáticamente a Cloudinary.
+6. Completar los campos y pulsar **Guardar**.
+7. El producto queda disponible en la tienda pública cuando está activo.
+8. Para eliminarlo, usar el botón de papelera y confirmar; se realiza un soft delete.
+9. Para activar/desactivar, usar el botón de estado de la tabla.
+
+Las imágenes se almacenan en Cloudinary bajo la carpeta `tiendagemelos3d/products`. El endpoint de carga requiere JWT y rol `admin`.
