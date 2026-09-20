@@ -18,13 +18,20 @@ function cleanCustomer(customer = {}) {
   };
 }
 
+const DEFAULT_COUPONS = {
+  PRINT10: { code: 'PRINT10', type: 'percent', value: 10, active: true, minPurchase: 0, maxUses: null, usedCount: 0, expiresAt: null },
+  ENVIOGRATIS: { code: 'ENVIOGRATIS', type: 'shipping', value: 0, active: true, minPurchase: 0, maxUses: null, usedCount: 0, expiresAt: null }
+};
+
 async function resolveCoupon(code, subtotal) {
   if (!code) return null;
 
-  const coupon = await Coupon.findOne({
+  const normalizedCode = String(code).trim().toUpperCase();
+  const storedCoupon = await Coupon.findOne({
     code: String(code).trim().toUpperCase(),
     active: true
   });
+  const coupon = storedCoupon || DEFAULT_COUPONS[normalizedCode];
 
   if (!coupon) return null;
   if (coupon.expiresAt && coupon.expiresAt <= new Date()) return null;
