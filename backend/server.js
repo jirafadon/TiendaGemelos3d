@@ -62,16 +62,6 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-app.get('/api/admin/reseed/tg3d-reseed-2026-09-20-8f4d9c2a7b1e6d3f', async (req, res, next) => {
-  try {
-    const Product = (await import('./models/Product.js')).default;
-    const { products } = await import('./utils/seed.js');
-    await Product.deleteMany({});
-    const documents = products.map(product => ({ ...product, slug: product.name.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''), salesCount: 0, active: true, createdBy: null }));
-    await Product.insertMany(documents);
-    res.json({ success: true, updated: documents.length, total: documents.length });
-  } catch (error) { next(error); }
-});
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
