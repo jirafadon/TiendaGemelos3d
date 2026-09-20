@@ -30,7 +30,7 @@
     "cookie-parser": "^1.4.7",
     "resend": "^6.0.0",
     "slugify": "^1.6.6",
-    "cloudinary": "^2.8.0",
+    "cloudinary": "^1.41.3",
     "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0"
   },
