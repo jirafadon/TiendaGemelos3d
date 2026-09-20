@@ -32,6 +32,7 @@ export async function getBootstrap(req, res, next) {
         stock: product.stock,
         tags: product.tags || [],
         seed: product.seed || '',
+        image: product.image || '',
         active: product.active,
         sold: product.salesCount || 0,
         desc: product.description,
