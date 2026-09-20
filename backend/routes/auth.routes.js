@@ -17,8 +17,7 @@ const loginRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardH
 
 const router = Router();
 
-router.post('/google',[body('credential').trim().isLength({min:20})],validate,googleLogin);
-
+router.post('/google', googleLogin);
 router.post(
   '/register',
   [
