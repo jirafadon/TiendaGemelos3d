@@ -7,6 +7,7 @@ import Coupon from '../models/Coupon.js';
 import Settings from '../models/Settings.js';
 import createSlug from '../utils/slugify.js';
 import { sendOrderConfirmation, sendOrderShipped } from '../services/email.service.js';
+import { stripHtml } from '../utils/sanitize.js';
 
 
 export async function getBootstrap(req, res, next) {
@@ -230,7 +231,7 @@ export async function createAdminProduct(req, res, next) {
     const payload = {
       ...req.body,
       category: req.body.category || req.body.cat,
-      description: req.body.description || req.body.desc,
+      description: stripHtml(req.body.description || req.body.desc),
       slug: createSlug(req.body.slug || req.body.name),
       createdBy: req.user._id,
       images,
