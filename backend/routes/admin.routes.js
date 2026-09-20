@@ -32,7 +32,17 @@ import {
 } from '../controllers/admin.controller.js';
 
 const router = Router();
-const upload = multer({ storage: new CloudinaryStorage({ cloudinary, params: { folder: 'tiendagemelos3d/products', resource_type: 'image', allowed_formats: ['jpg','jpeg','png','webp','gif'] } }), limits: { fileSize: 8 * 1024 * 1024 } });
+const upload = multer({
+  storage: new CloudinaryStorage({
+    cloudinary,
+    params: {
+      folder: 'tiendagemelos3d/products',
+      resource_type: 'image',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif']
+    }
+  }),
+  limits: { fileSize: 8 * 1024 * 1024, files: 6 }
+});
 router.use(protect, adminOnly);
 
 router.get('/bootstrap', getBootstrap);
@@ -42,9 +52,13 @@ router.get('/dashboard/top-products', getTopProducts);
 router.get('/dashboard/recent-orders', getRecentOrders);
 router.get('/dashboard/recent-users', getRecentUsers);
 
-router.post('/upload', upload.single('image'), (req, res) => {
-  if (!req.file?.path) return res.status(400).json({ success: false, message: 'No se recibió una imagen válida.' });
-  res.json({ success: true, url: req.file.path });
+router.post('/upload', upload.array('images', 6), (req, res) => {
+  const files = Array.isArray(req.files) ? req.files : [];
+  if (!files.length) return res.status(400).json({ success: false, message: 'No se recibió ninguna imagen válida.' });
+  res.json({
+    success: true,
+    urls: files.map((file) => file.path).filter(Boolean).slice(0, 6)
+  });
 });
 
 router.get('/products', listProducts);
