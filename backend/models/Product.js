@@ -56,6 +56,14 @@ const productSchema = new mongoose.Schema(
       min: 0,
       default: 0
     },
+    images: {
+      type: [String],
+      default: [],
+      validate: {
+        validator: (arr) => arr.length <= 6,
+        message: 'Máximo 6 imágenes por producto'
+      }
+    },
     image: { type: String, default: '' },
     seed: {
       type: String,
@@ -96,6 +104,19 @@ const productSchema = new mongoose.Schema(
     versionKey: false
   }
 );
+
+productSchema.pre('save', function(next) {
+  if (this.image && (!this.images || this.images.length === 0)) {
+    this.images = [this.image];
+  }
+  if (this.images && this.images.length > 0 && !this.image) {
+    this.image = this.images[0];
+  }
+  if (Array.isArray(this.images) && this.images.length > 6) {
+    return next(new Error('Máximo 6 imágenes por producto'));
+  }
+  next();
+});
 
 productSchema.index({ category: 1, active: 1 });
 productSchema.index({ name: 'text', description: 'text', tags: 'text' });
