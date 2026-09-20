@@ -11,6 +11,9 @@ import {
 } from '../controllers/auth.controller.js';
 import { protect } from '../middleware/auth.js';
 import { validate } from '../middleware/validate.js';
+import rateLimit from 'express-rate-limit';
+
+const loginRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: 'draft-8', legacyHeaders: false, message: { success: false, message: 'Demasiados intentos de inicio de sesión. Intentá nuevamente en 15 minutos.' } });
 
 const router = Router();
 
@@ -29,6 +32,7 @@ router.post(
 
 router.post(
   '/login',
+  loginRateLimit,
   [
     body('email').isEmail().withMessage('Email inválido.'),
     body('password').notEmpty().withMessage('La contraseña es obligatoria.')
