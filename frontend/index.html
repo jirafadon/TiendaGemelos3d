@@ -769,7 +769,7 @@
           $('#cashDone').onclick = () => { cart=[];persistCart();closeModal();toast('Pedido ' + (data.orderNumber || '') + ' recibido.'); };
           return;
         }
-        if (data.payMethod === 'transfer' || data.payment?.method === 'transfer')
+        if (data.payMethod === 'transfer' || data.payment?.method === 'transfer'){
           const bank = data.bankDetails || {};
           $('#checkoutForm').innerHTML = '<div class="checkout-note">Tu pedido <strong>' + esc(data.orderNumber || '') + '</strong> quedó pendiente. Realizá la transferencia y avisá cuando esté hecha.</div>' +
             '<div class="bank-details"><strong>Datos bancarios</strong>' +
