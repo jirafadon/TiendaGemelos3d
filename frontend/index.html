@@ -138,6 +138,24 @@
     .modal-backdrop{z-index:220;display:none;align-items:center;justify-content:center;padding:20px}
     .modal-backdrop.open{display:flex}
     .modal{background:#fff;width:min(850px,100%);max-height:90vh;overflow:auto;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+    .modal.auth-modal{width:min(440px,100%);border-radius:16px}
+    .modal.auth-modal .modal-head{padding:32px 32px 0;border-bottom:0}
+    .modal.auth-modal .modal-head h2{font:800 24px/1.2 Poppins;margin:0}
+    .modal.auth-modal .modal-body{padding:12px 32px 32px}
+    .auth-subtitle{color:var(--text-2);font-size:14px;margin:0 0 24px}
+    .auth-form{display:flex;flex-direction:column;width:100%}
+    .auth-field{display:flex;flex-direction:column;width:100%;margin:0 0 16px}
+    .auth-field label{font-weight:600;font-size:14px;margin:0 0 8px}
+    .auth-field input{width:100%;padding:12px;border:1px solid #e5e5e5;border-radius:8px;font-size:14px;outline:0}
+    .auth-field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(143,216,46,.14)}
+    .auth-form .btn{width:100%;padding:14px;border-radius:8px;font-weight:700;margin-top:0}
+    .auth-form .btn + .btn{margin-top:10px}
+    .auth-divider{display:flex;align-items:center;gap:10px;color:var(--text-2);font-size:12px;margin:20px 0}
+    .auth-divider::before,.auth-divider::after{content:'';height:1px;background:var(--border);flex:1}
+    .google-wrap{display:flex;justify-content:center;width:100%;min-height:44px}
+    .auth-link{text-align:center;margin:18px 0 0;font-size:13px}
+    .auth-link button{border:0;background:none;color:var(--accent-dark);font-weight:700;padding:0}
+    .auth-error{color:var(--danger);min-height:20px;font-size:13px;margin:0 0 8px}
     .modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
     .modal-head h2{font:800 22px Poppins;margin:0}
     .modal-body{padding:20px}
@@ -414,7 +432,8 @@
       persistCart();
     }
 
-    function openModal(title,body,footer) {
+    function openModal(title,body,footer,modalClass='') {
+      $('#modal').className = 'modal' + (modalClass ? ' ' + modalClass : '');
       $('#modal').innerHTML = '<div class="modal-head"><h2 id="modalTitle">' + esc(title) + '</h2><button class="close" type="button" id="closeModal" aria-label="Cerrar">×</button></div><div class="modal-body">' + body + '</div>' + (footer || '');
       $('#modalBackdrop').classList.add('open');
       document.body.classList.add('no-scroll');
@@ -504,9 +523,19 @@
     }
 
     function showLogin() {
-      const body = '<div class="form-grid"><p>Ingresá a tu cuenta para continuar con tu compra.</p><label>Email<input id="loginEmail" type="email" autocomplete="email"></label><label>Contraseña<input id="loginPassword" type="password" autocomplete="current-password"></label><div id="loginError" style="color:var(--danger);min-height:20px"></div><button class="btn btn-primary" type="button" id="loginSubmit">Ingresar</button><button class="btn" type="button" id="registerBtn">Crear cuenta</button><div id="googleBtn"></div></div>';
-      openModal('Mi cuenta',body);
-      $('#loginSubmit').onclick = async () => {
+      const body = '<form class="auth-form" id="loginForm">' +
+        '<p class="auth-subtitle">Ingresá a tu cuenta para continuar.</p>' +
+        '<div class="auth-field"><label for="loginEmail">Email</label><input id="loginEmail" type="email" autocomplete="email" required></div>' +
+        '<div class="auth-field"><label for="loginPassword">Contraseña</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>' +
+        '<div id="loginError" class="auth-error"></div>' +
+        '<button class="btn btn-primary" type="submit" id="loginSubmit">Ingresar</button>' +
+        '<button class="btn" style="border-color:var(--accent);color:var(--accent-dark)" type="button" id="registerBtn">Crear cuenta</button>' +
+        '<div class="auth-divider">o continuar con</div>' +
+        '<div id="googleBtn" class="google-wrap"></div>' +
+        '</form>';
+      openModal('Mi cuenta',body,undefined,'auth-modal');
+      $('#loginForm').onsubmit = async (event) => {
+        event.preventDefault();
         try {
           const data = await api('/auth/login',{method:'POST',body:JSON.stringify({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value})});
           localStorage.setItem(TOKEN_KEY,data.token);
@@ -520,9 +549,17 @@
     }
 
     function showRegister() {
-      const body = '<div class="form-grid"><label>Nombre<input id="registerName" type="text" autocomplete="name"></label><label>Email<input id="registerEmail" type="email" autocomplete="email"></label><label>Contraseña<input id="registerPassword" type="password" minlength="8" autocomplete="new-password"></label><div id="registerError" style="color:var(--danger);min-height:20px"></div><button class="btn btn-primary" type="button" id="registerSubmit">Crear cuenta</button></div>';
-      openModal('Crear cuenta',body);
-      $('#registerSubmit').onclick = async () => {
+      const body = '<form class="auth-form" id="registerForm">' +
+        '<div class="auth-field"><label for="registerName">Nombre</label><input id="registerName" type="text" autocomplete="name" required></div>' +
+        '<div class="auth-field"><label for="registerEmail">Email</label><input id="registerEmail" type="email" autocomplete="email" required></div>' +
+        '<div class="auth-field"><label for="registerPassword">Contraseña</label><input id="registerPassword" type="password" minlength="8" autocomplete="new-password" required></div>' +
+        '<div id="registerError" class="auth-error"></div>' +
+        '<button class="btn btn-primary" type="submit" id="registerSubmit">Crear cuenta</button>' +
+        '<p class="auth-link">¿Ya tenés cuenta? <button type="button" id="loginBtn">Iniciar sesión</button></p>' +
+        '</form>';
+      openModal('Crear cuenta',body,undefined,'auth-modal');
+      $('#registerForm').onsubmit = async (event) => {
+        event.preventDefault();
         try {
           const data = await api('/auth/register',{method:'POST',body:JSON.stringify({name:$('#registerName').value.trim(),email:$('#registerEmail').value.trim(),password:$('#registerPassword').value})});
           localStorage.setItem(TOKEN_KEY,data.token);
@@ -531,6 +568,7 @@
           toast('Cuenta creada correctamente.');
         } catch (error) { $('#registerError').textContent = error.message; }
       };
+      $('#loginBtn').onclick = showLogin;
     }
 
     function initGoogle() {
