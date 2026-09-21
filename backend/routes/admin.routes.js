@@ -72,22 +72,22 @@ router.post('/upload', upload.array('images', 6), (req, res) => {
 router.get('/products', listProducts);
 router.post('/products',[
   body('name').trim().isLength({min:2,max:160}),
-  body('category').optional().trim().isLength({min:2,max:60}),
-  body('cat').optional().trim().isLength({min:2,max:60}),
+  body('category').trim().isLength({min:2,max:60}),
+  body('description').optional({ checkFalsy: true }).isString().isLength({max:5000}),
   body('price').isFloat({min:0}),
   body('stock').optional().isInt({min:0}),
   body('images').optional().isArray({max:6}),
-  body('image').optional().isURL({protocols:['http','https'],require_protocol:true})
+  body('image').optional({ checkFalsy: true }).isURL({protocols:['http','https'],require_protocol:true})
 ],validate,createAdminProduct);
 router.put('/products/:id',[
   param('id').isMongoId(),
   body('name').trim().isLength({min:2,max:160}),
-  body('category').optional().trim().isLength({min:2,max:60}),
-  body('cat').optional().trim().isLength({min:2,max:60}),
+  body('category').trim().isLength({min:2,max:60}),
+  body('description').optional({ checkFalsy: true }).isString().isLength({max:5000}),
   body('price').isFloat({min:0}),
   body('stock').optional().isInt({min:0}),
   body('images').optional().isArray({max:6}),
-  body('image').optional().isURL({protocols:['http','https'],require_protocol:true})
+  body('image').optional({ checkFalsy: true }).isURL({protocols:['http','https'],require_protocol:true})
 ],validate,updateAdminProduct);
 router.delete('/products/:id', deleteAdminProduct);
 router.patch('/products/:id/toggle', toggleAdminProduct);
@@ -108,6 +108,6 @@ router.put('/coupons/:id',[param('id').isMongoId(),body('code').optional().trim(
 router.delete('/coupons/:id', deleteCoupon);
 
 router.get('/settings', getSettings);
-router.put('/settings',[body('storeName').optional().trim().isLength({max:120}),body('storeEmail').optional().isEmail(),body('shippingCost').optional().isFloat({min:0}),body('freeShippingMinimum').optional().isFloat({min:0})],validate,updateSettings);
+router.put('/settings',[body('storeName').optional().trim().isLength({max:120}),body('storeEmail').optional().isEmail(),body('shippingCost').optional().isFloat({min:0}),body('freeShippingMin').optional().isFloat({min:0})],validate,updateSettings);
 
 export default router;
