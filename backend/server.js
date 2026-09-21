@@ -14,6 +14,7 @@ import paymentRoutes from './routes/payments.routes.js';
 import adminRoutes from './routes/admin.routes.js';
 import emailRoutes from './routes/emails.routes.js';
 import couponsRoutes from './routes/coupons.routes.js';
+import settingsRoutes from './routes/settings.routes.js';
 
 export const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -70,6 +71,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/coupons', couponsRoutes);
+app.use('/api/settings', settingsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
