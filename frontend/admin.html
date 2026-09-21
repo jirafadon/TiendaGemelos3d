@@ -20,7 +20,15 @@
 @media(max-width:1050px){.stats{grid-template-columns:repeat(2,1fr)}.grid,.settings{grid-template-columns:1fr}.filters{grid-template-columns:1fr 1fr}.filters .search{grid-column:1/-1}}
 @media(max-width:780px){.sidebar{transform:translateX(-100%);transition:.2s}.menu-open .sidebar{transform:translateX(0)}.main{margin-left:0}.mobile{display:inline-block}.content{padding:16px 11px}.top{padding:0 11px}}
 @media(max-width:580px){.appearance-grid{grid-template-columns:1fr}.stats,.form-grid,.filters{grid-template-columns:1fr}.filters .search{grid-column:auto}.images{grid-template-columns:repeat(3,1fr)}.head{align-items:flex-start;flex-direction:column}}
-</style>
+.category-admin-table .category-icon{font-size:18px;width:36px;text-align:center}
+.category-admin-table .reorder{display:flex;gap:4px}
+.category-admin-table .reorder .btn{min-width:34px;padding:6px 8px}
+.category-icon-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.category-icon-option{border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:10px 6px;cursor:pointer;text-align:center;color:var(--text)}
+.category-icon-option:hover,.category-icon-option.active{border-color:var(--accent);box-shadow:0 0 0 2px #7c5cff20}
+.category-icon-option i{font-size:18px;display:block;margin-bottom:5px}
+.category-icon-option span{font-size:10px;color:var(--muted)}
+@media(max-width:900px){.category-icon-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}</style>
 </head>
 <body>
 <section id="login" class="login">
@@ -44,6 +52,7 @@
       <div class="nav-title">Panel</div>
       <button class="active" data-view="dashboard"><i class="fa-solid fa-chart-line"></i>Dashboard</button>
       <button data-view="products"><i class="fa-solid fa-box"></i>Productos</button>
+      <button data-view="categories"><i class="fa-solid fa-tags"></i>Categorías</button>
       <button data-view="orders"><i class="fa-solid fa-receipt"></i>Pedidos</button>
       <button data-view="users"><i class="fa-solid fa-users"></i>Usuarios</button>
       <div class="nav-title">Administración</div>
@@ -63,7 +72,7 @@
       <div class="top-actions"><button id="theme" class="icon" title="Cambiar tema"><i class="fa-solid fa-sun"></i></button><button id="refresh" class="icon" title="Actualizar"><i class="fa-solid fa-rotate"></i></button></div>
     </header>
     <div id="content" class="content">
-      <section id="view-dashboard"></section><section id="view-products" class="hidden"></section><section id="view-orders" class="hidden"></section><section id="view-users" class="hidden"></section><section id="view-coupons" class="hidden"></section><section id="view-settings" class="hidden"></section><section id="view-appearance" class="hidden"></section>
+      <section id="view-dashboard"></section><section id="view-products" class="hidden"></section><section id="view-categories" class="hidden"></section><section id="view-orders" class="hidden"></section><section id="view-users" class="hidden"></section><section id="view-coupons" class="hidden"></section><section id="view-settings" class="hidden"></section><section id="view-appearance" class="hidden"></section>
     </div>
   </main>
 </section>
@@ -94,13 +103,13 @@ async function api(path,options={}){
 function showLogin(){$('login').classList.remove('hidden');$('app').classList.add('hidden')}
 function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden')}
 function loading(view){$('view-'+view).innerHTML='<div class="card loading"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...</div>'}
-const viewMeta={dashboard:['Dashboard','Resumen general de la tienda'],products:['Productos','Catálogo conectado al backend'],orders:['Pedidos','Pedidos del backend'],users:['Usuarios','Usuarios registrados'],coupons:['Cupones','Promociones activas'],settings:['Configuración','Valores guardados en el backend'],appearance:['Apariencia','Personalizá el diseño de tu tienda']};
+const viewMeta={dashboard:['Dashboard','Resumen general de la tienda'],products:['Productos','Catálogo conectado al backend'],categories:['Categorías','Administrá las categorías del catálogo'],orders:['Pedidos','Pedidos del backend'],users:['Usuarios','Usuarios registrados'],coupons:['Cupones','Promociones activas'],settings:['Configuración','Valores guardados en el backend'],appearance:['Apariencia','Personalizá el diseño de tu tienda']};
 async function navigate(view){
   currentView=view;$('title').textContent=viewMeta[view][0];$('subtitle').textContent=viewMeta[view][1];
   Object.keys(viewMeta).forEach(v=>$('view-'+v).classList.toggle('hidden',v!==view));
   document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   document.body.classList.remove('menu-open');
-  try{if(view==='dashboard')await renderDashboard();if(view==='products')await renderProducts();if(view==='orders')await renderOrders();if(view==='users')await renderUsers();if(view==='coupons')await renderCoupons();if(view==='settings')await renderSettings();if(view==='appearance')await renderAppearance()}catch(e){if(e.message!=='Sesión expirada.')toast('err','Error',e.message)}
+  try{if(view==='dashboard')await renderDashboard();if(view==='products')await renderProducts();if(view==='categories')await renderCategories();if(view==='orders')await renderOrders();if(view==='users')await renderUsers();if(view==='coupons')await renderCoupons();if(view==='settings')await renderSettings();if(view==='appearance')await renderAppearance()}catch(e){if(e.message!=='Sesión expirada.')toast('err','Error',e.message)}
 }
 async function renderDashboard(){
   loading('dashboard');
@@ -178,6 +187,45 @@ function openProductModal(id=''){
 function closeModal(){$('modal').innerHTML=''}
 async function deleteProduct(id){if(!confirm('¿Eliminar este producto? El backend lo desactiva.'))return;try{const d=await api('/admin/products/'+encodeURIComponent(id),{method:'DELETE'});toast('ok','Producto eliminado',d.message||'Producto desactivado.');await renderProducts()}catch(e){toast('err','No se pudo eliminar',e.message)}}
 async function toggleProduct(id){try{const d=await api('/admin/products/'+encodeURIComponent(id)+'/toggle',{method:'PATCH'});toast('ok','Estado actualizado',d.product?.active?'Producto activado.':'Producto desactivado.');await renderProducts()}catch(e){toast('err','No se pudo actualizar',e.message)}}
+async function renderCategories(){
+  loading('categories');
+  const d=await api('/admin/categories');
+  const categories=d.categories||[];
+  $('view-categories').innerHTML='<div class="head"><div><h2>Categorías</h2><p>'+categories.length+' categorías configuradas.</p></div><button id="newCategory" class="btn primary"><i class="fa-solid fa-plus"></i>Nueva categoría</button></div>'+
+    '<div class="card table-wrap category-admin-table"><table><thead><tr><th>Ícono</th><th>Nombre</th><th>Slug</th><th>Orden</th><th>Productos</th><th>Estado</th><th>Acciones</th></tr></thead><tbody>'+
+    (categories.length?categories.map((c)=>'<tr><td><div class="category-icon"><i class="fa-solid '+esc(c.icon||'fa-cube')+'"></i></div></td><td><b>'+esc(c.name)+'</b>'+(c.description?'<br><small class="hint">'+esc(c.description)+'</small>':'')+'</td><td><code>'+esc(c.slug)+'</code></td><td>'+Number(c.order||0)+'</td><td>'+Number(c.productCount||0)+'</td><td>'+stateBadge(c.active===false?'inactive':'active')+'</td><td><div class="actions"><div class="reorder"><button class="btn small" data-category-up="'+esc(c._id)+'" title="Subir">↑</button><button class="btn small" data-category-down="'+esc(c._id)+'" title="Bajar">↓</button></div><button class="btn small" data-edit-category="'+esc(c._id)+'"><i class="fa-solid fa-pen"></i></button><button class="btn small" data-toggle-category="'+esc(c._id)+'">'+(c.active?'Desactivar':'Activar')+'</button><button class="btn small danger" data-delete-category="'+esc(c._id)+'"><i class="fa-solid fa-trash"></i></button></div></td></tr>').join(''):'<tr><td colspan="7"><div class="empty">No hay categorías.</div></td></tr>')+
+    '</tbody></table></div>';
+  $('newCategory').onclick=()=>openCategoryModal();
+  document.querySelectorAll('[data-edit-category]').forEach(b=>b.onclick=()=>openCategoryModal(b.dataset.editCategory,categories));
+  document.querySelectorAll('[data-toggle-category]').forEach(b=>b.onclick=()=>toggleCategory(b.dataset.toggleCategory,categories));
+  document.querySelectorAll('[data-delete-category]').forEach(b=>b.onclick=()=>deleteCategory(b.dataset.deleteCategory));
+  document.querySelectorAll('[data-category-up]').forEach(b=>b.onclick=()=>moveCategory(b.dataset.categoryUp,-1,categories));
+  document.querySelectorAll('[data-category-down]').forEach(b=>b.onclick=()=>moveCategory(b.dataset.categoryDown,1,categories));
+}
+const CATEGORY_ICONS=['fa-dragon','fa-lightbulb','fa-gears','fa-chess-knight','fa-robot','fa-screwdriver-wrench','fa-wand-magic-sparkles','fa-cube','fa-star','fa-heart','fa-tag','fa-box','fa-palette'];
+function openCategoryModal(id='',categories=[]){
+  const existing=id?categories.find(c=>String(c._id)===String(id)):null;
+  const c=existing||{name:'',slug:'',icon:'fa-cube',order:categories.length,description:'',active:true};
+  $('modal').innerHTML='<div id="categoryModal" class="modal-bg"><div class="modal"><div class="modal-head"><div><h3>'+(id?'Editar categoría':'Nueva categoría')+'</h3><small>Las categorías activas aparecen automáticamente en la tienda.</small></div><button id="closeCategoryModal" class="close" type="button">×</button></div><form id="categoryForm"><div class="modal-body"><div class="form-grid">'+
+    inputField('cName','Nombre *',c.name,'text',true)+inputField('cSlug','Slug',c.slug,'text')+inputField('cOrder','Orden',c.order??0,'number')+
+    '<div class="field full"><label>Ícono</label><div id="categoryIconGrid" class="category-icon-grid">'+CATEGORY_ICONS.map(icon=>'<button type="button" class="category-icon-option '+(icon===c.icon?'active':'')+'" data-category-icon="'+icon+'"><i class="fa-solid '+icon+'"></i><span>'+icon.replace('fa-','')+'</span></button>').join('')+'</div><input id="cIcon" type="hidden" value="'+esc(c.icon||'fa-cube')+'"></div>'+
+    '<div class="field full"><label for="cDescription">Descripción</label><textarea id="cDescription" class="textarea">'+esc(c.description||'')+'</textarea></div>'+
+    '<div class="field full"><label class="check"><input id="cActive" type="checkbox" '+(c.active!==false?'checked':'')+'> <span>Activa</span></label></div></div></div><div class="modal-foot"><button id="cancelCategory" class="btn" type="button">Cancelar</button><button id="saveCategory" class="btn primary" type="submit">Guardar categoría</button></div></form></div></div>';
+  $('closeCategoryModal').onclick=closeModal;$('cancelCategory').onclick=closeModal;
+  document.querySelectorAll('[data-category-icon]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-category-icon]').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('cIcon').value=b.dataset.categoryIcon});
+  $('cName').oninput=()=>{if(!$('cSlug').dataset.edited)$('cSlug').value=slugifyCategory($('cName').value)};
+  $('cSlug').oninput=()=>{$('cSlug').dataset.edited='1';$('cSlug').value=slugifyCategory($('cSlug').value)};
+  $('categoryForm').onsubmit=async(event)=>{
+    event.preventDefault();const button=$('saveCategory');button.disabled=true;
+    const body={name:$('cName').value.trim(),slug:slugifyCategory($('cSlug').value||$('cName').value),icon:$('cIcon').value,order:Number($('cOrder').value)||0,active:$('cActive').checked,description:$('cDescription').value.trim()};
+    try{await api(id?'/admin/categories/'+encodeURIComponent(id):'/admin/categories',{method:id?'PUT':'POST',body:JSON.stringify(body)});closeModal();toast('ok','Categoría guardada',id?'Categoría actualizada correctamente.':'Categoría creada correctamente.');await renderCategories()}catch(e){toast('err','No se pudo guardar',e.message)}finally{button.disabled=false}
+  };
+}
+function slugifyCategory(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')}
+async function toggleCategory(id,categories){const c=categories.find(x=>String(x._id)===String(id));if(!c)return;try{await api('/admin/categories/'+encodeURIComponent(id),{method:'PUT',body:JSON.stringify({name:c.name,slug:c.slug,icon:c.icon,order:c.order,active:!c.active,description:c.description||''})});toast('ok','Estado actualizado',!c.active?'Categoría activada.':'Categoría desactivada.');await renderCategories()}catch(e){toast('err','No se pudo actualizar',e.message)}}
+async function deleteCategory(id){if(!confirm('¿Eliminar esta categoría? Esta acción no se puede deshacer.'))return;try{const d=await api('/admin/categories/'+encodeURIComponent(id),{method:'DELETE'});toast('ok','Categoría eliminada',d.message||'Categoría eliminada.');await renderCategories()}catch(e){toast('err','No se pudo eliminar',e.message)}}
+async function moveCategory(id,direction,categories){const index=categories.findIndex(x=>String(x._id)===String(id));if(index<0)return;const target=index+direction;if(target<0||target>=categories.length)return;const reordered=categories.slice();[reordered[index],reordered[target]]=[reordered[target],reordered[index]];try{await api('/admin/categories/reorder',{method:'PATCH',body:JSON.stringify({order:reordered.map((c,i)=>({_id:c._id,order:i}))})});await renderCategories()}catch(e){toast('err','No se pudo reordenar',e.message)}}
+
 async function renderOrders(){
   loading('orders');const q=new URLSearchParams({page:ordersPage,limit:PAGE_SIZE,status:orderStatus,payMethod});const d=await api('/admin/orders?'+q);ordersPages=Math.max(1,Number(d.pages)||1);
   $('view-orders').innerHTML='<div class="head"><div><h2>Pedidos</h2><p>'+Number(d.total||0)+' pedidos.</p></div></div><div class="filters"><select id="orderStatus" class="select"><option value="all">Todos los pagos</option><option value="pending">Pendiente</option><option value="paid">Pagado</option><option value="cancelled">Cancelado</option></select><select id="payMethod" class="select"><option value="all">Todos los métodos</option><option value="mercadopago">Mercado Pago</option><option value="paypal">PayPal</option><option value="stripe">Stripe</option></select></div><div class="card table-wrap"><table><thead><tr><th>Número</th><th>Cliente</th><th>Total</th><th>Método</th><th>Pago</th><th>Envío</th><th>Fecha</th></tr></thead><tbody>'+
