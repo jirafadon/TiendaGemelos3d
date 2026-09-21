@@ -60,6 +60,7 @@
       <button data-view="appearance"><i class="fa-solid fa-palette"></i>Apariencia</button>
       <button data-view="texts"><i class="fa-solid fa-font"></i>Textos</button>
       <button data-view="settings"><i class="fa-solid fa-sliders"></i>Configuración</button>
+      <button data-view="payments"><i class="fa-solid fa-credit-card"></i>Pagos</button>
       <button onclick="window.open('/', '_blank')"><i class="fa-solid fa-store"></i>Ver tienda</button>
     </nav>
     <div class="side-foot">
@@ -73,7 +74,7 @@
       <div class="top-actions"><button id="theme" class="icon" title="Cambiar tema"><i class="fa-solid fa-sun"></i></button><button id="refresh" class="icon" title="Actualizar"><i class="fa-solid fa-rotate"></i></button></div>
     </header>
     <div id="content" class="content">
-      <section id="view-dashboard"></section><section id="view-products" class="hidden"></section><section id="view-categories" class="hidden"></section><section id="view-orders" class="hidden"></section><section id="view-users" class="hidden"></section><section id="view-coupons" class="hidden"></section><section id="view-settings" class="hidden"></section><section id="view-appearance" class="hidden"></section><section id="view-texts" class="hidden"></section>
+      <section id="view-dashboard"></section><section id="view-products" class="hidden"></section><section id="view-categories" class="hidden"></section><section id="view-orders" class="hidden"></section><section id="view-users" class="hidden"></section><section id="view-coupons" class="hidden"></section><section id="view-settings" class="hidden"></section><section id="view-appearance" class="hidden"></section><section id="view-texts" class="hidden"></section><section id="view-payments" class="hidden"></section>
     </div>
   </main>
 </section>
@@ -104,13 +105,13 @@ async function api(path,options={}){
 function showLogin(){$('login').classList.remove('hidden');$('app').classList.add('hidden')}
 function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden')}
 function loading(view){$('view-'+view).innerHTML='<div class="card loading"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...</div>'}
-const viewMeta={dashboard:['Dashboard','Resumen general de la tienda'],products:['Productos','Catálogo conectado al backend'],categories:['Categorías','Administrá las categorías del catálogo'],orders:['Pedidos','Pedidos del backend'],users:['Usuarios','Usuarios registrados'],coupons:['Cupones','Promociones activas'],settings:['Configuración','Valores guardados en el backend'],appearance:['Apariencia','Personalizá el diseño de tu tienda'],texts:['Textos','Editá los textos de la tienda pública']};
+const viewMeta={dashboard:['Dashboard','Resumen general de la tienda'],products:['Productos','Catálogo conectado al backend'],categories:['Categorías','Administrá las categorías del catálogo'],orders:['Pedidos','Pedidos del backend'],users:['Usuarios','Usuarios registrados'],coupons:['Cupones','Promociones activas'],settings:['Configuración','Valores guardados en el backend'],appearance:['Apariencia','Personalizá el diseño de tu tienda'],texts:['Textos','Editá los textos de la tienda pública'],payments:['Pagos','Configurá los métodos de pago de tu tienda']};
 async function navigate(view){
   currentView=view;$('title').textContent=viewMeta[view][0];$('subtitle').textContent=viewMeta[view][1];
   Object.keys(viewMeta).forEach(v=>$('view-'+v).classList.toggle('hidden',v!==view));
   document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   document.body.classList.remove('menu-open');
-  try{if(view==='dashboard')await renderDashboard();if(view==='products')await renderProducts();if(view==='categories')await renderCategories();if(view==='orders')await renderOrders();if(view==='users')await renderUsers();if(view==='coupons')await renderCoupons();if(view==='settings')await renderSettings();if(view==='appearance')await renderAppearance();if(view==='texts')await renderTexts()}catch(e){if(e.message!=='Sesión expirada.')toast('err','Error',e.message)}
+  try{if(view==='dashboard')await renderDashboard();if(view==='products')await renderProducts();if(view==='categories')await renderCategories();if(view==='orders')await renderOrders();if(view==='users')await renderUsers();if(view==='coupons')await renderCoupons();if(view==='settings')await renderSettings();if(view==='appearance')await renderAppearance();if(view==='texts')await renderTexts();if(view==='payments')await renderPayments()}catch(e){if(e.message!=='Sesión expirada.')toast('err','Error',e.message)}
 }
 async function renderDashboard(){
   loading('dashboard');
@@ -303,6 +304,38 @@ async function renderTexts(){
     ['topBarText','heroTitle','heroSubtitle','benefit1Icon','benefit1Title','benefit1Text','benefit2Icon','benefit2Title','benefit2Text','benefit3Icon','benefit3Title','benefit3Text','benefit4Icon','benefit4Title','benefit4Text','banner1Title','banner1Text','banner1ButtonText','banner1Link','banner2Title','banner2Text','banner2ButtonText','banner2Link','newsletterTitle','newsletterSubtitle','installmentsTitle','installmentsSubtitle','footerCopyright'].forEach((id)=>body[id]=$(id).value.trim());
     body.banner1Image=$('banner1Preview').dataset.image||'';body.banner2Image=$('banner2Preview').dataset.image||'';
     try{await api('/admin/settings',{method:'PUT',body:JSON.stringify(body)});toast('ok','Cambios guardados','Los textos de la tienda pública se actualizarán al recargar.');await renderTexts()}catch(err){toast('err','No se pudo guardar',err.message)}finally{button.disabled=false}};
+}
+
+
+async function renderPayments(){
+  loading('payments');
+  const d=await api('/admin/settings');const s=d.settings||{};
+  const secretValue=s.mpAccessToken?'••••••••':'';
+  const payInput=(id,label,value,placeholder)=>'<div class="field"><label for="'+id+'">'+esc(label)+'</label><input id="'+id+'" class="input" type="text" value="'+esc(value)+'" placeholder="'+esc(placeholder||'')+'"></div>';
+  $('view-payments').innerHTML='<div class="head"><div><h2>Pagos</h2><p>Configurá Mercado Pago, transferencia bancaria y efectivo.</p></div><button id="savePayments" class="btn primary"><i class="fa-solid fa-floppy-disk"></i>Guardar configuración de pagos</button></div>'+
+    '<div class="settings">'+
+      '<div class="card setting full"><h3><i class="fa-solid fa-credit-card"></i> Mercado Pago</h3>'+
+        '<div class="switch-row"><div><b>Habilitar Mercado Pago</b><small>El checkout solo lo mostrará cuando esté activo.</small></div><label class="switch"><input id="mpEnabled" type="checkbox" '+(s.mpEnabled?'checked':'')+'><span class="slider"></span></label></div>'+
+        '<div class="form-grid">'+
+          '<div class="field"><label for="mpMode">Modo</label><select id="mpMode" class="select"><option value="sandbox" '+(s.mpMode!=='production'?'selected':'')+'>Pruebas (Sandbox)</option><option value="production" '+(s.mpMode==='production'?'selected':'')+'>Producción</option></select></div>'+
+          '<div class="field"><label for="mpPublicKey">Public Key</label><input id="mpPublicKey" class="input" placeholder="APP_USR-..." value="'+esc(s.mpPublicKey||'')+'"></div>'+
+          '<div class="field full"><label for="mpAccessToken">Access Token</label><div style="display:flex;gap:8px"><input id="mpAccessToken" class="input" type="password" placeholder="APP_USR-..." value="'+secretValue+'" autocomplete="new-password"><button id="toggleMpToken" type="button" class="btn" title="Mostrar u ocultar">👁 Ver</button></div></div>'+
+        '</div><p style="margin:12px 0 0;color:var(--muted);font-size:11px">Obtenelas en https://www.mercadopago.com.ar/developers/panel</p>'+
+      '</div>'+
+      '<div class="card setting full"><h3><i class="fa-solid fa-building-columns"></i> Transferencia bancaria</h3>'+
+        '<div class="switch-row"><div><b>Habilitar Transferencia</b><small>Estos datos se muestran al cliente cuando elige transferencia en el checkout.</small></div><label class="switch"><input id="transferEnabled" type="checkbox" '+(s.transferEnabled!==false?'checked':'')+'><span class="slider"></span></label></div>'+
+        '<div class="form-grid">'+payInput('bankHolder','Titular',s.bankHolder||'','Juan Pérez')+payInput('bankCuit','CUIT',s.bankCuit||'','20-12345678-9')+payInput('bankName','Banco',s.bankName||'','Banco Nación')+payInput('bankAlias','Alias',s.bankAlias||'','tienda.gemelos.3d')+
+          '<div class="field"><label for="bankCbu">CBU</label><input id="bankCbu" class="input" maxlength="22" value="'+esc(s.bankCbu||'')+'" placeholder="0110599520000012345678"></div></div>'+
+      '</div>'+
+      '<div class="card setting full"><h3><i class="fa-solid fa-money-bill-wave"></i> Efectivo</h3>'+
+        '<div class="switch-row"><div><b>Habilitar pago en efectivo</b><small>El cliente va a ver estas instrucciones cuando elija efectivo.</small></div><label class="switch"><input id="cashEnabled" type="checkbox" '+(s.cashEnabled?'checked':'')+'><span class="slider"></span></label></div>'+
+        '<div class="field" style="margin-top:12px"><label for="cashInstructions">Instrucciones</label><textarea id="cashInstructions" class="textarea" placeholder="Coordinar retiro por WhatsApp">'+esc(s.cashInstructions||'Coordinar retiro por WhatsApp')+'</textarea></div></div>'+
+    '</div>';
+  $('toggleMpToken').onclick=()=>{const input=$('mpAccessToken');const visible=input.type==='text';input.type=visible?'password':'text';$('toggleMpToken').textContent=visible?'👁 Ver':'🙈 Ocultar';};
+  $('savePayments').onclick=async()=>{const button=$('savePayments');button.disabled=true;
+    const body={mpEnabled:$('mpEnabled').checked,mpMode:$('mpMode').value,mpPublicKey:$('mpPublicKey').value.trim(),transferEnabled:$('transferEnabled').checked,bankHolder:$('bankHolder').value.trim(),bankCuit:$('bankCuit').value.trim(),bankName:$('bankName').value.trim(),bankAlias:$('bankAlias').value.trim(),bankCbu:$('bankCbu').value.trim(),cashEnabled:$('cashEnabled').checked,cashInstructions:$('cashInstructions').value.trim()};
+    const token=$('mpAccessToken').value.trim();if(token&&token!=='••••••••')body.mpAccessToken=token;
+    try{await api('/admin/settings',{method:'PUT',body:JSON.stringify(body)});toast('ok','Pagos guardados','La configuración de pagos fue actualizada.');await renderPayments()}catch(err){toast('err','No se pudo guardar',err.message)}finally{button.disabled=false}};
 }
 
 async function renderSettings(){

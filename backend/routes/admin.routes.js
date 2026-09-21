@@ -303,6 +303,18 @@ router.post('/categories', createAdminCategory);
 router.put('/categories/:id', updateAdminCategory);
 router.delete('/categories/:id', deleteAdminCategory);
 router.patch('/categories/reorder', reorderAdminCategories);
-router.put('/settings',[body('storeName').optional().trim().isLength({max:120}),body('storeEmail').optional({checkFalsy:true}).isEmail(),body('storeLogo').optional().isString().isLength({max:2048}),body('primaryColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('primaryColorHover').optional().matches(/^#[0-9a-fA-F]{6}$/),body('backgroundColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('textColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('headerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('footerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('storeWhatsApp').optional().isString().isLength({max:60}),body('storePhone').optional().isString().isLength({max:60}),body('storeAddress').optional().isString().isLength({max:240}),body('instagramUrl').optional({checkFalsy:true}).isURL(),body('facebookUrl').optional({checkFalsy:true}).isURL(),body('tiktokUrl').optional({checkFalsy:true}).isURL()],validate,updateSettings);
+router.put('/settings',[body('storeName').optional().trim().isLength({max:120}),body('storeEmail').optional({checkFalsy:true}).isEmail(),body('storeLogo').optional().isString().isLength({max:2048}),body('primaryColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('primaryColorHover').optional().matches(/^#[0-9a-fA-F]{6}$/),body('backgroundColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('textColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('headerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('footerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('storeWhatsApp').optional().isString().isLength({max:60}),body('storePhone').optional().isString().isLength({max:60}),body('storeAddress').optional().isString().isLength({max:240}),body('instagramUrl').optional({checkFalsy:true}).isURL(),body('facebookUrl').optional({checkFalsy:true}).isURL(),body('tiktokUrl').optional({checkFalsy:true}).isURL(),
+  body('mpEnabled').optional().isBoolean(),
+  body('mpPublicKey').optional().isString().isLength({max:255}),
+  body('mpAccessToken').optional().isString().isLength({max:500}),
+  body('mpMode').optional().isIn(['sandbox','production']),
+  body('transferEnabled').optional().isBoolean(),
+  body('bankHolder').optional().isString().isLength({max:160}),
+  body('bankCuit').optional().isString().isLength({max:40}),
+  body('bankName').optional().isString().isLength({max:160}),
+  body('bankAlias').optional().isString().isLength({max:160}),
+  body('bankCbu').optional().isString().isLength({max:22}),
+  body('cashEnabled').optional().isBoolean(),
+  body('cashInstructions').optional().isString().isLength({max:1000})],validate,updateSettings);
 
 export default router;

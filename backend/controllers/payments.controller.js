@@ -1,10 +1,9 @@
 import Order from '../models/Order.js';
+import Settings from '../models/Settings.js';
 import Product from '../models/Product.js';
 import Coupon from '../models/Coupon.js';
 import { calcTotals, generateOrderNumber } from '../utils/helpers.js';
 import { createMPPreference, getMPPayment } from '../services/mercadoPago.service.js';
-import { createPayPalOrder, capturePayPalOrder } from '../services/paypal.service.js';
-import { createStripeSession, validateStripeWebhook } from '../services/stripe.service.js';
 import { sendOrderConfirmation, sendAdminNewOrder } from '../services/email.service.js';
 
 function cleanCustomer(customer = {}) {
@@ -130,19 +129,36 @@ async function buildOrder(req) {
 
 export async function checkout(req, res, next) {
   try {
+    const settings = await Settings.findOne({ key: 'main' }).lean() || {};
+    const method = String(req.body.payMethod || 'mercadopago').toLowerCase();
+    const enabled = {
+      mercadopago: !!settings.mpEnabled,
+      mp: !!settings.mpEnabled,
+      transfer: settings.transferEnabled !== false,
+      bank_transfer: settings.transferEnabled !== false,
+      cash: !!settings.cashEnabled
+    };
+    if (!enabled[method]) {
+      const error = new Error('Ese método de pago no está habilitado.');
+      error.statusCode = 400;
+      throw error;
+    }
+    if ((method === 'mercadopago' || method === 'mp') && (!settings.mpPublicKey || !settings.mpAccessToken)) {
+      const error = new Error('Mercado Pago no está configurado aún.');
+      error.statusCode = 400;
+      throw error;
+    }
+
     const order = await buildOrder(req);
     let payment = null;
 
     switch (String(order.payMethod).toLowerCase()) {
       case 'mercadopago':
       case 'mp':
-        payment = await createMPPreference(order);
+        payment = await createMPPreference(order, settings.mpAccessToken, settings.mpMode);
         break;
-      case 'paypal':
-        payment = await createPayPalOrder(order);
-        break;
-      case 'stripe':
-        payment = await createStripeSession(order);
+      case 'cash':
+        payment = { method: 'cash', status: 'pending', message: 'Pago en efectivo pendiente de coordinación.', instructions: settings.cashInstructions || 'Coordinar retiro por WhatsApp' };
         break;
       case 'transfer':
       case 'bank_transfer':
@@ -175,10 +191,6 @@ export async function checkout(req, res, next) {
       redirectUrl = payment.initPoint || payment.sandboxInitPoint;
     } else if (payment?.url) {
       redirectUrl = payment.url;
-    } else if (payment?.approvalUrl) {
-      redirectUrl = payment.approvalUrl;
-    } else if (payment?.orderID) {
-      redirectUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${encodeURIComponent(payment.orderID)}`;
     }
 
     res.status(201).json({
@@ -189,12 +201,15 @@ export async function checkout(req, res, next) {
       payment,
       bankDetails: String(order.payMethod).toLowerCase() === 'transfer' || String(order.payMethod).toLowerCase() === 'bank_transfer'
         ? {
-            holder: process.env.BANK_HOLDER || '',
-            cuit: process.env.BANK_CUIT || '',
-            bank: process.env.BANK_NAME || '',
-            alias: process.env.BANK_ALIAS || '',
-            cbu: process.env.BANK_CBU || ''
+            holder: settings.bankHolder || '',
+            cuit: settings.bankCuit || '',
+            bank: settings.bankName || '',
+            alias: settings.bankAlias || '',
+            cbu: settings.bankCbu || ''
           }
+        : undefined,
+      cashInstructions: String(order.payMethod).toLowerCase() === 'cash'
+        ? (settings.cashInstructions || 'Coordinar retiro por WhatsApp')
         : undefined
     });
   } catch (error) {
@@ -210,7 +225,8 @@ export async function mpWebhook(req, res, next) {
       return res.status(200).json({ success: true });
     }
 
-    const payment = await getMPPayment(paymentId);
+    const settings = await Settings.findOne({ key: 'main' }).lean() || {};
+    const payment = await getMPPayment(paymentId, settings.mpAccessToken);
     const orderNumber = payment.external_reference;
 
     if (!orderNumber) {
@@ -249,95 +265,3 @@ export async function mpWebhook(req, res, next) {
   }
 }
 
-export async function paypalCapture(req, res, next) {
-  try {
-    const { orderID, orderNumber } = req.body;
-
-    if (!orderID || !orderNumber) {
-      return res.status(400).json({ success: false, message: 'Faltan orderID y orderNumber.' });
-    }
-
-    const response = await capturePayPalOrder(orderID);
-    const capture = response.result?.purchase_units?.[0]?.payments?.captures?.[0];
-    const completed = response.result?.status === 'COMPLETED' || capture?.status === 'COMPLETED';
-
-    const order = await Order.findOneAndUpdate(
-      { number: orderNumber },
-      {
-        payStatus: completed ? 'paid' : 'pending',
-        externalId: String(orderID),
-        $push: {
-          statusHistory: {
-            status: completed ? 'paid' : 'pending',
-            date: new Date(),
-            note: `PayPal: ${response.result?.status || 'UNKNOWN'}`
-          }
-        }
-      },
-      { new: true }
-    );
-
-    if (!order) {
-      return res.status(404).json({ success: false, message: 'Pedido no encontrado.' });
-    }
-
-    res.json({ success: true, order, paypal: response.result });
-  } catch (error) {
-    next(error);
-  }
-}
-
-export async function stripeWebhook(req, res, next) {
-  try {
-    const signature = req.headers['stripe-signature'];
-    const event = validateStripeWebhook(req.body, signature);
-
-    if (event.type === 'checkout.session.completed' || event.type === 'checkout.session.async_payment_succeeded') {
-      const session = event.data.object;
-      const orderNumber = session.metadata?.orderNumber || session.client_reference_id;
-
-      if (orderNumber) {
-        await Order.findOneAndUpdate(
-          { number: orderNumber },
-          {
-            payStatus: 'paid',
-            externalId: session.payment_intent || session.id,
-            $push: {
-              statusHistory: {
-                status: 'paid',
-                date: new Date(),
-                note: `Stripe: ${event.type}`
-              }
-            }
-          }
-        );
-      }
-    }
-
-    if (event.type === 'checkout.session.async_payment_failed') {
-      const session = event.data.object;
-      const orderNumber = session.metadata?.orderNumber || session.client_reference_id;
-
-      if (orderNumber) {
-        await Order.findOneAndUpdate(
-          { number: orderNumber },
-          {
-            payStatus: 'failed',
-            externalId: session.payment_intent || session.id,
-            $push: {
-              statusHistory: {
-                status: 'failed',
-                date: new Date(),
-                note: 'Stripe: pago fallido.'
-              }
-            }
-          }
-        );
-      }
-    }
-
-    res.json({ received: true });
-  } catch (error) {
-    next(error);
-  }
-}

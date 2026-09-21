@@ -1,17 +1,13 @@
 import { MercadoPagoConfig, Preference, Payment } from 'mercadopago';
 
-function getClient() {
-  if (!process.env.MP_ACCESS_TOKEN) {
-    throw new Error('MP_ACCESS_TOKEN no está configurado.');
-  }
-
-  return new MercadoPagoConfig({
-    accessToken: process.env.MP_ACCESS_TOKEN
-  });
+function getClient(accessToken) {
+  const token = accessToken || process.env.MP_ACCESS_TOKEN;
+  if (!token) throw new Error('MP_ACCESS_TOKEN no está configurado.');
+  return new MercadoPagoConfig({ accessToken: token });
 }
 
-export async function createMPPreference(order) {
-  const client = getClient();
+export async function createMPPreference(order, accessToken, mode = 'sandbox') {
+  const client = getClient(accessToken);
   const preference = new Preference(client);
 
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5500';
@@ -49,8 +45,8 @@ export async function createMPPreference(order) {
   };
 }
 
-export async function getMPPayment(id) {
-  const client = getClient();
+export async function getMPPayment(id, accessToken) {
+  const client = getClient(accessToken);
   const payment = new Payment(client);
   return payment.get({ id });
 }

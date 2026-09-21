@@ -703,6 +703,26 @@
       }
     }
 
+    function paymentMethodOptions(){
+      const s=storeSettings||{};const options=[];
+      if(s.mpEnabled) options.push('<option value="mercadopago">Mercado Pago</option>');
+      if(s.transferEnabled!==false) options.push('<option value="transfer">Transferencia bancaria</option>');
+      if(s.cashEnabled) options.push('<option value="cash">Efectivo</option>');
+      return options.length?options.join(''):'<option value="" disabled selected>No hay métodos disponibles</option>';
+    }
+    function renderPaymentDetails(){
+      const method=$('#checkoutMethod')?.value;const s=storeSettings||{};const box=$('#paymentDetails');if(!box)return;
+      if(!method){box.innerHTML='<div class="checkout-note">Los pagos todavía no están configurados. Contactanos por WhatsApp.</div>';$('#paySubmit').disabled=true;return;}
+      $('#paySubmit').disabled=false;
+      if(method==='transfer'){
+        box.innerHTML='<div class="bank-details"><strong>Datos bancarios</strong><div><b>Titular:</b> '+esc(s.bankHolder||'—')+'</div><div><b>CUIT:</b> '+esc(s.bankCuit||'—')+'</div><div><b>Banco:</b> '+esc(s.bankName||'—')+'</div><div><b>Alias:</b> '+esc(s.bankAlias||'—')+'</div><div><b>CBU:</b> '+esc(s.bankCbu||'—')+'</div><p>Enviá el comprobante por WhatsApp.</p></div>';
+      }else if(method==='cash'){
+        box.innerHTML='<div class="checkout-note"><strong>Pago en efectivo</strong><p>'+esc(s.cashInstructions||'Coordinar retiro por WhatsApp')+'</p></div>';
+      }else if(method==='mercadopago'){
+        box.innerHTML=s.mpPublicKey?'<div class="checkout-note">Mercado Pago está preparado para iniciar el pago seguro.</div>':'<div class="checkout-note">Mercado Pago no está configurado aún.</div>';
+      }else box.innerHTML='';
+    }
+
     function startCheckout() {
       if (!cart.length) return;
       const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
@@ -719,7 +739,7 @@
           '<div class="auth-field"><label for="checkoutZip">CP</label><input id="checkoutZip" autocomplete="postal-code" required></div>' +
           '<div class="auth-field full"><label for="checkoutAddress">Dirección</label><input id="checkoutAddress" autocomplete="street-address" required></div>' +
           '<div class="auth-field full"><label for="checkoutCity">Ciudad</label><input id="checkoutCity" autocomplete="address-level2" required></div>' +
-          '<div class="auth-field full"><label for="checkoutMethod">Método de pago</label><select id="checkoutMethod"><option value="mercadopago">Mercado Pago</option><option value="paypal">PayPal</option><option value="stripe">Stripe</option><option value="transfer">Transferencia</option></select></div>' +
+          '<div class="auth-field full"><label for="checkoutMethod">Método de pago</label><select id="checkoutMethod">'+paymentMethodOptions()+'</select></div><div id="paymentDetails" class="full"></div>' +
         '</div>' +
         '<div id="checkoutError" class="auth-error"></div>' +
         '<button class="btn btn-primary" id="paySubmit" type="submit">Pagar y continuar</button>' +
@@ -727,6 +747,8 @@
       closeCart();
       openModal('Checkout',body,undefined,'checkout-modal');
       $('#checkoutForm').onsubmit = (event) => { event.preventDefault(); processCheckout(); };
+      $('#checkoutMethod').onchange = renderPaymentDetails;
+      renderPaymentDetails();
     }
 
     async function processCheckout() {
@@ -742,12 +764,12 @@
         const data = await api('/payments/checkout',{method:'POST',body:JSON.stringify(payload)});
         if (data.redirectUrl) { window.location.href = data.redirectUrl; return; }
         if (data.payment?.initPoint || data.payment?.sandboxInitPoint) { window.location.href = data.payment.initPoint || data.payment.sandboxInitPoint; return; }
-        if (data.payment?.orderID) {
-          const paypalBase = data.payment.approvalUrl || ('https://www.sandbox.paypal.com/checkoutnow?token=' + encodeURIComponent(data.payment.orderID));
-          window.location.href = paypalBase;
+        if (data.payMethod === 'cash' || data.payment?.method === 'cash') {
+          $('#checkoutForm').innerHTML = '<div class="checkout-note">Tu pedido <strong>' + esc(data.orderNumber || '') + '</strong> quedó pendiente.</div><div class="checkout-note"><strong>Instrucciones:</strong><p>' + esc(data.cashInstructions || data.payment?.instructions || storeSettings.cashInstructions || 'Coordinar retiro por WhatsApp') + '</p></div><button class="btn btn-primary" type="button" id="cashDone">Entendido</button>';
+          $('#cashDone').onclick = () => { cart=[];persistCart();closeModal();toast('Pedido ' + (data.orderNumber || '') + ' recibido.'); };
           return;
         }
-        if (data.payMethod === 'transfer' || data.payment?.method === 'transfer') {
+        if (data.payMethod === 'transfer' || data.payment?.method === 'transfer')
           const bank = data.bankDetails || {};
           $('#checkoutForm').innerHTML = '<div class="checkout-note">Tu pedido <strong>' + esc(data.orderNumber || '') + '</strong> quedó pendiente. Realizá la transferencia y avisá cuando esté hecha.</div>' +
             '<div class="bank-details"><strong>Datos bancarios</strong>' +
