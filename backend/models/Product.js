@@ -18,8 +18,9 @@ const productSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: [true, 'La descripción es obligatoria.'],
+      required: false,
       trim: true,
+      default: '',
       maxlength: 5000
     },
     category: {
@@ -41,7 +42,7 @@ const productSchema = new mongoose.Schema(
     },
     stock: {
       type: Number,
-      required: true,
+      required: false,
       min: 0,
       default: 0
     },
