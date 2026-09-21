@@ -73,6 +73,26 @@ const uploadImages = (req, res, next) => {
   });
 };
 
+
+const uploadLogo = (req, res, next) => {
+  upload.single('logo')(req, res, (error) => {
+    if (!error) return next();
+    if (error instanceof multer.MulterError) {
+      const message = error.code === 'LIMIT_FILE_SIZE' ? 'El logo debe pesar menos de 8 MB.' : error.message;
+      return res.status(400).json({ success: false, message });
+    }
+    return res.status(400).json({ success: false, message: error.message || 'No se pudo procesar el logo.' });
+  });
+};
+
+const uploadLogoToCloudinary = (file) => new Promise((resolve, reject) => {
+  const stream = cloudinary.uploader.upload_stream(
+    { folder: 'tiendagemelos3d/brand', resource_type: 'image', allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'] },
+    (error, result) => error ? reject(error) : resolve(result)
+  );
+  stream.end(file.buffer);
+});
+
 const uploadToCloudinary = (file) => new Promise((resolve, reject) => {
   const stream = cloudinary.uploader.upload_stream(
     {
@@ -130,6 +150,21 @@ const handleMultipleUpload = async (req, res) => {
     });
   }
 };
+
+
+router.post('/upload-logo', uploadLogo, async (req, res) => {
+  try {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      return res.status(503).json({ success: false, message: 'Cloudinary no está configurado en el servidor.' });
+    }
+    if (!req.file) return res.status(400).json({ success: false, message: 'No se recibió ningún logo.' });
+    const result = await uploadLogoToCloudinary(req.file);
+    return res.json({ success: true, url: result.secure_url });
+  } catch (error) {
+    console.error('Error subiendo logo a Cloudinary:', error);
+    return res.status(500).json({ success: false, message: 'Error al subir el logo a Cloudinary.' });
+  }
+});
 
 router.post('/upload-multiple', uploadImages, handleMultipleUpload);
 router.post('/upload', uploadImages, handleMultipleUpload);
@@ -223,6 +258,6 @@ router.put('/coupons/:id',[param('id').isMongoId(),body('code').optional().trim(
 router.delete('/coupons/:id', deleteCoupon);
 
 router.get('/settings', getSettings);
-router.put('/settings',[body('storeName').optional().trim().isLength({max:120}),body('storeEmail').optional().isEmail(),body('shippingCost').optional().isFloat({min:0}),body('freeShippingMin').optional().isFloat({min:0})],validate,updateSettings);
+router.put('/settings',[body('storeName').optional().trim().isLength({max:120}),body('storeEmail').optional({checkFalsy:true}).isEmail(),body('storeLogo').optional().isString().isLength({max:2048}),body('primaryColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('primaryColorHover').optional().matches(/^#[0-9a-fA-F]{6}$/),body('backgroundColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('textColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('headerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('footerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('storeWhatsApp').optional().isString().isLength({max:60}),body('storePhone').optional().isString().isLength({max:60}),body('storeAddress').optional().isString().isLength({max:240}),body('instagramUrl').optional({checkFalsy:true}).isURL(),body('facebookUrl').optional({checkFalsy:true}).isURL(),body('tiktokUrl').optional({checkFalsy:true}).isURL()),validate,updateSettings);
 
 export default router;
