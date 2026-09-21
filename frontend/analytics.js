@@ -1,5 +1,5 @@
 /* frontend/analytics.js
-   Solo funciones de analítica. NO funciones del panel admin. */
+   Solo funciones de analítica. NUNCA funciones del panel admin. */
 
 const GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // ⚠️ REEMPLAZAR
 
