@@ -116,6 +116,25 @@ const uploadToCloudinary = (file) => new Promise((resolve, reject) => {
   stream.end(file.buffer);
 });
 
+const uploadBanner = (req, res, next) => {
+  upload.single('image')(req, res, (error) => {
+    if (!error) return next();
+    if (error instanceof multer.MulterError) {
+      const message = error.code === 'LIMIT_FILE_SIZE' ? 'La imagen debe pesar menos de 8 MB.' : error.message;
+      return res.status(400).json({ success: false, message });
+    }
+    return res.status(400).json({ success: false, message: error.message || 'No se pudo procesar la imagen.' });
+  });
+};
+
+const uploadBannerToCloudinary = (file) => new Promise((resolve, reject) => {
+  const stream = cloudinary.uploader.upload_stream(
+    { folder: 'tiendagemelos3d/banners', resource_type: 'image', allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'] },
+    (error, result) => error ? reject(error) : resolve(result)
+  );
+  stream.end(file.buffer);
+});
+
 router.use(protect, adminOnly);
 
 router.get('/bootstrap', getBootstrap);
@@ -158,6 +177,20 @@ const handleMultipleUpload = async (req, res) => {
   }
 };
 
+
+router.post('/upload-banner', uploadBanner, async (req, res) => {
+  try {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      return res.status(503).json({ success: false, message: 'Cloudinary no está configurado en el servidor.' });
+    }
+    if (!req.file) return res.status(400).json({ success: false, message: 'No se recibió ninguna imagen.' });
+    const result = await uploadBannerToCloudinary(req.file);
+    return res.json({ success: true, url: result.secure_url });
+  } catch (error) {
+    console.error('Error subiendo banner a Cloudinary:', error);
+    return res.status(500).json({ success: false, message: 'Error al subir el banner a Cloudinary.' });
+  }
+});
 
 router.post('/upload-logo', uploadLogo, async (req, res) => {
   try {

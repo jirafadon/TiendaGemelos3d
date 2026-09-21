@@ -28,7 +28,7 @@
 .category-icon-option:hover,.category-icon-option.active{border-color:var(--accent);box-shadow:0 0 0 2px #7c5cff20}
 .category-icon-option i{font-size:18px;display:block;margin-bottom:5px}
 .category-icon-option span{font-size:10px;color:var(--muted)}
-@media(max-width:900px){.category-icon-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}</style>
+.text-sections{display:grid;gap:12px}.text-section{padding:17px}.text-section h3{margin:0 0 15px}.banner-editor{display:grid;grid-template-columns:1.2fr 1fr;gap:14px;align-items:start}.banner-preview{min-height:190px;border:1px dashed var(--line);border-radius:10px;background:var(--panel2);display:grid;place-items:center;overflow:hidden}.banner-preview img{width:100%;height:190px;object-fit:cover}.banner-upload{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:9px}.text-save{width:100%;justify-content:center;padding:13px;font-size:15px}@media(max-width:900px){.category-icon-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.banner-editor{grid-template-columns:1fr}}</style>
 </head>
 <body>
 <section id="login" class="login">
@@ -57,8 +57,9 @@
       <button data-view="users"><i class="fa-solid fa-users"></i>Usuarios</button>
       <div class="nav-title">Administración</div>
       <button data-view="coupons"><i class="fa-solid fa-ticket"></i>Cupones</button>
-      <button data-view="settings"><i class="fa-solid fa-sliders"></i>Configuración</button>
       <button data-view="appearance"><i class="fa-solid fa-palette"></i>Apariencia</button>
+      <button data-view="texts"><i class="fa-solid fa-font"></i>Textos</button>
+      <button data-view="settings"><i class="fa-solid fa-sliders"></i>Configuración</button>
       <button onclick="window.open('/', '_blank')"><i class="fa-solid fa-store"></i>Ver tienda</button>
     </nav>
     <div class="side-foot">
@@ -72,7 +73,7 @@
       <div class="top-actions"><button id="theme" class="icon" title="Cambiar tema"><i class="fa-solid fa-sun"></i></button><button id="refresh" class="icon" title="Actualizar"><i class="fa-solid fa-rotate"></i></button></div>
     </header>
     <div id="content" class="content">
-      <section id="view-dashboard"></section><section id="view-products" class="hidden"></section><section id="view-categories" class="hidden"></section><section id="view-orders" class="hidden"></section><section id="view-users" class="hidden"></section><section id="view-coupons" class="hidden"></section><section id="view-settings" class="hidden"></section><section id="view-appearance" class="hidden"></section>
+      <section id="view-dashboard"></section><section id="view-products" class="hidden"></section><section id="view-categories" class="hidden"></section><section id="view-orders" class="hidden"></section><section id="view-users" class="hidden"></section><section id="view-coupons" class="hidden"></section><section id="view-settings" class="hidden"></section><section id="view-appearance" class="hidden"></section><section id="view-texts" class="hidden"></section>
     </div>
   </main>
 </section>
@@ -103,13 +104,13 @@ async function api(path,options={}){
 function showLogin(){$('login').classList.remove('hidden');$('app').classList.add('hidden')}
 function showApp(){$('login').classList.add('hidden');$('app').classList.remove('hidden')}
 function loading(view){$('view-'+view).innerHTML='<div class="card loading"><i class="fa-solid fa-spinner fa-spin"></i> Cargando...</div>'}
-const viewMeta={dashboard:['Dashboard','Resumen general de la tienda'],products:['Productos','Catálogo conectado al backend'],categories:['Categorías','Administrá las categorías del catálogo'],orders:['Pedidos','Pedidos del backend'],users:['Usuarios','Usuarios registrados'],coupons:['Cupones','Promociones activas'],settings:['Configuración','Valores guardados en el backend'],appearance:['Apariencia','Personalizá el diseño de tu tienda']};
+const viewMeta={dashboard:['Dashboard','Resumen general de la tienda'],products:['Productos','Catálogo conectado al backend'],categories:['Categorías','Administrá las categorías del catálogo'],orders:['Pedidos','Pedidos del backend'],users:['Usuarios','Usuarios registrados'],coupons:['Cupones','Promociones activas'],settings:['Configuración','Valores guardados en el backend'],appearance:['Apariencia','Personalizá el diseño de tu tienda'],texts:['Textos','Editá los textos de la tienda pública']};
 async function navigate(view){
   currentView=view;$('title').textContent=viewMeta[view][0];$('subtitle').textContent=viewMeta[view][1];
   Object.keys(viewMeta).forEach(v=>$('view-'+v).classList.toggle('hidden',v!==view));
   document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   document.body.classList.remove('menu-open');
-  try{if(view==='dashboard')await renderDashboard();if(view==='products')await renderProducts();if(view==='categories')await renderCategories();if(view==='orders')await renderOrders();if(view==='users')await renderUsers();if(view==='coupons')await renderCoupons();if(view==='settings')await renderSettings();if(view==='appearance')await renderAppearance()}catch(e){if(e.message!=='Sesión expirada.')toast('err','Error',e.message)}
+  try{if(view==='dashboard')await renderDashboard();if(view==='products')await renderProducts();if(view==='categories')await renderCategories();if(view==='orders')await renderOrders();if(view==='users')await renderUsers();if(view==='coupons')await renderCoupons();if(view==='settings')await renderSettings();if(view==='appearance')await renderAppearance();if(view==='texts')await renderTexts()}catch(e){if(e.message!=='Sesión expirada.')toast('err','Error',e.message)}
 }
 async function renderDashboard(){
   loading('dashboard');
@@ -264,6 +265,44 @@ async function renderAppearance(){
   $('logoFile').onchange=async(e)=>{const file=e.target.files?.[0];if(!file)return;const form=new FormData();form.append('logo',file);e.target.disabled=true;try{const result=await api('/admin/upload-logo',{method:'POST',body:form});if(!result.url)throw new Error('Cloudinary no devolvió la URL del logo.');$('appearanceLogoPreview').src=result.url;$('appearanceLogoPreview').dataset.logo=result.url;toast('ok','Logo subido','El nuevo logo está listo para guardar.')}catch(err){toast('err','No se pudo subir el logo',err.message)}finally{e.target.disabled=false;e.target.value=''}};
   const save=async()=>{const button=$('saveAppearance');button.disabled=true;const body={storeName:$('storeName').value.trim(),storeLogo:$('appearanceLogoPreview').dataset.logo ?? s.storeLogo ?? '',primaryColor:$('primaryColorText').value.trim()||defaults.primaryColor,primaryColorHover:$('primaryColorHoverText').value.trim()||defaults.primaryColorHover,backgroundColor:$('backgroundColorText').value.trim()||defaults.backgroundColor,textColor:$('textColorText').value.trim()||defaults.textColor,headerColor:$('headerColorText').value.trim()||defaults.headerColor,footerColor:$('footerColorText').value.trim()||defaults.footerColor,storeWhatsApp:$('storeWhatsApp').value.trim(),storeEmail:$('storeEmail').value.trim(),storePhone:$('storePhone').value.trim(),storeAddress:$('storeAddress').value.trim(),instagramUrl:$('instagramUrl').value.trim(),facebookUrl:$('facebookUrl').value.trim(),tiktokUrl:$('tiktokUrl').value.trim()};try{await api('/admin/settings',{method:'PUT',body:JSON.stringify(body)});toast('ok','Cambios guardados','La tienda pública usará la nueva configuración al recargar.');await renderAppearance()}catch(err){toast('err','No se pudo guardar',err.message)}finally{button.disabled=false}};
   $('saveAppearance').onclick=save;$('saveAppearanceBottom').onclick=save;
+}
+
+async function renderTexts(){
+  loading('texts');
+  const d=await api('/admin/settings');const s=d.settings||{};
+  const defaults={topBarText:'🚚 Envíos a todo el país · Hasta 3 cuotas sin interés',heroTitle:'Impresión 3D Profesional',heroSubtitle:'',
+    benefit1Icon:'fa-truck',benefit1Title:'Envíos a todo el país',benefit1Text:'A domicilio o sucursal más cercana',
+    benefit2Icon:'fa-wand-magic-sparkles',benefit2Title:'Productos personalizados',benefit2Text:'Consultanos por pedidos personalizados',
+    benefit3Icon:'fa-shield-halved',benefit3Title:'Compra segura',benefit3Text:'Aboná con Mercado Pago',
+    benefit4Icon:'fa-comments',benefit4Title:'Venta mayorista',benefit4Text:'Consultá por WhatsApp',
+    banner1Title:'Figuras 3D',banner1Text:'Descubrí nuestra colección',banner1ButtonText:'Comprar',banner1Link:'/?cat=figuras',banner1Image:'',
+    banner2Title:'Soportes y Decoración',banner2Text:'Piezas únicas para tu hogar',banner2ButtonText:'Comprar',banner2Link:'/?cat=decoracion',banner2Image:'',
+    newsletterTitle:'Recibí todas las ofertas',newsletterSubtitle:'¿Querés recibir nuestras ofertas? ¡Registrate ya y comenzá a disfrutarlas!',
+    installmentsTitle:'3 cuotas sin interés en toda la web',installmentsSubtitle:'También tenemos 15% OFF abonando en efectivo o transferencia',
+    footerCopyright:'© 2026 Tienda Gemelos 3D · Todos los derechos reservados'};
+  const v=(k)=>s[k] ?? defaults[k],tf=(id,label)=>inputField(id,label,v(id));
+  const benefit=(n,title)=>'<div class="card text-section"><h3>'+title+'</h3><div class="form-grid">'+tf('benefit'+n+'Icon','Ícono Font Awesome')+tf('benefit'+n+'Title','Título')+tf('benefit'+n+'Text','Descripción')+'</div></div>';
+  const banner=(n,title)=>'<div class="card text-section"><h3>'+title+'</h3><div class="banner-editor"><div><div class="form-grid">'+tf('banner'+n+'Title','Título')+tf('banner'+n+'Text','Texto')+tf('banner'+n+'ButtonText','Texto del botón')+tf('banner'+n+'Link','Link')+'</div><div class="banner-upload"><label class="btn primary" for="banner'+n+'File"><i class="fa-solid fa-cloud-arrow-up"></i>Subir imagen</label><input id="banner'+n+'File" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden></div></div><div><div class="banner-preview"><img id="banner'+n+'Preview" src="'+esc(v('banner'+n+'Image')||'')+'" alt=""></div><div class="hint" style="margin-top:7px">Opcional · JPG, PNG, WEBP o GIF · hasta 8 MB</div></div></div></div>';
+  $('view-texts').innerHTML='<div class="head"><div><h2>Textos</h2><p>Editá los textos de la tienda pública.</p></div></div><div class="text-sections">'+
+    '<div class="card text-section"><h3>Barra superior</h3>'+tf('topBarText','Texto de la top bar')+'</div>'+
+    '<div class="card text-section"><h3>Hero</h3><div class="form-grid">'+tf('heroTitle','Título del hero')+tf('heroSubtitle','Subtítulo del hero')+'</div><div class="hint" style="margin-top:8px">Si la tienda no tiene hero visible, estos valores quedan guardados para cuando exista.</div></div>'+
+    '<div class="card text-section"><h3>Los 4 beneficios</h3><div class="text-sections">'+benefit(1,'Beneficio 1')+benefit(2,'Beneficio 2')+benefit(3,'Beneficio 3')+benefit(4,'Beneficio 4')+'</div></div>'+
+    banner(1,'Banner 1')+banner(2,'Banner 2')+
+    '<div class="card text-section"><h3>Newsletter</h3><div class="form-grid">'+tf('newsletterTitle','Título')+tf('newsletterSubtitle','Subtítulo')+'</div></div>'+
+    '<div class="card text-section"><h3>Cuotas</h3><div class="form-grid">'+tf('installmentsTitle','Título')+tf('installmentsSubtitle','Subtítulo')+'</div></div>'+
+    '<div class="card text-section"><h3>Footer</h3>'+tf('footerCopyright','Copyright')+'</div>'+
+    '<button id="saveTexts" class="btn primary text-save" type="button"><i class="fa-solid fa-floppy-disk"></i>Guardar cambios</button></div>';
+  [1,2].forEach((n)=>{
+    $('banner'+n+'Preview').onerror=()=>{$('banner'+n+'Preview').style.display='none'};
+    $('banner'+n+'File').onchange=async(e)=>{const file=e.target.files?.[0];if(!file)return;const form=new FormData();form.append('image',file);e.target.disabled=true;
+      try{const result=await api('/admin/upload-banner',{method:'POST',body:form});if(!result.url)throw new Error('Cloudinary no devolvió la URL.');$('banner'+n+'Preview').src=result.url;$('banner'+n+'Preview').style.display='block';$('banner'+n+'Preview').dataset.image=result.url;toast('ok','Imagen subida','El banner está listo para guardar.')}
+      catch(err){toast('err','No se pudo subir la imagen',err.message)}finally{e.target.disabled=false;e.target.value=''}};
+    $('banner'+n+'Preview').dataset.image=v('banner'+n+'Image')||'';
+  });
+  $('saveTexts').onclick=async()=>{const button=$('saveTexts');button.disabled=true;const body={};
+    ['topBarText','heroTitle','heroSubtitle','benefit1Icon','benefit1Title','benefit1Text','benefit2Icon','benefit2Title','benefit2Text','benefit3Icon','benefit3Title','benefit3Text','benefit4Icon','benefit4Title','benefit4Text','banner1Title','banner1Text','banner1ButtonText','banner1Link','banner2Title','banner2Text','banner2ButtonText','banner2Link','newsletterTitle','newsletterSubtitle','installmentsTitle','installmentsSubtitle','footerCopyright'].forEach((id)=>body[id]=$(id).value.trim());
+    body.banner1Image=$('banner1Preview').dataset.image||'';body.banner2Image=$('banner2Preview').dataset.image||'';
+    try{await api('/admin/settings',{method:'PUT',body:JSON.stringify(body)});toast('ok','Cambios guardados','Los textos de la tienda pública se actualizarán al recargar.');await renderTexts()}catch(err){toast('err','No se pudo guardar',err.message)}finally{button.disabled=false}};
 }
 
 async function renderSettings(){

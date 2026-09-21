@@ -244,30 +244,30 @@
 
     <section class="benefits">
       <div class="container benefit-grid">
-        <div class="benefit"><div class="benefit-icon"><i class="fa-solid fa-truck"></i></div><div><strong>Envíos a todo el país</strong><span>A domicilio o sucursal más cercana</span></div></div>
-        <div class="benefit"><div class="benefit-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><div><strong>Productos personalizados</strong><span>Consultanos por pedidos personalizados</span></div></div>
-        <div class="benefit"><div class="benefit-icon"><i class="fa-solid fa-lock"></i></div><div><strong>Compra segura</strong><span>Aboná con Mercado Pago</span></div></div>
-        <div class="benefit"><div class="benefit-icon"><i class="fa-solid fa-comments"></i></div><div><strong>Venta mayorista</strong><span>Consultá por WhatsApp</span></div></div>
+        <div class="benefit"><div class="benefit-icon"><i id="benefit1Icon" class="fa-solid fa-truck"></i></div><div><strong id="benefit1Title">Envíos a todo el país</strong><span id="benefit1Text">A domicilio o sucursal más cercana</span></div></div>
+        <div class="benefit"><div class="benefit-icon"><i id="benefit2Icon" class="fa-solid fa-wand-magic-sparkles"></i></div><div><strong id="benefit2Title">Productos personalizados</strong><span id="benefit2Text">Consultanos por pedidos personalizados</span></div></div>
+        <div class="benefit"><div class="benefit-icon"><i id="benefit3Icon" class="fa-solid fa-shield-halved"></i></div><div><strong id="benefit3Title">Compra segura</strong><span id="benefit3Text">Aboná con Mercado Pago</span></div></div>
+        <div class="benefit"><div class="benefit-icon"><i id="benefit4Icon" class="fa-solid fa-comments"></i></div><div><strong id="benefit4Title">Venta mayorista</strong><span id="benefit4Text">Consultá por WhatsApp</span></div></div>
       </div>
     </section>
 
     <section id="banners">
       <div class="container category-banners">
         <article class="category-banner">
-          <img src="https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800" alt="Figuras 3D">
-          <div class="banner-content"><h3>Figuras 3D</h3><p>Personajes, coleccionables y piezas para regalar.</p><button class="btn" type="button" data-banner-category="figuras">Comprar</button></div>
+          <img id="banner1Image" src="https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800" alt="Figuras 3D">
+          <div class="banner-content"><h3 id="banner1Title">Figuras 3D</h3><p id="banner1Text">Descubrí nuestra colección</p><a id="banner1Button" class="btn" href="/?cat=figuras">Comprar</a></div>
         </article>
         <article class="category-banner">
-          <img src="https://images.unsplash.com/photo-1631545806609-35d8db5a0a68?w=800" alt="Soportes y decoración">
-          <div class="banner-content"><h3>Soportes y Decoración</h3><p>Soluciones funcionales para tu casa, oficina o taller.</p><button class="btn" type="button" data-banner-category="decoracion">Comprar</button></div>
+          <img id="banner2Image" src="https://images.unsplash.com/photo-1631545806609-35d8db5a0a68?w=800" alt="Soportes y decoración">
+          <div class="banner-content"><h3 id="banner2Title">Soportes y Decoración</h3><p id="banner2Text">Piezas únicas para tu hogar</p><a id="banner2Button" class="btn" href="/?cat=decoracion">Comprar</a></div>
         </article>
       </div>
     </section>
 
     <section class="newsletter">
       <div class="container newsletter-inner">
-        <h2>Recibí todas las ofertas</h2>
-        <p>¿Querés recibir nuestras ofertas? ¡Registrate ya y comenzá a disfrutarlas!</p>
+        <h2 id="newsletterTitle">Recibí todas las ofertas</h2>
+        <p id="newsletterSubtitle">¿Querés recibir nuestras ofertas? ¡Registrate ya y comenzá a disfrutarlas!</p>
         <form id="newsletterForm" class="newsletter-form">
           <label class="sr-only" for="newsletterEmail">Email</label>
           <input id="newsletterEmail" type="email" required placeholder="tu@email.com" autocomplete="email">
@@ -277,8 +277,8 @@
     </section>
 
     <section class="installment">
-      <h2>3 cuotas sin interés en toda la web</h2>
-      <p>También tenemos 15% OFF abonando en efectivo o transferencia</p>
+      <h2 id="installmentsTitle">3 cuotas sin interés en toda la web</h2>
+      <p id="installmentsSubtitle">También tenemos 15% OFF abonando en efectivo o transferencia</p>
     </section>
   </main>
 
@@ -288,7 +288,7 @@
       <div><h3>Categorías</h3><a href="#inicio">Inicio</a><a href="#novedades" data-category="figuras">Figuras</a><a href="#novedades" data-category="decoracion">Decoración</a><a href="#novedades" data-category="funcionales">Funcionales</a><a href="#novedades" data-category="miniaturas">Miniaturas</a><a href="#novedades" data-category="juguetes">Juguetes</a><a href="#novedades" data-category="repuestos">Repuestos</a><a href="#novedades" data-category="personalizados">Personalizados</a><a href="#contacto">Contacto</a></div>
       <div><h3>Seguinos conectados</h3><div class="socials"><a class="social" id="instagramLink" href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a><a class="social" id="facebookLink" href="#" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></div><p><a id="footerWhatsApp" href="#" target="_blank" rel="noopener">WhatsApp disponible para consultas y mayoristas.</a></p></div>
     </div>
-    <div class="container copyright">© 2026 <span id="footerCopyrightName">Tienda Gemelos 3D</span> · Todos los derechos reservados</div>
+    <div id="footerCopyright" class="container copyright">© 2026 Tienda Gemelos 3D · Todos los derechos reservados</div>
   </footer>
 
   <a id="whatsappBtn" class="whatsapp" href="https://wa.me/" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -311,6 +311,16 @@
     const TOKEN_KEY = 'tg3d_token';
     const USER_KEY = 'tg3d_user';
     const DEFAULT_LOGO = 'https://res.cloudinary.com/nxgfhdxz/image/upload/v1789993988/Gemini_Generated_Image_c7nuutc7nuutc7nu.jpg';
+    const DEFAULT_TEXTS = {topBarText:'🚚 Envíos a todo el país · Hasta 3 cuotas sin interés',heroTitle:'Impresión 3D Profesional',heroSubtitle:'',
+      benefit1Icon:'fa-truck',benefit1Title:'Envíos a todo el país',benefit1Text:'A domicilio o sucursal más cercana',
+      benefit2Icon:'fa-wand-magic-sparkles',benefit2Title:'Productos personalizados',benefit2Text:'Consultanos por pedidos personalizados',
+      benefit3Icon:'fa-shield-halved',benefit3Title:'Compra segura',benefit3Text:'Aboná con Mercado Pago',
+      benefit4Icon:'fa-comments',benefit4Title:'Venta mayorista',benefit4Text:'Consultá por WhatsApp',
+      banner1Title:'Figuras 3D',banner1Text:'Descubrí nuestra colección',banner1ButtonText:'Comprar',banner1Link:'/?cat=figuras',banner1Image:'',
+      banner2Title:'Soportes y Decoración',banner2Text:'Piezas únicas para tu hogar',banner2ButtonText:'Comprar',banner2Link:'/?cat=decoracion',banner2Image:'',
+      newsletterTitle:'Recibí todas las ofertas',newsletterSubtitle:'¿Querés recibir nuestras ofertas? ¡Registrate ya y comenzá a disfrutarlas!',
+      installmentsTitle:'3 cuotas sin interés en toda la web',installmentsSubtitle:'También tenemos 15% OFF abonando en efectivo o transferencia',
+      footerCopyright:'© 2026 Tienda Gemelos 3D · Todos los derechos reservados'};
     let products = [];
     let bestSellingProducts = [];
     let cart = JSON.parse(localStorage.getItem('tg3d_cart') || '[]');
@@ -527,6 +537,7 @@
 
     function applySettings() {
       const settings = storeSettings || {};
+      const text=(key)=>settings[key] ?? DEFAULT_TEXTS[key];
       const name = settings.storeName || 'Tienda Gemelos 3D';
       const logo = settings.storeLogo || DEFAULT_LOGO;
       document.documentElement.style.setProperty('--accent', settings.primaryColor || '#8fd82e');
@@ -543,7 +554,13 @@
       $('#storeNameHeader').title = name;
       $('#footerStoreName').textContent = name;
       $('#footerCopyrightName').textContent = name;
-      $('#topBar').textContent = settings.topBarText || '🚚 Envíos a todo el país · Hasta 3 cuotas sin interés';
+      $('#topBar').textContent = text('topBarText');
+      ['benefit1','benefit2','benefit3','benefit4'].forEach((key)=>{const icon=$('#'+key+'Icon');if(icon)icon.className='fa-solid '+text(key+'Icon');const title=$('#'+key+'Title');if(title)title.textContent=text(key+'Title');const copy=$('#'+key+'Text');if(copy)copy.textContent=text(key+'Text')});
+      const heroTitle=$('#heroTitle');if(heroTitle)heroTitle.textContent=text('heroTitle');const heroSubtitle=$('#heroSubtitle');if(heroSubtitle)heroSubtitle.textContent=text('heroSubtitle');
+      $('#newsletterTitle').textContent=text('newsletterTitle');$('#newsletterSubtitle').textContent=text('newsletterSubtitle');
+      $('#installmentsTitle').textContent=text('installmentsTitle');$('#installmentsSubtitle').textContent=text('installmentsSubtitle');
+      $('#footerCopyright').textContent=text('footerCopyright');
+      [['1','banner1'],['2','banner2']].forEach(([n,key])=>{const title=$('#'+key+'Title');if(title)title.textContent=text(key+'Title');const copy=$('#'+key+'Text');if(copy)copy.textContent=text(key+'Text');const button=$('#'+key+'Button');if(button){button.textContent=text(key+'ButtonText');button.href=text(key+'Link')||DEFAULT_TEXTS[key+'Link']}const image=$('#'+key+'Image');if(image){const src=text(key+'Image');if(src)image.src=src;image.alt=text(key+'Title')}});
       $('#footerAddress').textContent = settings.storeAddress || 'Buenos Aires, Argentina';
       $('#footerEmail').textContent = settings.storeEmail || 'Email';
       $('#footerEmail').href = settings.storeEmail ? 'mailto:' + settings.storeEmail : '#';
@@ -779,7 +796,7 @@
     $('#allBestSellingBtn').onclick = showAllProducts;
     $('#modalBackdrop').addEventListener('click',(event) => { if(event.target === $('#modalBackdrop')) closeModal(); });
     document.addEventListener('keydown',(event) => { if(event.key === 'Escape'){closeModal();closeCart();} });
-    document.querySelectorAll('[data-banner-category]').forEach((node) => node.addEventListener('click',() => filterCategory(node.dataset.bannerCategory)));
+
 
     $('#searchInput').addEventListener('input',(event) => {
       const query = event.target.value.trim().toLowerCase();
@@ -794,6 +811,8 @@
 
     async function init() {
       await Promise.allSettled([loadCategories(),loadProducts(),loadSettings()]);
+      const requestedCategory=new URLSearchParams(window.location.search).get('cat');
+      if(requestedCategory && storeCategories.some((category)=>category.slug===requestedCategory)) filterCategory(requestedCategory);
       updateCart();
     }
     init();
