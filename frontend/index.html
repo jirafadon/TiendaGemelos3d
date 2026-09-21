@@ -178,13 +178,27 @@
     .main-product-image{width:100%;aspect-ratio:1;object-fit:contain;background:#f6f7f4;border-radius:9px}
     .modal-info h3{font:800 27px Poppins;margin:0 0 8px}
     .modal-info .price{font-size:28px;margin-top:18px}
+    .product-breadcrumb{font-size:12px;color:#6b6b6b;margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .product-breadcrumb a{color:inherit;text-decoration:none;cursor:pointer}
+    .product-breadcrumb a:hover{text-decoration:underline}
+    .modal-product-actions{padding:0 20px 20px;display:flex;justify-content:flex-end;gap:10px}
+    .modal-product-actions .btn{flex:1}
+    .related-products{margin-top:24px}
+    .related-products h4{font:700 18px/1.3 Poppins,Arial,sans-serif;margin:0 0 16px}
+    .related-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .related-card{border:1px solid var(--border);border-radius:10px;background:#fff;overflow:hidden;cursor:pointer;transition:.2s;text-align:left;padding:0}
+    .related-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#cdd8c2}
+    .related-card img{width:100%;aspect-ratio:1;object-fit:cover;background:#f3f4f1}
+    .related-card-body{padding:9px}
+    .related-card-name{font-size:13px;line-height:1.3;font-weight:600;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-overflow:ellipsis;min-height:34px;margin-bottom:5px}
+    .related-card-price{font-size:14px;font-weight:800;color:#111}
     .toast{position:fixed;right:20px;bottom:88px;z-index:500;background:#20251e;color:#fff;border-left:4px solid var(--accent);border-radius:8px;padding:13px 16px;box-shadow:var(--shadow);max-width:360px}
     .hidden{display:none!important}
     .clear-cart-btn{border:0;background:#f1f2ef;color:#666;border-radius:8px;padding:10px 12px;font-size:12px;white-space:nowrap}.clear-cart-btn:hover{background:#e5e5e5;color:#333}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     @media(max-width:1200px){.header-main{grid-template-columns:160px 1fr 230px}.product-grid{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:900px){.header-main{grid-template-columns:140px 1fr 170px;gap:12px}.header-action{min-width:48px}.header-action span{font-size:11px}.benefit-grid{grid-template-columns:repeat(2,1fr)}.benefit:nth-child(2){border-right:0}.benefit:nth-child(-n+2){border-bottom:1px solid var(--border)}.category-nav{justify-content:flex-start}.footer-grid{grid-template-columns:1fr 1fr}.category-banners{grid-template-columns:1fr}}
-    @media(max-width:767px){.container{width:min(100% - 22px,1240px)}.topbar{height:auto;min-height:36px;padding:8px}.header-main{height:70px;min-height:70px;display:flex;align-items:center;gap:12px;padding:0}.logo{flex:0 0 auto;height:100%}.logo img{height:45px;max-width:130px}.header-actions{gap:12px;flex:0 0 auto}.header-action{min-width:38px}.header-action span{display:none}.header-action i{font-size:20px}.menu-btn{display:block}.search-wrap{position:absolute;top:70px;left:11px;right:11px;max-width:none;margin:0}.header{margin-bottom:58px}.category-bar{display:none}.category-bar.mobile-open{display:block}.category-nav{height:auto;min-height:48px;padding:0;flex-wrap:wrap;justify-content:flex-start}.category-link{height:48px;padding:0 18px;font-size:15px;font-weight:500}.benefit{padding:18px 10px;gap:9px}.benefit-icon{width:42px;height:42px;flex-basis:42px;font-size:16px}.benefit span{font-size:11px}.section-title{font-size:29px}.product-grid{grid-template-columns:repeat(2,1fr);gap:10px}.product-body{padding:11px}.product-name{font-size:13px;min-height:35px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.price{font-size:20px}.product-actions{grid-template-columns:1fr}.product-actions .icon-only{display:none}.category-banner{min-height:220px}.banner-content{padding:28px}.banner-content h3{font-size:24px}.newsletter-form{flex-direction:row}.newsletter-form .btn{padding:10px 14px}.footer-grid{grid-template-columns:1fr}.whatsapp{right:14px;bottom:14px}.modal-gallery{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(6,1fr);order:2}.modal-info h3{font-size:22px}}
+    @media(max-width:767px){.container{width:min(100% - 22px,1240px)}.topbar{height:auto;min-height:36px;padding:8px}.header-main{height:70px;min-height:70px;display:flex;align-items:center;gap:12px;padding:0}.logo{flex:0 0 auto;height:100%}.logo img{height:45px;max-width:130px}.header-actions{gap:12px;flex:0 0 auto}.header-action{min-width:38px}.header-action span{display:none}.header-action i{font-size:20px}.menu-btn{display:block}.search-wrap{position:absolute;top:70px;left:11px;right:11px;max-width:none;margin:0}.header{margin-bottom:58px}.category-bar{display:none}.category-bar.mobile-open{display:block}.category-nav{height:auto;min-height:48px;padding:0;flex-wrap:wrap;justify-content:flex-start}.category-link{height:48px;padding:0 18px;font-size:15px;font-weight:500}.benefit{padding:18px 10px;gap:9px}.benefit-icon{width:42px;height:42px;flex-basis:42px;font-size:16px}.benefit span{font-size:11px}.section-title{font-size:29px}.product-grid{grid-template-columns:repeat(2,1fr);gap:10px}.product-body{padding:11px}.product-name{font-size:13px;min-height:35px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.price{font-size:20px}.product-actions{grid-template-columns:1fr}.product-actions .icon-only{display:none}.category-banner{min-height:220px}.banner-content{padding:28px}.banner-content h3{font-size:24px}.newsletter-form{flex-direction:row}.newsletter-form .btn{padding:10px 14px}.footer-grid{grid-template-columns:1fr}.whatsapp{right:14px;bottom:14px}.modal-gallery{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(6,1fr);order:2}.modal-info h3{font-size:22px}.modal-product-actions{flex-direction:column}.modal-product-actions .btn{width:100%}.related-grid{grid-template-columns:repeat(2,1fr);gap:12px}.product-breadcrumb{font-size:12px}}
   </style>
 </head>
 <body>
@@ -500,11 +514,45 @@
       currentModalProduct = product;
       const images = (Array.isArray(product.images) && product.images.length ? product.images : [imageFor(product)]).slice(0,6);
       const thumbs = images.map((src,index) => '<button class="thumb ' + (index===0?'active':'') + '" type="button" data-thumb="' + index + '"><img src="' + esc(src) + '" alt=""></button>').join('');
-      const body = '<div class="modal-gallery"><div class="thumbs">' + thumbs + '</div><div><img id="mainProductImage" class="main-product-image" src="' + esc(images[0]) + '" alt="' + esc(product.name) + '"></div></div><div class="modal-info" style="margin-top:20px"><h3>' + esc(product.name) + '</h3><p>' + esc(product.description || 'Producto impreso en 3D.') + '</p><div class="rating">★ ' + (Number(product.rating)||0).toFixed(1) + ' <span>(' + (Number(product.reviews)||0) + ' reseñas)</span></div><div class="price">' + money(product.price) + '</div><p style="color:var(--text-2)">Stock disponible: ' + (Number(product.stock)||0) + '</p></div>';
-      const footer = '<div style="padding:0 20px 20px;display:flex;justify-content:flex-end"><button class="btn btn-primary" id="modalAdd" type="button">Agregar al carrito</button></div>';
+      const cat = storeCategories.find((category) => category.slug === product.category);
+      const categoryName = cat ? cat.name : (product.category || 'Productos');
+      const related = products
+        .filter((p) => String(p._id) !== String(product._id) && p.category === product.category && p.active !== false)
+        .sort((a,b) => (Number(b.rating)||0) - (Number(a.rating)||0) || (Number(b.reviews)||0) - (Number(a.reviews)||0))
+        .slice(0,4);
+      const relatedHtml = related.length ? '<section class="related-products"><h4>También te puede interesar</h4><div class="related-grid">' +
+        related.map((item) => '<button class="related-card" type="button" data-related-id="' + esc(item._id) + '">' +
+          '<img src="' + esc(imageFor(item)) + '" alt="' + esc(item.name) + '">' +
+          '<div class="related-card-body"><div class="related-card-name">' + esc(item.name) + '</div><div class="related-card-price">' + money(item.price) + '</div></div>' +
+        '</button>').join('') + '</div></section>' : '';
+      const breadcrumb = '<div class="product-breadcrumb">' +
+        '<a href="#" id="bcHome">Inicio</a><span style="margin:0 6px;color:#aaa">›</span>' +
+        '<a href="#" id="bcCategory">' + esc(categoryName) + '</a><span style="margin:0 6px;color:#aaa">›</span>' +
+        '<span style="color:#2a2a2a;font-weight:600">' + esc(product.name) + '</span>' +
+      '</div>';
+      const body = '<div class="modal-gallery"><div class="thumbs">' + thumbs + '</div><div><img id="mainProductImage" class="main-product-image" src="' + esc(images[0]) + '" alt="' + esc(product.name) + '"></div></div>' +
+        '<div class="modal-info" style="margin-top:20px">' + breadcrumb +
+          '<h3>' + esc(product.name) + '</h3><p>' + esc(product.description || 'Producto impreso en 3D.') + '</p>' +
+          '<div class="rating">★ ' + (Number(product.rating)||0).toFixed(1) + ' <span>(' + (Number(product.reviews)||0) + ' reseñas)</span></div>' +
+          '<div class="price">' + money(product.price) + '</div><p style="color:var(--text-2)">Stock disponible: ' + (Number(product.stock)||0) + '</p>' +
+        '</div>' + relatedHtml;
+      const whatsappNumber = String(storeSettings.storeWhatsApp || '').replace(/\D/g,'');
+      const whatsappButton = whatsappNumber ? '<button class="btn" id="modalWhatsApp" type="button" style="background:#25D366;color:#fff;border-color:#25D366"><i class="fa-brands fa-whatsapp"></i> Consultar por WhatsApp</button>' : '';
+      const footer = '<div class="modal-product-actions"><button class="btn btn-primary" id="modalAdd" type="button">Agregar al carrito</button>' + whatsappButton + '</div>';
       openModal(product.name,body,footer);
       document.querySelectorAll('[data-thumb]').forEach((button) => button.onclick = () => { const i=Number(button.dataset.thumb); $('#mainProductImage').src=images[i]; document.querySelectorAll('[data-thumb]').forEach((x)=>x.classList.toggle('active',x===button)); });
+      document.querySelectorAll('[data-related-id]').forEach((button) => button.onclick = () => openProduct(button.dataset.relatedId));
+      $('#bcHome').onclick = (event) => { event.preventDefault(); closeModal(); window.scrollTo({top:0,behavior:'smooth'}); };
+      $('#bcCategory').onclick = (event) => { event.preventDefault(); closeModal(); filterCategory(product.category); };
       $('#modalAdd').onclick = () => { addToCart(product._id); closeModal(); openCart(); };
+      if (whatsappNumber) {
+        $('#modalWhatsApp').onclick = () => {
+          const number = String(storeSettings.storeWhatsApp || '').replace(/\D/g,'');
+          if (!number) { toast('WhatsApp no configurado.'); return; }
+          const text = encodeURIComponent(`Hola! Me interesa el producto: ${product.name} (${money(product.price)}). ¿Está disponible?`);
+          window.open(`https://wa.me/${number}?text=${text}`, '_blank');
+        };
+      }
     }
 
     async function loadProducts() {
