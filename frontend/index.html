@@ -54,10 +54,6 @@
     .category-link{height:48px;display:flex;align-items:center;padding:0 18px;text-decoration:none;white-space:nowrap;font-size:15px;font-weight:500;border-bottom:2px solid transparent}
     .category-link:hover,.category-link.active{color:var(--accent);border-bottom-color:var(--accent)}
     .menu-btn{display:none;border:1px solid var(--border);background:#fff;border-radius:8px;width:42px;height:42px}
-    .hero{height:120px;max-height:120px;min-height:0;background:linear-gradient(135deg,#1a1a1a 0%,#2d2d2d 100%);display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;overflow:hidden;position:relative}
-    .hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:36px;background:linear-gradient(180deg,transparent 0%,rgba(143,216,46,.06) 100%);pointer-events:none}
-    .hero-content{position:relative;z-index:1;width:min(900px,100%);margin:auto;padding:24px 20px}
-    .hero h1{font:700 22px/1.1 Poppins,Arial,sans-serif;margin:0}
     .btn{border:1px solid var(--border);background:#fff;color:var(--text);border-radius:8px;padding:12px 18px;font-weight:700;transition:.2s}
     .btn:hover{transform:translateY(-1px)}
     .btn-primary{background:var(--accent);border-color:var(--accent);color:#111}
@@ -72,6 +68,9 @@
     .benefit span{display:block;color:var(--text-2);font-size:12px}
     section{padding:56px 0}
     .section-title{text-align:center;margin:0 0 30px;font:800 36px/1.2 Poppins,Arial,sans-serif}
+    #mas-vendidos{padding:40px 0 56px}
+    #mas-vendidos .section-title{font:700 32px/1.2 Poppins,Arial,sans-serif;margin:0 0 30px}
+    #mas-vendidos .section-title small{margin-top:8px;color:#6b6b6b;font:500 15px Inter,Arial,sans-serif}
     .section-title small{display:block;margin-top:7px;color:var(--text-2);font:500 14px Inter,Arial,sans-serif}
     .product-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
     .product-card{border:1px solid var(--border);border-radius:var(--radius);background:#fff;overflow:hidden;transition:.22s;position:relative}
@@ -185,7 +184,7 @@
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     @media(max-width:1200px){.header-main{grid-template-columns:160px 1fr 230px}.product-grid{grid-template-columns:repeat(3,1fr)}}
     @media(max-width:900px){.header-main{grid-template-columns:140px 1fr 170px;gap:12px}.header-action{min-width:48px}.header-action span{font-size:11px}.benefit-grid{grid-template-columns:repeat(2,1fr)}.benefit:nth-child(2){border-right:0}.benefit:nth-child(-n+2){border-bottom:1px solid var(--border)}.category-nav{justify-content:flex-start}.footer-grid{grid-template-columns:1fr 1fr}.category-banners{grid-template-columns:1fr}}
-    @media(max-width:767px){.container{width:min(100% - 22px,1240px)}.topbar{height:auto;min-height:36px;padding:8px}.header-main{height:70px;min-height:70px;display:flex;align-items:center;gap:12px;padding:0}.logo{flex:0 0 auto;height:100%}.logo img{height:45px;max-width:130px}.header-actions{gap:12px;flex:0 0 auto}.header-action{min-width:38px}.header-action span{display:none}.header-action i{font-size:20px}.menu-btn{display:block}.search-wrap{position:absolute;top:70px;left:11px;right:11px;max-width:none;margin:0}.header{margin-bottom:58px}.category-bar{display:none}.category-bar.mobile-open{display:block}.category-nav{height:auto;min-height:48px;padding:0;flex-wrap:wrap;justify-content:flex-start}.category-link{height:48px;padding:0 18px;font-size:15px;font-weight:500}.hero{height:100px;max-height:100px;min-height:0}.hero-content{padding:24px 14px}.hero h1{font-size:22px;line-height:1.1;margin:0}.benefit{padding:18px 10px;gap:9px}.benefit-icon{width:42px;height:42px;flex-basis:42px;font-size:16px}.benefit span{font-size:11px}.section-title{font-size:29px}.product-grid{grid-template-columns:repeat(2,1fr);gap:10px}.product-body{padding:11px}.product-name{font-size:13px;min-height:35px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.price{font-size:20px}.product-actions{grid-template-columns:1fr}.product-actions .icon-only{display:none}.category-banner{min-height:220px}.banner-content{padding:28px}.banner-content h3{font-size:24px}.newsletter-form{flex-direction:row}.newsletter-form .btn{padding:10px 14px}.footer-grid{grid-template-columns:1fr}.whatsapp{right:14px;bottom:14px}.modal-gallery{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(6,1fr);order:2}.modal-info h3{font-size:22px}}
+    @media(max-width:767px){.container{width:min(100% - 22px,1240px)}.topbar{height:auto;min-height:36px;padding:8px}.header-main{height:70px;min-height:70px;display:flex;align-items:center;gap:12px;padding:0}.logo{flex:0 0 auto;height:100%}.logo img{height:45px;max-width:130px}.header-actions{gap:12px;flex:0 0 auto}.header-action{min-width:38px}.header-action span{display:none}.header-action i{font-size:20px}.menu-btn{display:block}.search-wrap{position:absolute;top:70px;left:11px;right:11px;max-width:none;margin:0}.header{margin-bottom:58px}.category-bar{display:none}.category-bar.mobile-open{display:block}.category-nav{height:auto;min-height:48px;padding:0;flex-wrap:wrap;justify-content:flex-start}.category-link{height:48px;padding:0 18px;font-size:15px;font-weight:500}.benefit{padding:18px 10px;gap:9px}.benefit-icon{width:42px;height:42px;flex-basis:42px;font-size:16px}.benefit span{font-size:11px}.section-title{font-size:29px}.product-grid{grid-template-columns:repeat(2,1fr);gap:10px}.product-body{padding:11px}.product-name{font-size:13px;min-height:35px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.price{font-size:20px}.product-actions{grid-template-columns:1fr}.product-actions .icon-only{display:none}.category-banner{min-height:220px}.banner-content{padding:28px}.banner-content h3{font-size:24px}.newsletter-form{flex-direction:row}.newsletter-form .btn{padding:10px 14px}.footer-grid{grid-template-columns:1fr}.whatsapp{right:14px;bottom:14px}.modal-gallery{grid-template-columns:1fr}.thumbs{grid-template-columns:repeat(6,1fr);order:2}.modal-info h3{font-size:22px}}
   </style>
 </head>
 <body>
@@ -225,13 +224,6 @@
   </header>
 
   <main id="inicio">
-
-    <section class="hero">
-      <div class="hero-content">
-        <h1>Impresión 3D Profesional</h1>
-      </div>
-    </section>
-
     <section id="mas-vendidos">
       <div class="container">
         <h2 class="section-title">Más vendidos<small>Los productos favoritos de nuestros clientes</small></h2>
