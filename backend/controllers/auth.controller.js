@@ -119,7 +119,7 @@ export async function register(req, res, next) {
       lastLogin: new Date()
     });
 
-    await sendWelcome(user);
+    try { await sendWelcome(user); } catch (emailError) { console.error('[email] Bienvenida:', emailError.message); }
 
     const token = signToken(user);
     res.cookie('token', token, cookieOptions());
@@ -194,7 +194,7 @@ export async function forgotPassword(req, res, next) {
       user.resetTokenExpires = new Date(Date.now() + 60 * 60 * 1000);
       await user.save();
 
-      await sendPasswordReset(user, rawToken);
+      try { await sendPasswordReset(user, rawToken); } catch (emailError) { console.error('[email] Recuperación:', emailError.message); }
     }
 
     res.json({

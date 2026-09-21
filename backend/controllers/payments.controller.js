@@ -181,10 +181,14 @@ export async function checkout(req, res, next) {
       }))
     );
 
-    await Promise.all([
-      sendOrderConfirmation(order),
-      sendAdminNewOrder(order)
-    ]);
+    try {
+      await Promise.all([
+        sendOrderConfirmation(order),
+        sendAdminNewOrder(order)
+      ]);
+    } catch (emailError) {
+      console.error('[email] Pedido:', emailError.message);
+    }
 
     let redirectUrl = null;
     if (payment?.initPoint || payment?.sandboxInitPoint) {

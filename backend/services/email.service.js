@@ -1,181 +1,10 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { Resend } from 'resend';
 
-let resendClient = null;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const templateDir = path.resolve(__dirname, '../templates/email');
+let resend = null;
 
-export function initClient() {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY no configurada. Los emails quedarán desactivados.');
-    return null;
-  }
-  if (!resendClient) resendClient = new Resend(process.env.RESEND_API_KEY);
-  return resendClient;
-}
-
-function fromEmail() {
-  return process.env.RESEND_FROM_EMAIL || 'PrintLab 3D <no-reply@example.com>';
-}
-
-function baseUrls() {
-  const frontendUrl = String(process.env.FRONTEND_URL || 'http://localhost:5500').replace(/\/$/, '');
-  const adminUrl = String(process.env.ADMIN_URL || frontendUrl).replace(/\/$/, '');
-  return {
-    websiteUrl: frontendUrl,
-    catalogUrl: `${frontendUrl}/index.html#catalogo`,
-    adminUrl,
-    instagramUrl: process.env.INSTAGRAM_URL || `${frontendUrl}/#instagram`,
-    facebookUrl: process.env.FACEBOOK_URL || `${frontendUrl}/#facebook`,
-    unsubscribeUrl: process.env.UNSUBSCRIBE_URL || `${frontendUrl}/#unsubscribe`
-  };
-}
-
-async function renderTemplate(templateName, variables = {}) {
-  const filePath = path.join(templateDir, templateName);
-  let html = await fs.readFile(filePath, 'utf8');
-  const values = { ...baseUrls(), ...variables };
-  const rawKeys = new Set(['itemsRows']);
-  for (const [key, value] of Object.entries(values)) {
-    const replacement = rawKeys.has(key) ? String(value ?? '') : escapeHtml(value);
-    html = html.replaceAll(`{{${key}}}`, replacement);
-  }
-  return html;
-}
-
-async function sendEmail({ to, subject, html }) {
-  try {
-    const client = initClient();
-    if (!client) return null;
-    return await client.emails.send({ from: fromEmail(), to, subject, html });
-  } catch (error) {
-    console.error(`Error enviando email a ${to}:`, error.message);
-    return null;
-  }
-}
-
-function formatMoney(value) {
-  return Number(value || 0).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function money(value) {
-  return `$${formatMoney(value)}`;
-}
-
-function itemsRows(order) {
-  return (order.items || []).map(item => `
-    <tr>
-      <td style="padding:10px;border-bottom:1px solid #26333b;color:#eaf7f3">${escapeHtml(item.name)}</td>
-      <td align="center" style="padding:10px;border-bottom:1px solid #26333b;color:#b8c9c4">${Number(item.qty || 0)}</td>
-      <td align="right" style="padding:10px;border-bottom:1px solid #26333b;color:#eaf7f3">${money(Number(item.price || 0) * Number(item.qty || 0))}</td>
-    </tr>
-  `).join('');
-}
-
-export async function sendWelcome(user) {
-  try {
-    const html = await renderTemplate('welcome.html', { userName: user.name });
-    return await sendEmail({ to: user.email, subject: '¡Bienvenido a PrintLab 3D!', html });
-  } catch (error) {
-    console.error('sendWelcome:', error.message);
-    return null;
-  }
-}
-
-export async function sendOrderConfirmation(order) {
-  try {
-    const html = await renderTemplate('orderConfirmation.html', {
-      customerName: order.customer?.name,
-      orderNumber: order.number,
-      itemsRows: itemsRows(order),
-      subtotal: money(order.subtotal),
-      shipping: money(order.shipping),
-      discount: money(order.discount),
-      total: money(order.total),
-      address: order.customer?.address,
-      city: order.customer?.city,
-      zip: order.customer?.zip,
-      phone: order.customer?.phone,
-      payMethod: order.payMethod
-    });
-    return await sendEmail({ to: order.customer.email, subject: `Confirmación de pedido ${order.number}`, html });
-  } catch (error) {
-    console.error('sendOrderConfirmation:', error.message);
-    return null;
-  }
-}
-
-export async function sendOrderShipped(order, tracking) {
-  try {
-    const trackingValue = tracking || 'No disponible';
-    const trackingUrl = process.env.TRACKING_BASE_URL
-      ? `${String(process.env.TRACKING_BASE_URL).replace(/\/$/, '')}/${encodeURIComponent(trackingValue)}`
-      : `${baseUrls().websiteUrl}/#seguimiento-${encodeURIComponent(trackingValue)}`;
-    const html = await renderTemplate('orderShipped.html', {
-      customerName: order.customer?.name,
-      orderNumber: order.number,
-      tracking: trackingValue,
-      trackingUrl
-    });
-    return await sendEmail({ to: order.customer.email, subject: `Tu pedido ${order.number} fue enviado`, html });
-  } catch (error) {
-    console.error('sendOrderShipped:', error.message);
-    return null;
-  }
-}
-
-export async function sendPasswordReset(user, token) {
-  try {
-    const frontendUrl = String(process.env.FRONTEND_URL || 'http://localhost:5500').replace(/\/$/, '');
-    const resetUrl = `${frontendUrl}/index.html?resetToken=${encodeURIComponent(token)}`;
-    const html = await renderTemplate('passwordReset.html', { userName: user.name, resetUrl });
-    return await sendEmail({ to: user.email, subject: 'Restablecer contraseña - PrintLab 3D', html });
-  } catch (error) {
-    console.error('sendPasswordReset:', error.message);
-    return null;
-  }
-}
-
-export async function sendAdminNewOrder(order) {
-  try {
-    const adminEmail = process.env.ADMIN_EMAIL;
-    if (!adminEmail) {
-      console.warn('ADMIN_EMAIL no configurado. No se enviará el aviso de nuevo pedido.');
-      return null;
-    }
-    const html = await renderTemplate('adminNewOrder.html', {
-      orderNumber: order.number,
-      total: money(order.total),
-      customerName: order.customer?.name,
-      customerEmail: order.customer?.email,
-      address: order.customer?.address,
-      city: order.customer?.city,
-      zip: order.customer?.zip,
-      payMethod: order.payMethod,
-      itemsRows: itemsRows(order),
-      subtotal: money(order.subtotal),
-      shipping: money(order.shipping),
-      discount: money(order.discount)
-    });
-    return await sendEmail({ to: adminEmail, subject: `Nuevo pedido ${order.number}`, html });
-  } catch (error) {
-    console.error('sendAdminNewOrder:', error.message);
-    return null;
-  }
-}
-
-export async function sendNewsletterWelcome(email) {
-  try {
-    const html = await renderTemplate('welcome.html', { userName: 'amigo/a de PrintLab 3D' });
-    return await sendEmail({ to: email, subject: '¡Gracias por suscribirte a PrintLab 3D!', html });
-  } catch (error) {
-    console.error('sendNewsletterWelcome:', error.message);
-    return null;
-  }
-}
+const FROM = () => process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
+const ADMIN_EMAIL = () => process.env.ADMIN_EMAIL || '3dgemelos@gmail.com';
+const FRONTEND_URL = () => String(process.env.FRONTEND_URL || 'https://tiendagemelos3d.vercel.app').replace(/\/$/, '');
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -184,4 +13,122 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
+}
+
+function getClient() {
+  if (!process.env.RESEND_API_KEY) {
+    console.warn('[email] RESEND_API_KEY no configurada, se omite el envío');
+    return null;
+  }
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
+
+async function safeSend(options) {
+  const client = getClient();
+  if (!client) return { skipped: true };
+  try {
+    const result = await client.emails.send({
+      from: FROM(),
+      ...options
+    });
+    console.log('[email] Enviado:', result.data?.id || 'sin id');
+    return result;
+  } catch (err) {
+    console.error('[email] Error al enviar:', err.message);
+    return { error: err.message };
+  }
+}
+
+function emailWrapper(content) {
+  return `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background:#f5f5f5;font-family:Arial,Helvetica,sans-serif;color:#2a2a2a;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f5;padding:24px 0;">
+<tr><td align="center">
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#fff;border-radius:12px;overflow:hidden;">
+<tr><td style="background:#8fd82e;padding:24px;text-align:center;"><h1 style="margin:0;color:#1a1a1a;font-size:22px;">Tienda Gemelos 3D</h1></td></tr>
+<tr><td style="padding:32px 28px;">${content}</td></tr>
+<tr><td style="background:#1a1a1a;padding:20px 28px;text-align:center;color:#9aa4b8;font-size:12px;">© 2026 Tienda Gemelos 3D · Impresión 3D profesional</td></tr>
+</table></td></tr></table></body></html>`;
+}
+
+function renderWelcome(user) {
+  return emailWrapper(`
+    <h2 style="margin:0 0 16px;font-size:20px;">¡Hola ${escapeHtml(user.name || 'cliente')}!</h2>
+    <p style="margin:0 0 16px;line-height:1.6;">Gracias por registrarte en <strong>Tienda Gemelos 3D</strong>. Ya podés ver nuestros productos, agregarlos al carrito y hacer tus pedidos.</p>
+    <p style="margin:0 0 24px;line-height:1.6;">Cualquier consulta, escribinos por WhatsApp.</p>
+    <p style="text-align:center;margin:0;"><a href="${FRONTEND_URL()}" style="display:inline-block;background:#8fd82e;color:#1a1a1a;text-decoration:none;font-weight:700;padding:14px 32px;border-radius:8px;">Ver catálogo</a></p>`);
+}
+
+function renderOrderConfirmation(order) {
+  const rows = (order.items || []).map(item => `<tr>
+    <td style="padding:8px 0;border-bottom:1px solid #eee;">${escapeHtml(item.name)}${item.variant ? ` <small style="color:#6b6b6b;">(${escapeHtml(item.variant)})</small>` : ''}</td>
+    <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:center;">${Number(item.qty || 0)}</td>
+    <td style="padding:8px 0;border-bottom:1px solid #eee;text-align:right;">$${Number(item.price || 0).toLocaleString('es-AR')}</td>
+  </tr>`).join('');
+  return emailWrapper(`
+    <h2 style="margin:0 0 8px;font-size:20px;">¡Gracias por tu compra!</h2>
+    <p style="margin:0 0 20px;line-height:1.6;color:#6b6b6b;">Pedido <strong style="color:#1a1a1a;">${escapeHtml(order.number)}</strong></p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;font-size:14px;">
+      <thead><tr><th align="left" style="padding:8px 0;border-bottom:2px solid #1a1a1a;">Producto</th><th align="center" style="padding:8px 0;border-bottom:2px solid #1a1a1a;">Cant.</th><th align="right" style="padding:8px 0;border-bottom:2px solid #1a1a1a;">Precio</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p style="margin:0 0 8px;font-weight:700;">Dirección de envío:</p>
+    <p style="margin:0 0 20px;line-height:1.6;color:#6b6b6b;">${escapeHtml(order.customer?.name)}<br>${escapeHtml(order.customer?.address)}<br>${escapeHtml(order.customer?.city)} ${escapeHtml(order.customer?.zip)}<br>${escapeHtml(order.customer?.phone)}</p>
+    <p style="margin:0;line-height:1.6;color:#6b6b6b;font-size:13px;">Te vamos a avisar cuando tu pedido esté en camino.</p>`);
+}
+
+function renderAdminNewOrder(order) {
+  const items = (order.items || []).map(i => `<li>${Number(i.qty || 0)}x ${escapeHtml(i.name)} — $${Number(i.price || 0).toLocaleString('es-AR')}</li>`).join('');
+  return emailWrapper(`
+    <h2 style="margin:0 0 8px;font-size:20px;">🎉 Nuevo pedido recibido</h2>
+    <p style="margin:0 0 20px;line-height:1.6;">Pedido <strong>${escapeHtml(order.number)}</strong> · Total <strong>$${Number(order.total || 0).toLocaleString('es-AR')}</strong></p>
+    <p style="margin:0 0 8px;font-weight:700;">Cliente:</p>
+    <p style="margin:0 0 16px;line-height:1.6;color:#6b6b6b;">${escapeHtml(order.customer?.name)}<br>${escapeHtml(order.customer?.email)}<br>${escapeHtml(order.customer?.phone)}</p>
+    <p style="margin:0 0 8px;font-weight:700;">Productos:</p><ul style="margin:0 0 16px;padding-left:20px;line-height:1.6;color:#6b6b6b;">${items}</ul>
+    <p style="margin:0;line-height:1.6;color:#6b6b6b;font-size:13px;">Método de pago: <strong>${escapeHtml(order.payMethod || '-')}</strong></p>`);
+}
+
+function renderPasswordReset(user, resetUrl) {
+  return emailWrapper(`
+    <h2 style="margin:0 0 16px;font-size:20px;">Recuperar contraseña</h2>
+    <p style="margin:0 0 16px;line-height:1.6;">Hola ${escapeHtml(user.name || 'cliente')}, recibimos un pedido para restablecer tu contraseña.</p>
+    <p style="margin:0 0 24px;line-height:1.6;">El enlace es válido por <strong>1 hora</strong>. Si no lo pediste vos, ignorá este mensaje.</p>
+    <p style="text-align:center;margin:0;"><a href="${resetUrl}" style="display:inline-block;background:#8fd82e;color:#1a1a1a;text-decoration:none;font-weight:700;padding:14px 32px;border-radius:8px;">Restablecer contraseña</a></p>
+    <p style="margin:24px 0 0;line-height:1.6;color:#6b6b6b;font-size:13px;word-break:break-all;">Si el botón no funciona, copiá este link en el navegador:<br>${escapeHtml(resetUrl)}</p>`);
+}
+
+export async function sendWelcome(user) {
+  if (!user?.email) return;
+  return safeSend({ to: user.email, subject: '¡Bienvenido a Tienda Gemelos 3D!', html: renderWelcome(user) });
+}
+
+export async function sendOrderConfirmation(order) {
+  if (!order?.customer?.email) return;
+  return safeSend({ to: order.customer.email, subject: `Confirmación de pedido ${order.number}`, html: renderOrderConfirmation(order) });
+}
+
+export async function sendAdminNewOrder(order) {
+  if (!order) return;
+  return safeSend({ to: ADMIN_EMAIL(), subject: `Nuevo pedido ${order.number} - $${order.total}`, html: renderAdminNewOrder(order) });
+}
+
+export async function sendPasswordReset(user, resetToken) {
+  if (!user?.email) return;
+  const resetUrl = `${FRONTEND_URL()}/reset-password?token=${encodeURIComponent(resetToken)}`;
+  return safeSend({ to: user.email, subject: 'Recuperar contraseña - Tienda Gemelos 3D', html: renderPasswordReset(user, resetUrl) });
+}
+
+// Se conserva para compatibilidad con futuras etapas; no se dispara en esta feature.
+export async function sendOrderShipped() { return { skipped: true }; }
+
+export async function sendNewsletterWelcome(email) {
+  if (!email) return;
+  return safeSend({
+    to: email,
+    subject: '¡Gracias por suscribirte a Tienda Gemelos 3D!',
+    html: emailWrapper('<h2>¡Gracias por suscribirte!</h2><p>Te avisaremos de novedades y promociones de Tienda Gemelos 3D.</p>')
+  });
 }
