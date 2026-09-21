@@ -135,25 +135,68 @@ router.post('/upload-multiple', uploadImages, handleMultipleUpload);
 router.post('/upload', uploadImages, handleMultipleUpload);
 
 router.get('/products', listProducts);
-router.post('/products',[
-  body('name').trim().isLength({min:2,max:160}),
-  body('category').trim().isLength({min:2,max:60}),
-  body('description').optional({ checkFalsy: true }).isString().isLength({max:5000}),
-  body('price').isFloat({min:0}),
-  body('stock').optional().isInt({min:0}),
-  body('images').optional().isArray({max:6}),
-  body('image').optional({ checkFalsy: true }).isURL({protocols:['http','https'],require_protocol:true})
-],validate,createAdminProduct);
-router.put('/products/:id',[
+const productValidation = [
+  body('name')
+    .isString()
+    .trim()
+    .isLength({ min: 2, max: 160 }),
+  body('category')
+    .isString()
+    .trim()
+    .isLength({ min: 2, max: 60 }),
+  body('description')
+    .optional({ checkFalsy: true })
+    .isString()
+    .isLength({ max: 5000 }),
+  body('price')
+    .isFloat({ min: 0 }),
+  body('stock')
+    .optional({ checkFalsy: true })
+    .isInt({ min: 0 }),
+  body('oldPrice')
+    .optional({ checkFalsy: true })
+    .isFloat({ min: 0 }),
+  body('rating')
+    .optional({ checkFalsy: true })
+    .isFloat({ min: 0, max: 5 }),
+  body('reviews')
+    .optional({ checkFalsy: true })
+    .isInt({ min: 0 }),
+  body('tags')
+    .optional()
+    .isArray(),
+  body('images')
+    .optional()
+    .isArray({ max: 6 }),
+  body('images.*')
+    .optional()
+    .isString()
+    .isLength({ min: 1, max: 2048 }),
+  body('image')
+    .optional({ checkFalsy: true })
+    .isString()
+    .trim()
+    .isLength({ max: 2048 })
+    .custom((value) => /^https?:\\/\\//i.test(value)),
+  body('active')
+    .optional()
+    .isBoolean(),
+  body('variants')
+    .optional()
+    .isObject(),
+  body('variants.color')
+    .optional()
+    .isArray({ max: 50 }),
+  body('variants.size')
+    .optional()
+    .isArray({ max: 50 })
+];
+
+router.post('/products', productValidation, validate, createAdminProduct);
+router.put('/products/:id', [
   param('id').isMongoId(),
-  body('name').trim().isLength({min:2,max:160}),
-  body('category').trim().isLength({min:2,max:60}),
-  body('description').optional({ checkFalsy: true }).isString().isLength({max:5000}),
-  body('price').isFloat({min:0}),
-  body('stock').optional().isInt({min:0}),
-  body('images').optional().isArray({max:6}),
-  body('image').optional({ checkFalsy: true }).isURL({protocols:['http','https'],require_protocol:true})
-],validate,updateAdminProduct);
+  ...productValidation
+], validate, updateAdminProduct);
 router.delete('/products/:id', deleteAdminProduct);
 router.patch('/products/:id/toggle', toggleAdminProduct);
 
