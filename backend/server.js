@@ -15,6 +15,8 @@ import adminRoutes from './routes/admin.routes.js';
 import emailRoutes from './routes/emails.routes.js';
 import couponsRoutes from './routes/coupons.routes.js';
 import settingsRoutes from './routes/settings.routes.js';
+import categoriesRoutes from './routes/categories.routes.js';
+import { seedCategories } from './utils/seedCategories.js';
 
 export const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -72,12 +74,14 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/coupons', couponsRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/categories', categoriesRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
 
 export async function startServer() {
   await connectDB();
+  await seedCategories();
   return app.listen(port, () => {
     console.log(`Tienda Gemelos 3D backend escuchando en http://localhost:${port}`);
   });

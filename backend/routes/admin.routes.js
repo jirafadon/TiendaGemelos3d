@@ -31,6 +31,13 @@ import {
   getSettings,
   updateSettings
 } from '../controllers/admin.controller.js';
+import {
+  listAdminCategories,
+  createAdminCategory,
+  updateAdminCategory,
+  deleteAdminCategory,
+  reorderAdminCategories
+} from '../controllers/categories.controller.js';
 
 const router = Router();
 
@@ -258,6 +265,11 @@ router.put('/coupons/:id',[param('id').isMongoId(),body('code').optional().trim(
 router.delete('/coupons/:id', deleteCoupon);
 
 router.get('/settings', getSettings);
+router.get('/categories', listAdminCategories);
+router.post('/categories', createAdminCategory);
+router.put('/categories/:id', updateAdminCategory);
+router.delete('/categories/:id', deleteAdminCategory);
+router.patch('/categories/reorder', reorderAdminCategories);
 router.put('/settings',[body('storeName').optional().trim().isLength({max:120}),body('storeEmail').optional({checkFalsy:true}).isEmail(),body('storeLogo').optional().isString().isLength({max:2048}),body('primaryColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('primaryColorHover').optional().matches(/^#[0-9a-fA-F]{6}$/),body('backgroundColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('textColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('headerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('footerColor').optional().matches(/^#[0-9a-fA-F]{6}$/),body('storeWhatsApp').optional().isString().isLength({max:60}),body('storePhone').optional().isString().isLength({max:60}),body('storeAddress').optional().isString().isLength({max:240}),body('instagramUrl').optional({checkFalsy:true}).isURL(),body('facebookUrl').optional({checkFalsy:true}).isURL(),body('tiktokUrl').optional({checkFalsy:true}).isURL()],validate,updateSettings);
 
 export default router;
