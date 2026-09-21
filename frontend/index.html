@@ -210,15 +210,8 @@
       <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir categorías"><i class="fa-solid fa-bars"></i></button>
     </div>
     <div id="categoryBar" class="category-bar">
-      <nav class="container category-nav" aria-label="Categorías principales">
-        <a class="category-link active" href="#inicio">Inicio</a>
-        <a class="category-link" href="#novedades" data-category="figuras">Figuras</a>
-        <a class="category-link" href="#banners" data-category="decoracion">Decoración</a>
-        <a class="category-link" href="#novedades" data-category="funcionales">Funcionales</a>
-        <a class="category-link" href="#novedades" data-category="miniaturas">Miniaturas</a>
-        <a class="category-link" href="#novedades" data-category="juguetes">Juguetes</a>
-        <a class="category-link" href="#novedades" data-category="repuestos">Repuestos</a>
-        <a class="category-link" href="#novedades" data-category="personalizados">Personalizados</a>
+      <nav id="categoryNav" class="container category-nav" aria-label="Categorías principales">
+        <a class="category-link active" href="#inicio" data-category="">Inicio</a>
         <a class="category-link" href="#contacto">Contacto</a>
       </nav>
     </div>
@@ -322,6 +315,16 @@
     let bestSellingProducts = [];
     let cart = JSON.parse(localStorage.getItem('tg3d_cart') || '[]');
     let storeSettings = {};
+    let storeCategories = [];
+    const FALLBACK_CATEGORIES = [
+      {name:'Figuras',slug:'figuras',icon:'fa-dragon',order:0},
+      {name:'Decoración',slug:'decoracion',icon:'fa-lightbulb',order:1},
+      {name:'Funcionales',slug:'funcionales',icon:'fa-gears',order:2},
+      {name:'Miniaturas',slug:'miniaturas',icon:'fa-chess-knight',order:3},
+      {name:'Juguetes',slug:'juguetes',icon:'fa-robot',order:4},
+      {name:'Repuestos',slug:'repuestos',icon:'fa-screwdriver-wrench',order:5},
+      {name:'Personalizados',slug:'personalizados',icon:'fa-wand-magic-sparkles',order:6}
+    ];
     let currentModalProduct = null;
     let currentCategory = '';
 
@@ -558,9 +561,33 @@
       const themeMeta=document.querySelector('meta[name="theme-color"]');if(themeMeta)themeMeta.content=settings.primaryColor||'#8fd82e';
     }
 
+    async function loadCategories() {
+      try {
+        const data = await api('/categories');
+        storeCategories = Array.isArray(data.categories) ? data.categories : [];
+        if (!storeCategories.length) storeCategories = FALLBACK_CATEGORIES.slice();
+      } catch (error) {
+        storeCategories = FALLBACK_CATEGORIES.slice();
+      }
+      renderCategoryBar();
+    }
+
+    function renderCategoryBar() {
+      const nav = $('#categoryNav');
+      if (!nav) return;
+      const current = currentCategory;
+      nav.innerHTML = '<a class="category-link '+(!current?'active':'')+'" href="#inicio" data-category="">Inicio</a>' +
+        storeCategories.map((category) => '<a class="category-link '+(category.slug===current?'active':'')+'" href="#novedades" data-category="'+esc(category.slug)+'">'+esc(category.name)+'</a>').join('') +
+        '<a class="category-link" href="#contacto">Contacto</a>';
+      nav.querySelectorAll('[data-category]').forEach((node) => node.addEventListener('click',(event) => {
+        event.preventDefault();
+        filterCategory(node.dataset.category || '');
+      }));
+    }
+
     function filterCategory(category) {
       currentCategory = category || '';
-      document.querySelectorAll('[data-category]').forEach((node) => node.classList.toggle('active',node.dataset.category === currentCategory));
+      renderCategoryBar();
       renderProductLists();
       document.querySelector('#novedades').scrollIntoView({behavior:'smooth'});
     }
@@ -752,7 +779,6 @@
     $('#allBestSellingBtn').onclick = showAllProducts;
     $('#modalBackdrop').addEventListener('click',(event) => { if(event.target === $('#modalBackdrop')) closeModal(); });
     document.addEventListener('keydown',(event) => { if(event.key === 'Escape'){closeModal();closeCart();} });
-    document.querySelectorAll('[data-category]').forEach((node) => node.addEventListener('click',(event) => { if(node.dataset.category){event.preventDefault();filterCategory(node.dataset.category);} }));
     document.querySelectorAll('[data-banner-category]').forEach((node) => node.addEventListener('click',() => filterCategory(node.dataset.bannerCategory)));
 
     $('#searchInput').addEventListener('input',(event) => {
@@ -767,7 +793,7 @@
     document.addEventListener('click',(event) => { if(!event.target.closest('.search-wrap')) $('#suggestions').classList.remove('open'); });
 
     async function init() {
-      await Promise.allSettled([loadProducts(),loadSettings()]);
+      await Promise.allSettled([loadCategories(),loadProducts(),loadSettings()]);
       updateCart();
     }
     init();
