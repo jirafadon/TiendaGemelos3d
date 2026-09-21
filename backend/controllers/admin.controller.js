@@ -159,18 +159,45 @@ export async function getRecentUsers(req, res, next) {
 
 export async function listProducts(req, res, next) {
   try {
-    const { search, category, status, page = 1, limit = 20 } = req.query;
+    const {
+      search = '',
+      category = '',
+      status = '',
+      sort = 'new',
+      page = 1,
+      limit = 20
+    } = req.query;
+    const currentPage = Math.max(1, Number(page) || 1);
+    const perPage = Math.min(100, Math.max(1, Number(limit) || 20));
     const query = {};
-    if (search) query.name = { $regex: search, $options: 'i' };
-    if (category && category !== 'all') query.category = category;
+    if (String(search).trim()) query.name = { $regex: String(search).trim(), $options: 'i' };
+    if (category && category !== 'all') query.category = String(category).toLowerCase();
     if (status === 'active') query.active = true;
     if (status === 'inactive') query.active = false;
 
+    const sortMap = {
+      new: { createdAt: -1 },
+      popular: { salesCount: -1, createdAt: -1 },
+      priceAsc: { price: 1 },
+      priceDesc: { price: -1 },
+      rating: { rating: -1, reviews: -1 }
+    };
+
     const [products, total] = await Promise.all([
-      Product.find(query).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(Number(limit)),
+      Product.find(query)
+        .sort(sortMap[sort] || sortMap.new)
+        .skip((currentPage - 1) * perPage)
+        .limit(perPage),
       Product.countDocuments(query)
     ]);
-    res.json({ success: true, products, total, page: Number(page), pages: Math.ceil(total / limit) });
+
+    res.json({
+      success: true,
+      products,
+      total,
+      page: currentPage,
+      pages: Math.ceil(total / perPage)
+    });
   } catch (error) {
     next(error);
   }
@@ -178,14 +205,25 @@ export async function listProducts(req, res, next) {
 
 export async function createAdminProduct(req, res, next) {
   try {
-    const data = { ...req.body };
-    data.name = stripHtml(data.name || '');
-    data.description = stripHtml(data.description || '');
+    const data = {
+      name: stripHtml(req.body.name || ''),
+      description: stripHtml(req.body.description || ''),
+      category: String(req.body.category || '').trim().toLowerCase(),
+      price: Number(req.body.price),
+      oldPrice: req.body.oldPrice === '' || req.body.oldPrice == null ? null : Number(req.body.oldPrice),
+      stock: Number(req.body.stock || 0),
+      rating: Number(req.body.rating || 0),
+      reviews: Number(req.body.reviews || 0),
+      tags: Array.isArray(req.body.tags) ? req.body.tags.map(String).filter(Boolean) : [],
+      image: String(req.body.image || ''),
+      images: Array.isArray(req.body.images) ? req.body.images.map(String).filter(Boolean).slice(0, 6) : [],
+      active: req.body.active !== false,
+      variants: {
+        color: Array.isArray(req.body.variants?.color) ? req.body.variants.color.map(String).filter(Boolean) : [],
+        size: Array.isArray(req.body.variants?.size) ? req.body.variants.size.map(String).filter(Boolean) : []
+      }
+    };
     data.slug = createSlug(data.name);
-    if (typeof data.images === 'string') {
-      data.images = data.images.split(',').map((s) => s.trim()).filter(Boolean);
-    }
-    if (!data.images) data.images = [];
     if (data.images.length > 0 && !data.image) data.image = data.images[0];
     const product = await Product.create(data);
     res.status(201).json({ success: true, product });
@@ -206,7 +244,7 @@ export async function updateAdminProduct(req, res, next) {
       data.images = data.images.split(',').map((s) => s.trim()).filter(Boolean);
     }
     if (data.images && data.images.length > 0) data.image = data.images[0];
-    const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true });
+    const product = await Product.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
     if (!product) return res.status(404).json({ success: false, message: 'Producto no encontrado' });
     res.json({ success: true, product });
   } catch (error) {
