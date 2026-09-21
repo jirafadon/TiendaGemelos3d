@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <link rel="stylesheet" href="a11y.css">
   <style>
-    :root{--accent:#8fd82e;--accent-hover:#6da020;--accent-dark:#4a7015;--bg:#fff;--bg-alt:#f7f8f5;--text:#2a2a2a;--text-2:#6b6b6b;--border:#e5e5e5;--dark:#1a1a1a;--success:#22c55e;--danger:#ef4444;--shadow:0 8px 28px rgba(20,30,10,.08);--radius:12px}
+    :root{--accent:#8fd82e;--accent-hover:#6da020;--accent-dark:#4a7015;--bg:#fff;--bg-alt:#f7f8f5;--text:#2a2a2a;--text-2:#6b6b6b;--border:#e5e5e5;--dark:#1a1a1a;--header-bg:#fff;--footer-bg:#1a1a1a;--success:#22c55e;--danger:#ef4444;--shadow:0 8px 28px rgba(20,30,10,.08);--radius:12px}
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif;line-height:1.5}
@@ -31,7 +31,7 @@
     a{color:inherit}
     .container{width:min(1240px,calc(100% - 32px));margin:auto}
     .topbar{height:36px;background:var(--accent);color:#111;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;text-align:center}
-    .header{position:sticky;top:0;z-index:100;background:#fff;border-bottom:1px solid var(--border);box-shadow:0 3px 15px rgba(0,0,0,.05)}
+    .header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bottom:1px solid var(--border);box-shadow:0 3px 15px rgba(0,0,0,.05)}
     .header-main{min-height:100px;display:grid;grid-template-columns:190px 1fr 260px;gap:24px;align-items:center}
     .logo{display:flex;align-items:center;text-decoration:none}
     .logo img{width:auto;height:70px;max-width:185px;object-fit:contain}
@@ -108,7 +108,7 @@
     .installment{text-align:center;padding:62px 20px}
     .installment h2{font:800 34px Poppins;margin:0 0 8px}
     .installment p{margin:0;color:var(--text-2)}
-    .footer{background:var(--dark);color:#fff;padding:52px 0 20px}
+    .footer{background:var(--footer-bg);color:#fff;padding:52px 0 20px}
     .footer-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:45px}
     .footer h3{font:800 16px Poppins;margin:0 0 15px}
     .footer a{display:block;text-decoration:none;color:#c9c9c9;margin:9px 0;font-size:13px}
@@ -264,7 +264,7 @@
       <div><h3>Categorías</h3><a href="#inicio">Inicio</a><a href="#novedades" data-category="figuras">Figuras</a><a href="#novedades" data-category="decoracion">Decoración</a><a href="#novedades" data-category="funcionales">Funcionales</a><a href="#novedades" data-category="miniaturas">Miniaturas</a><a href="#novedades" data-category="juguetes">Juguetes</a><a href="#novedades" data-category="repuestos">Repuestos</a><a href="#novedades" data-category="personalizados">Personalizados</a><a href="#contacto">Contacto</a></div>
       <div><h3>Seguinos conectados</h3><div class="socials"><a class="social" id="instagramLink" href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a><a class="social" id="facebookLink" href="#" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></div><p id="footerWhatsApp">WhatsApp disponible para consultas y mayoristas.</p></div>
     </div>
-    <div class="container copyright">© 2026 Tienda Gemelos 3D · Todos los derechos reservados</div>
+    <div class="container copyright">© 2026 <span id="footerCopyrightName">Tienda Gemelos 3D</span> · Todos los derechos reservados</div>
   </footer>
 
   <a id="whatsappBtn" class="whatsapp" href="https://wa.me/" target="_blank" rel="noopener" aria-label="Contactar por WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
@@ -465,10 +465,18 @@
       const settings = storeSettings || {};
       const name = settings.storeName || 'Tienda Gemelos 3D';
       const logo = settings.storeLogo || DEFAULT_LOGO;
+      document.documentElement.style.setProperty('--accent', settings.primaryColor || '#8fd82e');
+      document.documentElement.style.setProperty('--accent-hover', settings.primaryColorHover || '#6da020');
+      document.documentElement.style.setProperty('--bg', settings.backgroundColor || '#ffffff');
+      document.documentElement.style.setProperty('--text', settings.textColor || '#2a2a2a');
+      document.documentElement.style.setProperty('--header-bg', settings.headerColor || '#ffffff');
+      document.documentElement.style.setProperty('--footer-bg', settings.footerColor || '#1a1a1a');
+      document.documentElement.style.setProperty('--accent-dark', settings.primaryColorHover || '#6da020');
       $('#storeLogo').src = logo;
       $('#storeLogo').onerror = () => { $('#storeLogo').src = DEFAULT_LOGO; };
       $('#storeLogo').alt = name;
       $('#footerStoreName').textContent = name;
+      $('#footerCopyrightName').textContent = name;
       $('#topBar').textContent = settings.topBarText || '🚚 Envíos a todo el país · Hasta 3 cuotas sin interés';
       $('#footerAddress').textContent = settings.storeAddress || 'Buenos Aires, Argentina';
       $('#footerEmail').textContent = settings.storeEmail || 'Email';
@@ -477,6 +485,8 @@
       $('#footerPhone').href = settings.storePhone ? 'tel:' + settings.storePhone.replace(/\s/g,'') : '#';
       $('#instagramLink').href = settings.instagramUrl || '#';
       $('#facebookLink').href = settings.facebookUrl || '#';
+      if(!$('#tiktokLink')){$('.socials').insertAdjacentHTML('beforeend','<a class="social" id="tiktokLink" href="#" target="_blank" rel="noopener" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>');}
+      $('#tiktokLink').href = settings.tiktokUrl || '#';
       const whatsapp = String(settings.storeWhatsApp || '').replace(/\D/g,'');
       $('#whatsappBtn').href = whatsapp ? 'https://wa.me/' + whatsapp : '#';
       $('#footerWhatsApp').textContent = whatsapp ? 'Consultas y ventas por WhatsApp.' : 'WhatsApp disponible para consultas y mayoristas.';
