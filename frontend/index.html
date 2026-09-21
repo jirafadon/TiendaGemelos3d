@@ -33,7 +33,7 @@
     .topbar{height:36px;background:var(--accent);color:#111;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;text-align:center}
     .header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bottom:1px solid var(--border);box-shadow:0 3px 15px rgba(0,0,0,.05)}
     .header-main{min-height:100px;display:grid;grid-template-columns:190px 1fr 260px;gap:24px;align-items:center}
-    .logo{display:flex;align-items:center;text-decoration:none}
+    .logo{display:flex;align-items:center;text-decoration:none;gap:9px}.header-store-name{font-size:13px;font-weight:800;color:var(--text);white-space:nowrap}.logo img{flex:0 0 auto}
     .logo img{width:auto;height:70px;max-width:185px;object-fit:contain}
     .search-wrap{position:relative}
     .search{height:48px;width:100%;border:1px solid #d7d7d7;border-radius:26px;padding:0 48px 0 18px;outline:0;color:var(--text);background:#fff}
@@ -55,7 +55,7 @@
     .category-link{padding:14px 13px;text-decoration:none;white-space:nowrap;font-size:14px;font-weight:600;border-bottom:2px solid transparent}
     .category-link:hover,.category-link.active{color:var(--accent-dark);border-bottom-color:var(--accent)}
     .menu-btn{display:none;border:1px solid var(--border);background:#fff;border-radius:8px;width:42px;height:42px}
-    .hero{min-height:400px;background:linear-gradient(135deg,#8fd82e 0%,#6da020 100%);display:flex;align-items:center;text-align:center;color:#fff}
+    .hero{min-height:400px;background:linear-gradient(135deg,var(--accent) 0%,var(--accent-hover) 100%);display:flex;align-items:center;text-align:center;color:#fff}
     .hero-content{width:min(900px,100%);margin:auto;padding:70px 20px}
     .hero h1{font:800 clamp(38px,5vw,56px)/1.05 Poppins,Arial,sans-serif;margin:0 0 16px}
     .hero p{font-size:18px;max-width:720px;margin:0 auto 28px}
@@ -163,7 +163,7 @@
   <header class="header">
     <div class="container header-main">
       <a class="logo" href="#inicio" aria-label="Tienda Gemelos 3D">
-        <img id="storeLogo" src="https://res.cloudinary.com/nxgfhdxz/image/upload/v1789993988/Gemini_Generated_Image_c7nuutc7nuutc7nu.jpg" alt="Tienda Gemelos 3D">
+        <img id="storeLogo" src="https://res.cloudinary.com/nxgfhdxz/image/upload/v1789993988/Gemini_Generated_Image_c7nuutc7nuutc7nu.jpg" alt="Tienda Gemelos 3D"><span id="headerStoreName" class="header-store-name">Tienda Gemelos 3D</span>
       </a>
       <div class="search-wrap">
         <label class="sr-only" for="searchInput">Buscar productos</label>
@@ -262,7 +262,7 @@
     <div class="container footer-grid">
       <div><h3 id="footerStoreName">Tienda Gemelos 3D</h3><p id="footerAddress">Buenos Aires, Argentina</p><p><a id="footerEmail" href="mailto:">Email</a></p><p><a id="footerPhone" href="tel:">Teléfono</a></p></div>
       <div><h3>Categorías</h3><a href="#inicio">Inicio</a><a href="#novedades" data-category="figuras">Figuras</a><a href="#novedades" data-category="decoracion">Decoración</a><a href="#novedades" data-category="funcionales">Funcionales</a><a href="#novedades" data-category="miniaturas">Miniaturas</a><a href="#novedades" data-category="juguetes">Juguetes</a><a href="#novedades" data-category="repuestos">Repuestos</a><a href="#novedades" data-category="personalizados">Personalizados</a><a href="#contacto">Contacto</a></div>
-      <div><h3>Seguinos conectados</h3><div class="socials"><a class="social" id="instagramLink" href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a><a class="social" id="facebookLink" href="#" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></div><p id="footerWhatsApp">WhatsApp disponible para consultas y mayoristas.</p></div>
+      <div><h3>Seguinos conectados</h3><div class="socials"><a class="social" id="instagramLink" href="#" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a><a class="social" id="facebookLink" href="#" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></div><p><a id="footerWhatsApp" href="#" target="_blank" rel="noopener">WhatsApp disponible para consultas y mayoristas.</a></p></div>
     </div>
     <div class="container copyright">© 2026 <span id="footerCopyrightName">Tienda Gemelos 3D</span> · Todos los derechos reservados</div>
   </footer>
@@ -476,6 +476,7 @@
       $('#storeLogo').onerror = () => { $('#storeLogo').src = DEFAULT_LOGO; };
       $('#storeLogo').alt = name;
       $('#footerStoreName').textContent = name;
+      $('#headerStoreName').textContent = name;
       $('#footerCopyrightName').textContent = name;
       $('#topBar').textContent = settings.topBarText || '🚚 Envíos a todo el país · Hasta 3 cuotas sin interés';
       $('#footerAddress').textContent = settings.storeAddress || 'Buenos Aires, Argentina';
@@ -490,7 +491,9 @@
       const whatsapp = String(settings.storeWhatsApp || '').replace(/\D/g,'');
       $('#whatsappBtn').href = whatsapp ? 'https://wa.me/' + whatsapp : '#';
       $('#footerWhatsApp').textContent = whatsapp ? 'Consultas y ventas por WhatsApp.' : 'WhatsApp disponible para consultas y mayoristas.';
+      $('#footerWhatsApp').href = whatsapp ? 'https://wa.me/' + whatsapp : '#';
       document.title = name + ' | Impresión 3D Profesional';
+      const themeMeta=document.querySelector('meta[name="theme-color"]');if(themeMeta)themeMeta.content=settings.primaryColor||'#8fd82e';
     }
 
     function filterCategory(category) {
