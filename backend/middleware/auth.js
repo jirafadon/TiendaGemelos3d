@@ -36,6 +36,26 @@ export async function protect(req, res, next) {
   }
 }
 
+export async function optionalProtect(req, res, next) {
+  try {
+    let token = null;
+    const authorization = req.headers.authorization;
+    if (authorization?.startsWith('Bearer ')) token = authorization.slice(7).trim();
+    if (!token && req.cookies?.token) token = req.cookies.token;
+    if (!token) return next();
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id);
+    if (user) {
+      req.user = user;
+      req.auth = decoded;
+    }
+  } catch {
+    // Guest checkout: an absent/invalid token must not block the purchase.
+  }
+  next();
+}
+
 export function adminOnly(req, res, next) {
   if (!req.user || req.user.role !== 'admin') {
     return res.status(403).json({ success: false, message: 'Se requieren permisos de administrador.' });

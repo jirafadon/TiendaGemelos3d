@@ -51,7 +51,7 @@ async function buildOrder(req) {
   }
 
   const customer = cleanCustomer(rawCustomer);
-  if (!customer.name || !customer.email || !customer.address || !customer.city || !customer.zip) {
+  if (!customer.name || !customer.email || !customer.phone || !customer.address || !customer.city || !customer.zip) {
     const error = new Error('Faltan datos del cliente o de envío.');
     error.statusCode = 400;
     throw error;
@@ -170,10 +170,32 @@ export async function checkout(req, res, next) {
       sendAdminNewOrder(order)
     ]);
 
+    let redirectUrl = null;
+    if (payment?.initPoint || payment?.sandboxInitPoint) {
+      redirectUrl = payment.initPoint || payment.sandboxInitPoint;
+    } else if (payment?.url) {
+      redirectUrl = payment.url;
+    } else if (payment?.approvalUrl) {
+      redirectUrl = payment.approvalUrl;
+    } else if (payment?.orderID) {
+      redirectUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${encodeURIComponent(payment.orderID)}`;
+    }
+
     res.status(201).json({
       success: true,
-      order,
-      payment
+      orderNumber: order.number,
+      redirectUrl,
+      payMethod: order.payMethod,
+      payment,
+      bankDetails: String(order.payMethod).toLowerCase() === 'transfer' || String(order.payMethod).toLowerCase() === 'bank_transfer'
+        ? {
+            holder: process.env.BANK_HOLDER || '',
+            cuit: process.env.BANK_CUIT || '',
+            bank: process.env.BANK_NAME || '',
+            alias: process.env.BANK_ALIAS || '',
+            cbu: process.env.BANK_CBU || ''
+          }
+        : undefined
     });
   } catch (error) {
     next(error);

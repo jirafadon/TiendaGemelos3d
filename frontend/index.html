@@ -162,6 +162,13 @@
     .auth-link{text-align:center;margin:18px 0 0;font-size:13px}
     .auth-link button{border:0;background:none;color:var(--accent-dark);font-weight:700;padding:0}
     .auth-error{color:var(--danger);min-height:20px;font-size:13px;margin:0 0 8px}
+    .modal.checkout-modal{width:min(620px,100%)}
+    .checkout-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+    .checkout-grid .full{grid-column:1 / -1}
+    .checkout-note{background:#f7f8f5;border:1px solid #e5e5e5;border-radius:10px;padding:12px 14px;font-size:13px;color:var(--text-2);margin:0 0 20px}
+    .bank-details{background:#f7f8f5;border:1px solid #dfe7d8;border-radius:10px;padding:16px;margin:8px 0 16px}
+    .bank-details strong{display:block;margin-bottom:8px}
+    .bank-details div{font-size:13px;margin:4px 0}
     .modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
     .modal-head h2{font:800 22px Poppins;margin:0}
     .modal-body{padding:20px}
@@ -631,35 +638,74 @@
 
     function startCheckout() {
       if (!cart.length) return;
-      if (!token()) {
-        closeCart();
-        showLogin();
-        return;
-      }
       const user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
-      const body = '<div class="form-grid"><p>Completá tus datos para continuar con el pedido.</p><label>Nombre<input id="checkoutName" value="' + esc(user && user.name || '') + '"></label><label>Email<input id="checkoutEmail" type="email" value="' + esc(user && user.email || '') + '"></label><label>Teléfono<input id="checkoutPhone"></label><label>Dirección<input id="checkoutAddress"></label><label>Ciudad<input id="checkoutCity"></label><label>Código postal<input id="checkoutZip"></label><label>Método de pago<select id="checkoutMethod"><option value="mercadopago">Mercado Pago</option><option value="paypal">PayPal</option><option value="stripe">Stripe</option><option value="transfer">Transferencia</option></select></label><div id="checkoutError" style="color:var(--danger);min-height:20px"></div><button class="btn btn-primary" id="paySubmit" type="button">Confirmar pedido</button></div>';
+      const fullName = String(user?.name || '').trim().split(/\s+/);
+      const firstName = fullName.shift() || '';
+      const lastName = fullName.join(' ');
+      const body = '<form class="auth-form" id="checkoutForm">' +
+        '<p class="checkout-note">Completá tus datos para continuar. Podés crear una cuenta después para seguir tus pedidos.</p>' +
+        '<div class="checkout-grid">' +
+          '<div class="auth-field"><label for="checkoutFirstName">Nombre</label><input id="checkoutFirstName" value="' + esc(firstName) + '" autocomplete="given-name" required></div>' +
+          '<div class="auth-field"><label for="checkoutLastName">Apellido</label><input id="checkoutLastName" value="' + esc(lastName) + '" autocomplete="family-name" required></div>' +
+          '<div class="auth-field full"><label for="checkoutEmail">Email</label><input id="checkoutEmail" type="email" value="' + esc(user?.email || '') + '" autocomplete="email" required></div>' +
+          '<div class="auth-field"><label for="checkoutPhone">Teléfono</label><input id="checkoutPhone" type="tel" autocomplete="tel" required></div>' +
+          '<div class="auth-field"><label for="checkoutZip">CP</label><input id="checkoutZip" autocomplete="postal-code" required></div>' +
+          '<div class="auth-field full"><label for="checkoutAddress">Dirección</label><input id="checkoutAddress" autocomplete="street-address" required></div>' +
+          '<div class="auth-field full"><label for="checkoutCity">Ciudad</label><input id="checkoutCity" autocomplete="address-level2" required></div>' +
+          '<div class="auth-field full"><label for="checkoutMethod">Método de pago</label><select id="checkoutMethod"><option value="mercadopago">Mercado Pago</option><option value="paypal">PayPal</option><option value="stripe">Stripe</option><option value="transfer">Transferencia</option></select></div>' +
+        '</div>' +
+        '<div id="checkoutError" class="auth-error"></div>' +
+        '<button class="btn btn-primary" id="paySubmit" type="submit">Pagar y continuar</button>' +
+      '</form>';
       closeCart();
-      openModal('Checkout',body);
-      $('#paySubmit').onclick = processCheckout;
+      openModal('Checkout',body,undefined,'checkout-modal');
+      $('#checkoutForm').onsubmit = (event) => { event.preventDefault(); processCheckout(); };
     }
 
     async function processCheckout() {
-      if (!token()) return;
+      const firstName = $('#checkoutFirstName').value.trim();
+      const lastName = $('#checkoutLastName').value.trim();
       const payload = {
         items: cart.map((item) => ({productId:item.productId,qty:item.qty})),
-        customer: {name:$('#checkoutName').value.trim(),email:$('#checkoutEmail').value.trim(),phone:$('#checkoutPhone').value.trim(),address:$('#checkoutAddress').value.trim(),city:$('#checkoutCity').value.trim(),zip:$('#checkoutZip').value.trim()},
+        customer: {name:[firstName,lastName].filter(Boolean).join(' '),email:$('#checkoutEmail').value.trim(),phone:$('#checkoutPhone').value.trim(),address:$('#checkoutAddress').value.trim(),city:$('#checkoutCity').value.trim(),zip:$('#checkoutZip').value.trim()},
         payMethod:$('#checkoutMethod').value
       };
       try {
+        $('#paySubmit').disabled = true;
         const data = await api('/payments/checkout',{method:'POST',body:JSON.stringify(payload)});
-        if (data.payment && (data.payment.initPoint || data.payment.sandboxInitPoint)) { window.location.href = data.payment.initPoint || data.payment.sandboxInitPoint; return; }
-        if (data.payment && data.payment.orderID) { window.location.href = 'https://www.sandbox.paypal.com/checkoutnow?token=' + encodeURIComponent(data.payment.orderID); return; }
-        if (data.payment && data.payment.url) { window.location.href = data.payment.url; return; }
+        if (data.redirectUrl) { window.location.href = data.redirectUrl; return; }
+        if (data.payment?.initPoint || data.payment?.sandboxInitPoint) { window.location.href = data.payment.initPoint || data.payment.sandboxInitPoint; return; }
+        if (data.payment?.orderID) {
+          const paypalBase = data.payment.approvalUrl || ('https://www.sandbox.paypal.com/checkoutnow?token=' + encodeURIComponent(data.payment.orderID));
+          window.location.href = paypalBase;
+          return;
+        }
+        if (data.payMethod === 'transfer' || data.payment?.method === 'transfer') {
+          const bank = data.bankDetails || {};
+          $('#checkoutForm').innerHTML = '<div class="checkout-note">Tu pedido <strong>' + esc(data.orderNumber || '') + '</strong> quedó pendiente. Realizá la transferencia y avisá cuando esté hecha.</div>' +
+            '<div class="bank-details"><strong>Datos bancarios</strong>' +
+            '<div><b>Titular:</b> ' + esc(bank.holder || 'Configurá los datos bancarios') + '</div>' +
+            '<div><b>CUIT:</b> ' + esc(bank.cuit || '—') + '</div>' +
+            '<div><b>Banco:</b> ' + esc(bank.bank || '—') + '</div>' +
+            '<div><b>Alias:</b> ' + esc(bank.alias || '—') + '</div>' +
+            '<div><b>CBU:</b> ' + esc(bank.cbu || '—') + '</div></div>' +
+            '<button class="btn btn-primary" type="button" id="transferDone">Ya transferí</button>';
+          $('#transferDone').onclick = () => {
+            cart = [];
+            persistCart();
+            closeModal();
+            toast('Recibimos tu aviso de transferencia. Pedido ' + (data.orderNumber || '') + '.');
+          };
+          return;
+        }
         cart = [];
         persistCart();
         closeModal();
-        openModal('Pedido recibido','<p>Tu pedido <strong>' + esc(data.order && data.order.number || '') + '</strong> fue creado correctamente.</p>');
-      } catch (error) { $('#checkoutError').textContent = error.message; }
+        openModal('Pedido recibido','<p>Tu pedido <strong>' + esc(data.orderNumber || '') + '</strong> fue creado correctamente.</p>');
+      } catch (error) {
+        $('#checkoutError').textContent = error.message;
+        $('#paySubmit').disabled = false;
+      }
     }
 
     function showAllProducts() {
