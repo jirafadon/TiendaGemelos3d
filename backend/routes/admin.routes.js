@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { body, param } from 'express-validator';
 import { validate } from '../middleware/validate.js';
 import multer from 'multer';
-import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import { cloudinary } from '../config/cloudinary.js';
 import { protect, adminOnly } from '../middleware/auth.js';
 import {
@@ -34,17 +33,62 @@ import {
 } from '../controllers/admin.controller.js';
 
 const router = Router();
+
 const upload = multer({
-  storage: new CloudinaryStorage({
-    cloudinary,
-    params: {
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 8 * 1024 * 1024,
+    files: 6
+  },
+  fileFilter: (req, file, callback) => {
+    const allowed = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    if (!allowed.includes(file.mimetype)) {
+      return callback(new Error('Formato de imagen no permitido. Usá JPG, PNG, WEBP o GIF.'));
+    }
+    callback(null, true);
+  }
+});
+
+const uploadImages = (req, res, next) => {
+  upload.array('images', 6)(req, res, (error) => {
+    if (!error) return next();
+
+    if (error instanceof multer.MulterError) {
+      const message = error.code === 'LIMIT_FILE_SIZE'
+        ? 'Cada imagen debe pesar menos de 8 MB.'
+        : error.code === 'LIMIT_FILE_COUNT'
+          ? 'Podés subir hasta 6 imágenes.'
+          : error.message;
+
+      return res.status(400).json({
+        success: false,
+        message
+      });
+    }
+
+    return res.status(400).json({
+      success: false,
+      message: error.message || 'No se pudieron procesar las imágenes.'
+    });
+  });
+};
+
+const uploadToCloudinary = (file) => new Promise((resolve, reject) => {
+  const stream = cloudinary.uploader.upload_stream(
+    {
       folder: 'tiendagemelos3d/products',
       resource_type: 'image',
       allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif']
+    },
+    (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
     }
-  }),
-  limits: { fileSize: 8 * 1024 * 1024, files: 6 }
+  );
+
+  stream.end(file.buffer);
 });
+
 router.use(protect, adminOnly);
 
 router.get('/bootstrap', getBootstrap);
@@ -54,20 +98,41 @@ router.get('/dashboard/top-products', getTopProducts);
 router.get('/dashboard/recent-orders', getRecentOrders);
 router.get('/dashboard/recent-users', getRecentUsers);
 
-router.post('/upload-multiple', upload.array('images', 6), (req, res) => {
-  const files = Array.isArray(req.files) ? req.files : [];
-  if (!files.length) return res.status(400).json({ success: false, message: 'No se recibió ninguna imagen válida.' });
-  res.json({ success: true, urls: files.map((file) => file.path).filter(Boolean).slice(0, 6) });
-});
+const handleMultipleUpload = async (req, res) => {
+  try {
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      return res.status(503).json({
+        success: false,
+        message: 'Cloudinary no está configurado en el servidor.'
+      });
+    }
 
-router.post('/upload', upload.array('images', 6), (req, res) => {
-  const files = Array.isArray(req.files) ? req.files : [];
-  if (!files.length) return res.status(400).json({ success: false, message: 'No se recibió ninguna imagen válida.' });
-  res.json({
-    success: true,
-    urls: files.map((file) => file.path).filter(Boolean).slice(0, 6)
-  });
-});
+    const files = Array.isArray(req.files) ? req.files : [];
+    if (!files.length) {
+      return res.status(400).json({
+        success: false,
+        message: 'No se recibió ninguna imagen válida.'
+      });
+    }
+
+    const uploads = await Promise.all(files.map(uploadToCloudinary));
+
+    return res.json({
+      success: true,
+      urls: uploads.map((upload) => upload.secure_url).filter(Boolean).slice(0, 6)
+    });
+  } catch (error) {
+    console.error('Error subiendo imágenes a Cloudinary:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Error al subir las imágenes a Cloudinary.',
+      error: process.env.NODE_ENV === 'production' ? undefined : error.message
+    });
+  }
+};
+
+router.post('/upload-multiple', uploadImages, handleMultipleUpload);
+router.post('/upload', uploadImages, handleMultipleUpload);
 
 router.get('/products', listProducts);
 router.post('/products',[
