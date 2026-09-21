@@ -177,7 +177,14 @@ const productValidation = [
     .isString()
     .trim()
     .isLength({ max: 2048 })
-    .custom((value) => /^https?:\\/\\//i.test(value)),
+    .custom((value) => {
+      try {
+        const url = new URL(value);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      } catch {
+        return false;
+      }
+    }),
   body('active')
     .optional()
     .isBoolean(),
