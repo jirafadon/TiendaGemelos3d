@@ -880,11 +880,19 @@ function cloudinaryUrl(url, size) {
     }
 
     function showAllProducts() {
-      currentCategory = '';
-      const section = document.querySelector('#novedades');
-      renderProductLists();
-      section.scrollIntoView({behavior:'smooth'});
-    }
+  if (!products.length) {
+    toast('No hay productos disponibles');
+    return;
+  }
+  const activeProducts = products.filter((p) => p.active !== false);
+  if (!activeProducts.length) {
+    toast('No hay productos disponibles');
+    return;
+  }
+  const grid = '<div class="product-grid" style="grid-template-columns:repeat(4,1fr);gap:16px">' + activeProducts.map(productCard).join('') + '</div>';
+  openModal('Todos los productos (' + activeProducts.length + ')', grid);
+  bindProductButtons();
+}
 
     $('#cartBtn').onclick = openCart;
     $('#clearCartBtn').onclick = clearCart;
