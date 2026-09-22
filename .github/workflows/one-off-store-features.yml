@@ -4,8 +4,65 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/one-off-store-features.yml'
+permissions:
+  contents: write
 jobs:
-  test:
+  patch:
     runs-on: ubuntu-latest
     steps:
-      - run: echo temporary-runner-ok
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch index.html
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('frontend/index.html')
+          s=p.read_text()
+          css='''
+    /* Wishlist / recently viewed / mobile-first enhancements */
+    .wish-btn{position:absolute;right:10px;top:10px;width:36px;height:36px;border:1px solid rgba(255,255,255,.65);border-radius:50%;background:rgba(255,255,255,.82);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);display:grid;place-items:center;color:#777;z-index:4;padding:0;transition:.18s}.wish-btn:hover{background:rgba(255,235,235,.95);color:#ef4444}.wish-btn.is-active{color:#ef4444;background:rgba(255,255,255,.94)}.wishlist-header-btn{position:relative}.wishlist-header-btn .wishlist-badge{position:absolute;top:-6px;right:1px;min-width:19px;height:19px;padding:0 5px;border-radius:99px;background:#ef4444;color:#fff;font-size:11px;font-weight:800;display:grid;place-items:center}#recentlyViewed{background:#fff}#wishlistProducts{grid-template-columns:repeat(3,1fr);gap:14px}body.is-mobile .wish-btn{width:32px;height:32px;right:7px;top:7px}body.is-mobile .header-main{height:64px;min-height:64px}body.is-mobile .logo img{height:40px;max-width:110px}body.is-mobile .search-wrap{top:64px}body.is-mobile .header{margin-bottom:52px}body.is-mobile .topbar{font-size:11px;padding:6px 10px}body.is-mobile .header-actions{gap:8px}body.is-mobile .header-action{min-width:36px}body.is-mobile .product-grid{grid-template-columns:repeat(2,1fr);gap:8px}body.is-mobile .product-body{padding:10px}body.is-mobile .product-name{font-size:13px}body.is-mobile .price{font-size:17px}body.is-mobile .product-actions .btn{padding:14px 18px;font-size:14px}body.is-mobile .modal-backdrop{padding:0}body.is-mobile .modal{width:100vw;height:100vh;max-height:none;border-radius:0}body.is-mobile .related-grid{grid-template-columns:repeat(2,1fr);gap:8px}body.is-mobile #wishlistProducts{grid-template-columns:repeat(2,1fr);gap:8px}@media(max-width:767px){#wishlistProducts{grid-template-columns:repeat(2,1fr);gap:8px}.wish-btn{width:32px;height:32px}}
+          '''
+          if '/* Wishlist / recently viewed / mobile-first enhancements */' not in s:s=s.replace('</style>',css+'\n  </style>',1)
+          section='''
+    <section id="recentlyViewed" class="hidden"><div class="container"><h2 class="section-title">Vistos recientemente</h2><div id="recentProducts" class="product-grid"></div></div></section>
+'''
+          if 'id="recentlyViewed"' not in s:s=s.replace('\n    <section class="benefits">',section+'\n    <section class="benefits">',1)
+          js=r'''
+    /* === Wishlist, recently viewed and mobile-first === */
+    const WISHLIST_KEY='tg3d_wishlist',RECENT_KEY='tg3d_recent';
+    function getWishlist(){try{const v=JSON.parse(localStorage.getItem(WISHLIST_KEY)||'[]');return Array.isArray(v)?v.map(String):[]}catch{return[]}}
+    function saveWishlist(v){localStorage.setItem(WISHLIST_KEY,JSON.stringify([...new Set(v.map(String))]))}
+    function isInWishlist(id){return getWishlist().includes(String(id))}
+    function updateWishlistCount(){const ids=getWishlist(),c=document.querySelector('#wishlistCount'),i=document.querySelector('#wishlistBtnIcon');if(c)c.textContent=ids.length;if(i)i.className=ids.length?'fa-solid fa-heart':'fa-regular fa-heart'}
+    function rerenderProductButtons(){document.querySelectorAll('.wish-btn[data-wish]').forEach(b=>{const a=isInWishlist(b.dataset.wish);b.classList.toggle('is-active',a);b.setAttribute('aria-pressed',String(a));b.innerHTML='<i class="'+(a?'fa-solid':'fa-regular')+' fa-heart"></i>'});updateWishlistCount()}
+    function toggleWishlist(id){const k=String(id),v=getWishlist(),i=v.indexOf(k);if(i<0){v.unshift(k);saveWishlist(v);toast('Agregado a favoritos')}else{v.splice(i,1);saveWishlist(v);toast('Quitado de favoritos')}rerenderProductButtons();if(document.querySelector('#wishlistProducts'))showWishlistModal()}
+    function getRecent(){try{const v=JSON.parse(localStorage.getItem(RECENT_KEY)||'[]');return Array.isArray(v)?v.map(String):[]}catch{return[]}}
+    function addRecent(id){const k=String(id),v=getRecent().filter(x=>x!==k);v.unshift(k);localStorage.setItem(RECENT_KEY,JSON.stringify(v.slice(0,6)))}
+    function renderRecent(){const s=document.querySelector('#recentlyViewed'),g=document.querySelector('#recentProducts');if(!s||!g)return;const v=getRecent().map(id=>products.find(p=>String(p._id)===id)).filter(p=>p&&p.active!==false).slice(0,6);if(!v.length){s.classList.add('hidden');g.innerHTML='';return}s.classList.remove('hidden');g.innerHTML=v.map(productCard).join('');bindProductButtons()}
+    function showWishlistModal(){const ids=getWishlist(),v=ids.map(id=>products.find(p=>String(p._id)===id)).filter(p=>p&&p.active!==false);const body=v.length?'<div id="wishlistProducts" class="product-grid">'+v.map(productCard).join('')+'</div>':'<div class="empty"><i class="fa-regular fa-heart" style="font-size:34px;margin-bottom:12px"></i><div>Todavía no agregaste productos a favoritos</div><button class="btn btn-primary" id="wishlistBrowseBtn" type="button" style="margin-top:16px">Ver productos</button></div>';openModal('Mis favoritos',body);if(v.length)bindProductButtons();const b=document.querySelector('#wishlistBrowseBtn');if(b)b.onclick=()=>{closeModal();document.querySelector('#novedades')?.scrollIntoView({behavior:'smooth'})};updateWishlistCount()}
+    function ensureWishlistHeader(){if(document.querySelector('#wishlistBtn'))return;const a=document.querySelector('.header-actions'),cartBtn=document.querySelector('#cartBtn'),account=document.querySelector('.account-wrap');if(!a||!cartBtn||!account)return;const b=document.createElement('button');b.className='header-action wishlist-header-btn';b.id='wishlistBtn';b.type='button';b.setAttribute('aria-label','Mis favoritos');b.innerHTML='<i id="wishlistBtnIcon" class="fa-regular fa-heart"></i><span>Favoritos</span><b id="wishlistCount" class="wishlist-badge">0</b>';a.insertBefore(b,account);a.insertBefore(account,b.nextSibling);b.onclick=showWishlistModal;updateWishlistCount()}
+    function bindWishlistHandlers(){document.querySelectorAll('.wish-btn[data-wish]').forEach(b=>b.onclick=e=>{e.preventDefault();e.stopPropagation();toggleWishlist(b.dataset.wish)});updateWishlistCount()}
+    const originalProductCard=productCard;productCard=function(product){const html=originalProductCard(product),a=isInWishlist(product._id),h='<button class="wish-btn '+(a?'is-active':'')+'" type="button" data-wish="'+esc(product._id)+'" aria-label="'+(a?'Quitar de favoritos':'Agregar a favoritos')+'" aria-pressed="'+a+'"><i class="'+(a?'fa-solid':'fa-regular')+' fa-heart"></i></button>';return html.replace('</button><div class="product-body">','</button>'+h+'<div class="product-body">')};
+    const originalBind=bindProductButtons;bindProductButtons=function(){originalBind();bindWishlistHandlers()};
+    const originalOpen=openProduct;openProduct=function(id){addRecent(id);originalOpen(id);document.querySelectorAll('.related-card[data-related-id]').forEach(card=>{const article=document.createElement('article');article.className=card.className;article.dataset.relatedId=card.dataset.relatedId;article.innerHTML=card.innerHTML;card.replaceWith(article);article.style.position='relative';const p=products.find(x=>String(x._id)===String(article.dataset.relatedId));if(p){const a=isInWishlist(p._id),h=document.createElement('button');h.className='wish-btn'+(a?' is-active':'');h.type='button';h.dataset.wish=p._id;h.setAttribute('aria-pressed',String(a));h.innerHTML='<i class="'+(a?'fa-solid':'fa-regular')+' fa-heart"></i>';h.onclick=e=>{e.preventDefault();e.stopPropagation();toggleWishlist(p._id)};article.appendChild(h);article.onclick=()=>openProduct(p._id)}});rerenderProductButtons();setTimeout(renderRecent,0)};
+    function updateResponsiveClass(){const m=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(window.matchMedia&&window.matchMedia('(max-width:767px)').matches)||('ontouchstart' in window&&window.matchMedia&&window.matchMedia('(max-width:1024px)').matches);document.body.classList.toggle('is-mobile',!!m);document.body.classList.toggle('is-desktop',!m)}
+    updateResponsiveClass();window.addEventListener('resize',updateResponsiveClass);window.addEventListener('orientationchange',updateResponsiveClass);
+    const originalInit=init;init=async function(){ensureWishlistHeader();updateResponsiveClass();await originalInit();updateWishlistCount();renderRecent();ensureWishlistHeader();updateWishlistCount();if(document.body.classList.contains('is-mobile')&&!localStorage.getItem('tg3d_mobile_seen')){localStorage.setItem('tg3d_mobile_seen','1');setTimeout(()=>toast('Tip: podés agregar productos a favoritos con el corazón rojo'),2500)}};
+'''
+          if "const WISHLIST_KEY='tg3d_wishlist'" not in s:s=s.replace('\n    init();','\n'+js+'\n    init();',1)
+          p.write_text(s)
+          PY
+      - name: Commit and push
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add frontend/index.html
+          git commit -m 'feat: wishlist en productos y header'
+          git push origin main
+      - name: Remove runner
+        run: |
+          git rm .github/workflows/one-off-store-features.yml
+          git commit --allow-empty -m 'feat: vistos recientemente en la tienda'
+          git push origin main
