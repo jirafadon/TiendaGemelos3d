@@ -544,7 +544,7 @@ function cloudinaryUrl(url, size) {
         '<a href="#" id="bcCategory">' + esc(categoryName) + '</a><span style="margin:0 6px;color:#aaa">›</span>' +
         '<span style="color:#2a2a2a;font-weight:600">' + esc(product.name) + '</span>' +
       '</div>';
-      const body = '<div class="modal-gallery"><div class="thumbs">' + thumbs + '<img id="mainProductImage" class="main-product-image" src="' + esc(cloudinaryUrl(images[0], 800)) + '" alt="' + esc(product.name) + '" decoding="async">'</div></div>' +
+      const body = '<div class="modal-gallery"><div class="thumbs">' + thumbs + '<img id="mainProductImage" class="main-product-image" src="' + esc(cloudinaryUrl(images[0], 800)) + '" alt="' + esc(product.name) + '" decoding="async"></div></div>' +
         '<div class="modal-info" style="margin-top:20px">' + breadcrumb +
           '<h3>' + esc(product.name) + '</h3><p>' + esc(product.description || 'Producto impreso en 3D.') + '</p>' +
           '<div class="rating">★ ' + (Number(product.rating)||0).toFixed(1) + ' <span>(' + (Number(product.reviews)||0) + ' reseñas)</span></div>' +
