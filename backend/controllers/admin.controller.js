@@ -255,9 +255,9 @@ export async function updateAdminProduct(req, res, next) {
 
 export async function deleteAdminProduct(req, res, next) {
   try {
-    const product = await Product.findByIdAndUpdate(req.params.id, { active: false }, { new: true });
+    const product = await Product.findByIdAndDelete(req.params.id);
     if (!product) return res.status(404).json({ success: false, message: 'Producto no encontrado' });
-    res.json({ success: true, message: 'Producto desactivado' });
+    res.json({ success: true, message: 'Producto eliminado permanentemente' });
   } catch (error) {
     next(error);
   }
