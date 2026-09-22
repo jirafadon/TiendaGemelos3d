@@ -24,6 +24,9 @@ import {
   listUsers,
   updateUser,
   deleteUser,
+  resetUserPassword,
+  sendUserResetEmail,
+  getUserDetail,
   listCoupons,
   createCoupon,
   updateCoupon,
@@ -290,7 +293,10 @@ router.post('/orders/:id/resend-email',[param('id').isMongoId()],validate,resend
 
 router.get('/users', listUsers);
 router.patch('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
+router.delete('/users/:id', [param('id').isMongoId()], validate, deleteUser);
+router.post('/users/:id/reset-password', [param('id').isMongoId()], validate, resetUserPassword);
+router.post('/users/:id/send-reset', [param('id').isMongoId()], validate, sendUserResetEmail);
+router.get('/users/:id', [param('id').isMongoId()], validate, getUserDetail);
 
 router.get('/coupons', listCoupons);
 router.post('/coupons',[body('code').trim().isLength({min:3,max:40}),body('type').isIn(['percent','fixed','shipping']),body('value').isFloat({min:0}),body('maxUses').optional({nullable:true}).isInt({min:0})],validate,createCoupon);

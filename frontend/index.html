@@ -46,7 +46,7 @@
     .header-actions{display:flex;justify-content:flex-end;align-items:center;gap:24px;flex:0 0 auto}
     .header-action{position:relative;border:0;background:#fff;color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;min-width:60px}
     .header-action i{font-size:21px}
-    .header-action:hover{color:var(--accent)}
+    .header-action:hover{color:var(--accent)}.account-wrap{position:relative}.user-menu{position:absolute;right:0;top:calc(100% + 10px);width:220px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:7px;display:none;z-index:160}.user-menu.open{display:block}.user-menu button{width:100%;border:0;background:#fff;color:var(--text);padding:10px 11px;border-radius:7px;text-align:left;display:flex;align-items:center;gap:10px;font-size:13px}.user-menu button:hover{background:var(--bg-alt);color:var(--accent-dark)}.user-menu .user-menu-name{font-weight:700;border-bottom:1px solid var(--border);border-radius:0;padding-bottom:11px;margin-bottom:4px}.user-menu .user-menu-name small{display:block;color:var(--text-2);font-weight:400;font-size:11px;margin-top:2px}.profile-grid{display:grid;grid-template-columns:90px 1fr;gap:16px;align-items:start}.profile-avatar{width:82px;height:82px;border-radius:50%;object-fit:cover;background:var(--bg-alt);border:1px solid var(--border)}.profile-data{display:grid;gap:10px}.profile-data div{background:var(--bg-alt);padding:10px;border-radius:8px}.profile-data small{display:block;color:var(--text-2);font-size:11px;margin-bottom:2px}@media(max-width:767px){.account-wrap{position:relative}.user-menu{right:-5px;width:205px}}
     .badge{position:absolute;top:-5px;right:5px;min-width:19px;height:19px;border-radius:99px;background:var(--accent);color:#111;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px}
     .category-bar{background:#fff;border-bottom:1px solid var(--border)}
     .category-nav{height:48px;display:flex;align-items:center;justify-content:center;gap:4px;overflow-x:auto;scrollbar-width:none}
@@ -218,7 +218,7 @@
       </div>
       <div class="header-actions">
         <button class="header-action" id="helpBtn" type="button"><i class="fa-regular fa-comment"></i><span>Ayuda</span></button>
-        <button class="header-action" id="accountBtn" type="button"><i class="fa-regular fa-user"></i><span>Mi cuenta</span></button>
+        <div class="account-wrap"><button class="header-action" id="accountBtn" type="button" aria-haspopup="true" aria-expanded="false"><i id="accountIcon" class="fa-regular fa-user"></i><span id="accountLabel">Mi cuenta</span></button><div id="userMenu" class="user-menu" role="menu"><button id="profileMenuBtn" type="button"><i class="fa-regular fa-user"></i><span>Perfil</span></button><button id="ordersMenuBtn" type="button"><i class="fa-solid fa-receipt"></i><span>Mis pedidos</span></button><button id="logoutMenuBtn" type="button"><i class="fa-solid fa-right-from-bracket"></i><span>Cerrar sesión</span></button></div></div>
         <button class="header-action" id="cartBtn" type="button"><i class="fa-solid fa-cart-shopping"></i><span>Mi carrito</span><b id="cartCount" class="badge">0</b></button>
       </div>
       <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir categorías"><i class="fa-solid fa-bars"></i></button>
@@ -657,6 +657,14 @@
       document.querySelector('#novedades').scrollIntoView({behavior:'smooth'});
     }
 
+    function getStoredUser(){try{return JSON.parse(localStorage.getItem(USER_KEY)||'null')}catch{return null}}
+    function setSession(user){if(user)localStorage.setItem(USER_KEY,JSON.stringify(user));const current=user||getStoredUser();const logged=!!token()&&!!current;$('#accountLabel').textContent=logged?(current.name||'Mi cuenta'):'Mi cuenta';$('#accountIcon').className=logged?'fa-regular fa-circle-user':'fa-regular fa-user';$('#profileMenuBtn').classList.toggle('hidden',!logged);$('#ordersMenuBtn').classList.toggle('hidden',!logged);$('#logoutMenuBtn').classList.toggle('hidden',!logged);return current}
+    function closeUserMenu(){$('#userMenu').classList.remove('open');$('#accountBtn').setAttribute('aria-expanded','false')}
+    function toggleUserMenu(){if(!token()||!getStoredUser()){closeUserMenu();showLogin();return}const menu=$('#userMenu'),open=!menu.classList.contains('open');menu.classList.toggle('open',open);$('#accountBtn').setAttribute('aria-expanded',String(open))}
+    function showProfile(){const user=getStoredUser();if(!user)return;const avatar=user.avatar?'<img class="profile-avatar" src="'+esc(user.avatar)+'" alt="Avatar">':'<div class="profile-avatar" style="display:grid;place-items:center;font-size:30px;color:var(--text-2)"><i class="fa-regular fa-user"></i></div>';closeUserMenu();openModal('Perfil','<div class="profile-grid"><div>'+avatar+'</div><div class="profile-data"><div><small>Nombre</small>'+esc(user.name||'—')+'</div><div><small>Email</small>'+esc(user.email||'—')+'</div><div><small>Proveedor</small>'+esc(user.provider||'local')+'</div><div><small>Miembro desde</small>'+esc(user.createdAt?new Date(user.createdAt).toLocaleDateString('es-AR'):'—')+'</div></div></div>')}
+    async function showMyOrders(){closeUserMenu();try{const data=await api('/orders/my');const orders=data.orders||[];const body=orders.length?orders.map(o=>'<div style="padding:12px 0;border-bottom:1px solid var(--border)"><div style="display:flex;justify-content:space-between;gap:12px"><strong>'+esc(o.number||o._id)+'</strong><strong>'+money(o.total)+'</strong></div><div style="margin-top:5px;color:var(--text-2);font-size:12px">Pago: '+esc(o.payStatus||'—')+' · Envío: '+esc(o.shippingStatus||'—')+' · '+(o.createdAt?new Date(o.createdAt).toLocaleDateString('es-AR'):'—')+'</div></div>').join(''):'<div class="empty">Todavía no tenés pedidos.</div>';openModal('Mis pedidos','<div>'+body+'</div>')}catch(error){toast(error.message)}}
+    async function restoreSession(){if(!token()){setSession(null);return}try{const data=await api('/auth/me');setSession(data.user||getStoredUser())}catch{localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(USER_KEY);setSession(null)}}
+    async function logoutUser(){closeUserMenu();try{await api('/auth/logout',{method:'POST'})}catch{}localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(USER_KEY);setSession(null);closeModal();toast('Sesión cerrada.')}
     function showLogin() {
       const body = '<form class="auth-form" id="loginForm">' +
         '<p class="auth-subtitle">Ingresá a tu cuenta para continuar.</p>' +
@@ -675,6 +683,7 @@
           const data = await api('/auth/login',{method:'POST',body:JSON.stringify({email:$('#loginEmail').value.trim(),password:$('#loginPassword').value})});
           localStorage.setItem(TOKEN_KEY,data.token);
           localStorage.setItem(USER_KEY,JSON.stringify(data.user || {}));
+          setSession(data.user || {});
           closeModal();
           toast('Sesión iniciada correctamente.');
         } catch (error) { $('#loginError').textContent = error.message; }
@@ -699,6 +708,7 @@
           const data = await api('/auth/register',{method:'POST',body:JSON.stringify({name:$('#registerName').value.trim(),email:$('#registerEmail').value.trim(),password:$('#registerPassword').value})});
           localStorage.setItem(TOKEN_KEY,data.token);
           localStorage.setItem(USER_KEY,JSON.stringify(data.user || {}));
+          setSession(data.user || {});
           closeModal();
           toast('Cuenta creada correctamente.');
         } catch (error) { $('#registerError').textContent = error.message; }
@@ -722,6 +732,7 @@
         const data = await api('/auth/google',{method:'POST',body:JSON.stringify({credential:response.credential})});
         localStorage.setItem(TOKEN_KEY,data.token);
         localStorage.setItem(USER_KEY,JSON.stringify(data.user || {}));
+        setSession(data.user || {});
         closeModal();
         toast('Sesión iniciada con Google.');
       } catch (error) { const node=$('#loginError'); if(node) node.textContent=error.message; }
@@ -857,7 +868,11 @@
     $('#closeCart').onclick = closeCart;
     $('#drawerBackdrop').onclick = closeCart;
     $('#checkoutBtn').onclick = startCheckout;
-    $('#accountBtn').onclick = showLogin;
+    $('#accountBtn').onclick = toggleUserMenu;
+    $('#profileMenuBtn').onclick = showProfile;
+    $('#ordersMenuBtn').onclick = showMyOrders;
+    $('#logoutMenuBtn').onclick = logoutUser;
+    document.addEventListener('click',(event)=>{if(!event.target.closest('.account-wrap'))closeUserMenu()});
     $('#helpBtn').onclick = showHelp;
     $('#menuBtn').onclick = () => $('#categoryBar').classList.toggle('mobile-open');
     $('#newsletterForm').addEventListener('submit',subscribeNewsletter);
@@ -880,7 +895,7 @@
     document.addEventListener('click',(event) => { if(!event.target.closest('.search-wrap')) $('#suggestions').classList.remove('open'); });
 
     async function init() {
-      await Promise.allSettled([loadCategories(),loadProducts(),loadSettings()]);
+      await Promise.allSettled([loadCategories(),loadProducts(),loadSettings(),restoreSession()]);
       const requestedCategory=new URLSearchParams(window.location.search).get('cat');
       if(requestedCategory && storeCategories.some((category)=>category.slug===requestedCategory)) filterCategory(requestedCategory);
       updateCart();

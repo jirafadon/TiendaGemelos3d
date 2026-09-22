@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import Product from '../models/Product.js';
@@ -6,7 +7,7 @@ import User from '../models/User.js';
 import Coupon from '../models/Coupon.js';
 import Settings from '../models/Settings.js';
 import createSlug from '../utils/slugify.js';
-import { sendOrderConfirmation, sendOrderShipped } from '../services/email.service.js';
+import { sendOrderConfirmation, sendOrderShipped, sendPasswordReset } from '../services/email.service.js';
 import { stripHtml } from '../utils/sanitize.js';
 
 async function ensureDefaultCoupons() {
@@ -394,6 +395,59 @@ export async function deleteUser(req, res, next) {
     }
     await User.findByIdAndDelete(req.params.id);
     res.json({ success: true, message: 'Usuario eliminado' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function resetUserPassword(req, res, next) {
+  try {
+    const user = await User.findById(req.params.id).select('+password');
+    if (!user) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    const tempPassword = crypto.randomBytes(8).toString('base64').replace(/[^a-zA-Z0-9]/g, '').slice(0, 10);
+    user.password = await bcrypt.hash(tempPassword, 12);
+    user.provider = 'local';
+    user.googleId = undefined;
+    user.resetToken = undefined;
+    user.resetTokenExpires = undefined;
+    await user.save();
+    res.json({ success: true, tempPassword });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function sendUserResetEmail(req, res, next) {
+  try {
+    const user = await User.findById(req.params.id).select('+resetToken +resetTokenExpires');
+    if (!user) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    user.resetToken = hashedToken;
+    user.resetTokenExpires = new Date(Date.now() + 3600000);
+    await user.save();
+    const result = await sendPasswordReset(user, resetToken);
+    if (result?.error) return res.status(502).json({ success: false, message: result.error });
+    if (result?.skipped) return res.status(503).json({ success: false, message: 'El servicio de email no está configurado.' });
+    res.json({ success: true, message: 'Email enviado' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getUserDetail(req, res, next) {
+  try {
+    const user = await User.findById(req.params.id).select('-password -resetToken -resetTokenExpires');
+    if (!user) return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    const [orders, totalOrders, totalSpent] = await Promise.all([
+      Order.find({ user: user._id }).sort({ createdAt: -1 }).limit(5),
+      Order.countDocuments({ user: user._id }),
+      Order.aggregate([
+        { $match: { user: user._id, payStatus: 'paid' } },
+        { $group: { _id: null, total: { $sum: '$total' } } }
+      ])
+    ]);
+    res.json({ success: true, user, stats: { totalOrders, totalSpent: totalSpent[0]?.total || 0, recentOrders: orders } });
   } catch (error) {
     next(error);
   }
