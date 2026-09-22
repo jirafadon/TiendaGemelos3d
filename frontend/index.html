@@ -422,9 +422,9 @@ function cloudinaryUrl(url, size) {
   const stars = '★'.repeat(Math.max(0,Math.min(5,Math.round(rating)))) + '☆'.repeat(5 - Math.max(0,Math.min(5,Math.round(rating))));
   const cashPrice = discount > 0 ? Math.round(price * 0.9) : Math.round(price * 0.85);
   const badgeShipping = price >= 30000 ? '<span class="badge-ship"><i class="fa-solid fa-truck"></i> GRATIS</span>' : '';
-  const badgeInstallments = '<span class="badge-inst"><i class="fa-solid fa-credit-card"></i> 3 CUOTAS SIN INTERÉS</span>';
+  
   return '<article class="product-card">' +
-    '<div class="product-badges">' + badgeShipping + badgeInstallments + '</div>' +
+    '<div class="product-badges">' + badgeShipping + '</div>' +
     '<button class="product-image-wrap" type="button" data-product="' + esc(product._id) + '" aria-label="Ver ' + esc(product.name) + '">' +
       '<img class="product-image" src="' + esc(cloudinaryUrl(imageFor(product), 400)) + '" alt="' + esc(product.name) + '" loading="lazy" decoding="async">' +
       '<button class="wish-btn ' + (isInWishlist(product._id) ? 'active' : '') + '" data-wish="' + esc(product._id) + '" aria-label="Agregar a favoritos" type="button"><i class="' + (isInWishlist(product._id) ? 'fa-solid fa-heart' : 'fa-regular fa-heart') + '"></i></button>' +
@@ -434,7 +434,7 @@ function cloudinaryUrl(url, size) {
       '<div class="rating"><span class="stars">' + stars + '</span> <span class="reviews">(' + reviews + ')</span></div>' +
       (oldPrice > price ? '<div class="old-price-line">' + money(oldPrice) + '</div>' : '') +
       '<div class="price-line">' + money(price) + (discount > 0 ? ' <span class="discount-tag">' + discount + '% OFF</span>' : '') + '</div>' +
-      '<div class="installments-line">3 x ' + money(Math.round(price / 3)) + ' sin interés</div>' +
+      
       '<div class="cash-line">' + money(cashPrice) + ' con Efectivo</div>' +
       '<div class="product-actions"><button class="btn btn-dark" type="button" data-add="' + esc(product._id) + '">Comprar</button></div>' +
     '</div>' +
