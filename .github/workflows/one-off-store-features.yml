@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/one-off-store-features.yml'
+permissions:
+  contents: write
 jobs:
   patch:
     runs-on: ubuntu-latest
