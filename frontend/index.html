@@ -387,7 +387,12 @@
     function imageFor(product) {
       return (product && Array.isArray(product.images) && product.images[0]) || (product && product.image) || DEFAULT_LOGO;
     }
-
+function cloudinaryUrl(url, size) {
+  if (!url) return url;
+  if (!url.includes('res.cloudinary.com')) return url;
+  const sizeParam = size ? `w_${size},h_${size},c_fill,q_auto,f_auto/` : 'q_auto,f_auto/';
+  return url.replace('/image/upload/', `/image/upload/${sizeParam}`);
+}
     function productCard(product) {
       const price = Number(product.price) || 0;
       const oldPrice = Number(product.oldPrice) || 0;
@@ -396,7 +401,7 @@
       const reviews = Number(product.reviews) || 0;
       return '<article class="product-card">' +
         '<button class="product-image-wrap" type="button" data-product="' + esc(product._id) + '" aria-label="Ver ' + esc(product.name) + '">' +
-          '<img class="product-image" src="' + esc(imageFor(product)) + '" alt="' + esc(product.name) + '" loading="lazy">' +
+         '<img class="product-image" src="' + esc(cloudinaryUrl(imageFor(product), 400)) + '" alt="' + esc(product.name) + '" loading="lazy" decoding="async">' +
           (discount > 0 ? '<span class="product-label">-' + discount + '% OFF</span>' : '') +
         '</button>' +
         '<div class="product-body">' +
@@ -455,7 +460,7 @@
       }
       $('#checkoutBtn').disabled = false;
       $('#cartItems').innerHTML = cart.map((item,index) => '<div class="cart-item">' +
-        '<div class="cart-image"><img class="cart-item-image" src="' + esc(item.image || DEFAULT_LOGO) + '" alt="' + esc(item.name) + '"><div class="cart-image-placeholder hidden"><i class="fa-solid fa-cube"></i></div></div>' +
+        '<div class="cart-image"><img class="cart-item-image" src="' + esc(cloudinaryUrl(item.image || DEFAULT_LOGO, 200)) + '" alt="' + esc(item.name) + '" decoding="async"><div class="cart-image-placeholder hidden"><i class="fa-solid fa-cube"></i></div></div>' +
         '<div class="cart-item-info"><div class="cart-item-name" title="' + esc(item.name) + '">' + esc(item.name) + '</div><div class="cart-item-price">' + money(item.price) + '</div><div class="qty"><button type="button" data-minus="' + index + '" aria-label="Disminuir cantidad">−</button><span>' + item.qty + '</span><button type="button" data-plus="' + index + '" aria-label="Aumentar cantidad">+</button></div></div>' +
         '<button class="cart-remove" type="button" data-remove="' + index + '" aria-label="Eliminar">×</button></div>').join('');
       document.querySelectorAll('.cart-item-image').forEach((image) => {
@@ -539,7 +544,7 @@
         '<a href="#" id="bcCategory">' + esc(categoryName) + '</a><span style="margin:0 6px;color:#aaa">›</span>' +
         '<span style="color:#2a2a2a;font-weight:600">' + esc(product.name) + '</span>' +
       '</div>';
-      const body = '<div class="modal-gallery"><div class="thumbs">' + thumbs + '</div><div><img id="mainProductImage" class="main-product-image" src="' + esc(images[0]) + '" alt="' + esc(product.name) + '"></div></div>' +
+      const body = '<div class="modal-gallery"><div class="thumbs">' + thumbs + '<img id="mainProductImage" class="main-product-image" src="' + esc(cloudinaryUrl(images[0], 800)) + '" alt="' + esc(product.name) + '" decoding="async">'</div></div>' +
         '<div class="modal-info" style="margin-top:20px">' + breadcrumb +
           '<h3>' + esc(product.name) + '</h3><p>' + esc(product.description || 'Producto impreso en 3D.') + '</p>' +
           '<div class="rating">★ ' + (Number(product.rating)||0).toFixed(1) + ' <span>(' + (Number(product.reviews)||0) + ' reseñas)</span></div>' +
@@ -549,7 +554,7 @@
       const whatsappButton = whatsappNumber ? '<button class="btn" id="modalWhatsApp" type="button" style="background:#25D366;color:#fff;border-color:#25D366"><i class="fa-brands fa-whatsapp"></i> Consultar por WhatsApp</button>' : '';
       const footer = '<div class="modal-product-actions"><button class="btn btn-primary" id="modalAdd" type="button">Agregar al carrito</button>' + whatsappButton + '</div>';
       openModal(product.name,body,footer);
-      document.querySelectorAll('[data-thumb]').forEach((button) => button.onclick = () => { const i=Number(button.dataset.thumb); $('#mainProductImage').src=images[i]; document.querySelectorAll('[data-thumb]').forEach((x)=>x.classList.toggle('active',x===button)); });
+      document.querySelectorAll('[data-thumb]').forEach((button) => button.onclick = () => { const i=Number(button.dataset.thumb); $('#mainProductImage').src=cloudinaryUrl(images[i], 800); document.querySelectorAll('[data-thumb]').forEach((x)=>x.classList.toggle('active',x===button)); });
       document.querySelectorAll('[data-related-id]').forEach((button) => button.onclick = () => openProduct(button.dataset.relatedId));
       $('#bcHome').onclick = (event) => { event.preventDefault(); closeModal(); window.scrollTo({top:0,behavior:'smooth'}); };
       $('#bcCategory').onclick = (event) => { event.preventDefault(); closeModal(); filterCategory(product.category); };
@@ -897,7 +902,7 @@
       const box = $('#suggestions');
       if (!query) { box.classList.remove('open'); box.innerHTML=''; return; }
       const matches = products.filter((p) => (p.name + ' ' + (p.category||'')).toLowerCase().includes(query)).slice(0,6);
-      box.innerHTML = matches.length ? matches.map((p) => '<button class="suggestion" type="button" data-suggest="' + esc(p._id) + '"><img src="' + esc(imageFor(p)) + '" alt=""><span>' + esc(p.name) + '</span></button>').join('') : '<div style="padding:14px;color:var(--text-2)">Sin resultados</div>';
+      box.innerHTML = matches.length ? matches.map((p) => '<button class="suggestion" type="button" data-suggest="' + esc(p._id) + '"><img src="' + esc(cloudinaryUrl(imageFor(p), 100)) + '" alt="" decoding="async"><span>' + esc(p.name) + '</span></button>').join('') : '<div style="padding:14px;color:var(--text-2)">Sin resultados</div>';
       box.classList.add('open');
       document.querySelectorAll('[data-suggest]').forEach((button) => button.onclick = () => { box.classList.remove('open'); openProduct(button.dataset.suggest); });
     });
